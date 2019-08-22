@@ -1,0 +1,153 @@
+::selection {
+    background: $light-gray;
+    color: $black;
+}
+
+::-moz-selection {
+    background: $light-gray;
+    color: $black;
+}
+
+.page-body-wrapper {
+    min-height: calc(100vh - #{$navbar-height});
+    display: flex;
+    flex-direction: row;
+    padding-left: 0;
+    padding-right: 0;
+
+    &.full-page-wrapper {
+        width: 100%;
+        min-height: 100vh;
+    }
+}
+
+.main-panel {
+    transition: width $action-transition-duration $action-transition-timing-function, margin $action-transition-duration $action-transition-timing-function;
+    width: calc(100% - #{$sidebar-width-lg});
+    min-height: calc(100vh - #{$navbar-height});
+    display: flex;
+    flex-direction: column;
+
+    @media (max-width: 991px) {
+        margin-left: 0;
+        width: 100%;
+    }
+}
+
+.content-wrapper {
+    background: $content-bg;
+    padding: 1.5rem 1.7rem;
+    width: 100%;
+    flex-grow: 1;
+}
+
+.container-scroller {
+    overflow: hidden;
+}
+
+.cms-logo {
+    cursor: pointer;
+    margin: auto 12px auto 12px;
+    img {
+        height: 26px;
+        background: $white;
+        border-radius: 50%;
+        padding: 5px;
+    }
+}
+
+.cms-text {
+    font-size: $sidebar-menu-font-size;
+    text-decoration: none !important;
+    color: $white !important;
+    margin: auto auto auto 10px;
+    cursor: pointer !important;
+}
+
+.brand-form-container {
+    width: 100%;
+    height: 100px;
+
+    a {
+        text-decoration: none !important;
+        color: $black !important;
+        margin: auto;
+
+        .brand-logo-form {
+            width: 50px;
+            display: inline-block;
+            margin: auto 5px auto auto;
+        }
+
+        .brand-text-form {
+            display: inline-block;
+            font-size: 24px;
+            margin: auto auto auto 5px;
+        }
+    }
+}
+
+.text-red {
+    color: $red !important;
+}
+
+.asColorPicker-input:focus, .dataTables_wrapper select:focus, .form-control:focus, .jsgrid .jsgrid-table .jsgrid-filter-row input:focus[type=number], .jsgrid .jsgrid-table .jsgrid-filter-row input:focus[type=text], .jsgrid .jsgrid-table .jsgrid-filter-row select:focus, .select2-container--default .select2-selection--single .select2-search__field:focus, .select2-container--default .select2-selection--single:focus, .tt-hint:focus, .tt-query:focus, .typeahead:focus {
+    border-color: $primary;
+}
+
+.root-items-container {
+    a {
+        color: $black;
+    }
+
+    .root-item-icon {
+        a {
+            .mdi-folder-open {
+                color: $folder-color;
+                font-size: 20px;
+            }
+
+            &:hover {
+                .mdi-folder-open {
+                    color: $sidebar-color-1;
+                }
+            }
+        }
+
+        a {
+            .mdi-file {
+                color: $file-color;
+                font-size: 20px;
+            }
+
+            &:hover {
+                .mdi-file {
+                    color: $sidebar-color-1;
+                }
+            }
+        }
+    }
+}
+
+.text-transform-none {
+    text-transform: none !important;
+}
+
+.min-h-640 {
+    min-height: 640px !important;
+}
+
+.CodeMirror {
+    padding: 0px !important;
+}
+
+.tagsinput {
+    padding: 5px !important;
+}
+
+textarea {
+    &.form-control {
+        min-height: 100px;
+        padding: 12px;
+    }
+}

@@ -1,0 +1,10 @@
+.nav,
+.navbar-nav {
+    .nav-item {
+        &.dropdown {
+            .navbar-dropdown {
+                top: calc(#{$navbar-height} - 6px);
+            }
+        }
+    }
+}

@@ -1,0 +1,69 @@
+////////// COLOR VARIABLES //////////
+$content-bg:#f3f4fa;
+$footer-bg: $content-bg;
+$footer-color: color(dark);
+$border-color: #f2f2f2;
+$footer-height: 60px;
+////////// COLOR VARIABLES //////////
+
+////////// SIDEBAR ////////
+$sidebar-color-1: #23282d;
+$sidebar-color-2: #32373c;
+$sidebar-color-3: #a8a8a8;
+$sidebar-color-4: #494f56;
+$sidebar-width-lg: 200px;
+$sidebar-width-mini: 185px;
+$sidebar-width-icon: 70px;
+$sidebar-light-bg: $white;
+$sidebar-light-menu-color: $white;
+$sidebar-light-menu-active-bg: $sidebar-color-2;
+$sidebar-light-menu-active-color: $sidebar-color-3;
+$sidebar-light-menu-hover-bg: $sidebar-color-2;
+$sidebar-light-menu-hover-color: $sidebar-light-menu-color;
+$sidebar-light-submenu-color: $sidebar-light-menu-color;
+$sidebar-light-submenu-hover-bg: $sidebar-color-2;
+$sidebar-light-submenu-hover-color: $sidebar-color-3;
+$sidebar-light-category-color: #999999;
+$sidebar-light-menu-icon-color: $sidebar-light-menu-color;
+$sidebar-light-profile-name-color: #404852;
+$sidebar-light-profile-title-color: #8d9498;
+$sidebar-dark-bg: #252C46;
+$sidebar-dark-menu-color: #9F9EA3;
+$sidebar-dark-menu-active-bg: lighten($sidebar-dark-bg, 5%);
+$sidebar-dark-menu-active-color: $white;
+$sidebar-dark-menu-hover-bg: $sidebar-dark-menu-active-bg;
+$sidebar-dark-menu-hover-color: $sidebar-dark-menu-color;
+$sidebar-dark-submenu-color: $sidebar-dark-menu-color;
+$sidebar-dark-submenu-hover-bg: initial;
+$sidebar-dark-submenu-hover-color: #000;
+$sidebar-dark-category-color: #999999;
+$sidebar-dark-menu-icon-color: #9F9EA3;
+$sidebar-dark-profile-name-color: #404852;
+$sidebar-dark-profile-title-color: #8d9498;
+$sidebar-menu-font-size: 12px;
+$sidebar-icon-size: 16px;
+$sidebar-menu-padding: 16px 35px;
+$nav-link-height: 52px;
+$sidebar-submenu-padding: 0 0 0 2.5rem;
+$sidebar-submenu-font-size: $sidebar-menu-font-size;
+$sidebar-submenu-item-padding: .75rem 1rem;
+$sidebar-icon-font-size: .9375rem;
+$sidebar-arrow-font-size: .625rem;
+$sidebar-profile-bg: transparent;
+$sidebar-profile-padding: 0rem 1.625rem 2.25rem 1.188rem;
+$sidebar-mini-menu-padding: .8125rem 1rem .8125rem 1rem;
+$sidebar-icon-only-menu-padding: .5rem 1.625rem .5rem 1.188rem;
+$sidebar-icon-only-submenu-padding: 0 0 0 1.5rem;
+$sidebar-icon-only-submenu-width: 200px;
+$rtl-sidebar-submenu-padding: 0 3.45rem 0 0;
+///////// SIDEBAR ////////
+
+///////// NAVBAR ////////
+$navbar-height: 43px;
+$navbar-light-color: #202339;
+$navbar-font-size: $sidebar-menu-font-size;
+$navbar-icon-font-size: 1.25rem;
+///////// NAVBAR ////////
+
+$folder-color: #daac26;
+$file-color: #90caf9;

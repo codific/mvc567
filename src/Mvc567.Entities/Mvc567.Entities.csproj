@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+	<Company>Intellisoft567</Company>
+    <Product>mvc567</Product>
+    <PackageLicenseUrl>https://github.com/intellisoft567/mvc567/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/intellisoft567/mvc567</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/intellisoft567/mvc567</RepositoryUrl>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    <Description>mvc567 is a content management system library based on ASP.NET Core MVC developed to be used for SAAS  products.</Description>
+    <Authors>Georgi Karagogov</Authors>
+    <Copyright>Georgi Karagogov</Copyright>
+    <PackageTags>MVC, .Net Core, CMS, Asp.Net Core, Asp.Net</PackageTags>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="8.1.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.2.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Mvc567.DataAccess\Mvc567.DataAccess.csproj" />
+  </ItemGroup>
+
+</Project>

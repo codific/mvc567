@@ -1,0 +1,15 @@
+/* Layouts */
+
+@import "../../../node_modules/bootstrap/scss/functions";
+@import "../../../node_modules/bootstrap/scss/variables";
+@import "../shared/variables";
+@import "./variables";
+@import "../shared/mixins/misc";
+@import "./navbar";
+@import "./sidebar";
+@import "./footer";
+@import "./layouts";
+@import "./misc";
+
+@import "./components/modals";
+@import "./components/full-calendar";

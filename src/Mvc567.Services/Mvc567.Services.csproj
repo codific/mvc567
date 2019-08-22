@@ -1,0 +1,37 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+	<Company>Intellisoft567</Company>
+    <Product>mvc567</Product>
+    <PackageLicenseUrl>https://github.com/intellisoft567/mvc567/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/intellisoft567/mvc567</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/intellisoft567/mvc567</RepositoryUrl>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    <Description>mvc567 is a content management system library based on ASP.NET Core MVC developed to be used for SAAS  products.</Description>
+    <Authors>Georgi Karagogov</Authors>
+    <Copyright>Georgi Karagogov</Copyright>
+    <PackageTags>MVC, .Net Core, CMS, Asp.Net Core, Asp.Net</PackageTags>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Exports\libwkhtmltox.dll" />
+    <None Remove="Exports\libwkhtmltox.dylib" />
+    <None Remove="Exports\libwkhtmltox.so" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="8.1.1" />
+    <PackageReference Include="DinkToPdf" Version="1.0.8" />
+    <PackageReference Include="Magick.NET-Q8-AnyCPU" Version="7.14.0.1" />
+    <PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="2.2.0" />
+    <PackageReference Include="NPOI" Version="2.4.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Mvc567.Common\Mvc567.Common.csproj" />
+    <ProjectReference Include="..\Mvc567.DataAccess\Mvc567.DataAccess.csproj" />
+    <ProjectReference Include="..\Mvc567.Entities\Mvc567.Entities.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,81 @@
+@*
+This file is part of the mvc567 distribution (https://github.com/intellisoft567/mvc567).
+Copyright (C) 2019 Georgi Karagogov
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
+*@
+
+<nav class="navbar default-layout col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
+    <div class="text-center navbar-brand-wrapper d-flex align-items-top justify-content-center">
+        <a class="cms-logo" title="Mvc567" href="https://Mvc567.com" target="_blank"><img src="/resources/images/logo_svg.svg"/></a>
+        <a class="cms-text" title="@configuration["ProjectMetaInformation:Name"]" href="@Url.Action("Index", "Home", new { Area = string.Empty })"><i class="menu-icon mdi mdi-home"></i> @configuration["ProjectMetaInformation:Name"]</a>
+    </div>
+    <div class="navbar-menu-wrapper d-flex align-items-center">
+        <button class="navbar-toggler navbar-toggler align-self-center" type="button" data-toggle="minimize">
+            <span class="mdi mdi-menu"></span>
+        </button>
+        <ul class="addon-navbar navbar-nav navbar-nav-left header-links d-none d-md-flex">
+            @{
+                if (ViewData.ContainsKey("NavigationActions") && ViewData["NavigationActions"] != null)
+                {
+                    var navigationActions = (List<NavigationActionViewModel>)ViewData["NavigationActions"];
+                    foreach (var navigationAction in navigationActions)
+                    {
+                        string targetAttribute = navigationAction.SeparatePage ? "_blank" : "_parent";
+                        <li class="nav-item p-1">
+                            @if (navigationAction.Method == System.Net.Http.HttpMethod.Get)
+                            {
+                                <a href="@navigationAction.ActionUrl" target="@targetAttribute" class="nav-link btn btn-secondary h-auto">
+                                    <span class="mdi @navigationAction.Icon mr-1"></span> @navigationAction.Name
+                                </a>
+                            }
+                            else if (navigationAction.Method == System.Net.Http.HttpMethod.Post)
+                            {
+                            <form method="@navigationAction.Method" target="@targetAttribute" action="@navigationAction.ActionUrl" onsubmit="@(navigationAction.HasConfirmation ? $"showConfirmationMessage(event, '{navigationAction.ConfirmationTitle}', '{navigationAction.ConfirmationMessage}')" : string.Empty)">
+                                @Html.AntiForgeryToken()
+                                @if (navigationAction.Parameters != null && navigationAction.Parameters.Count > 0)
+                                {
+                                    foreach (var navigationActionParameter in navigationAction.Parameters)
+                                    {
+                                        <input type="hidden" name="@navigationActionParameter.Key" value="@navigationActionParameter.Value"/>
+                                    }
+                                }
+                                <button type="submit" class="nav-link btn btn-secondary h-auto"><span class="mdi @navigationAction.Icon mr-1"></span> @navigationAction.Name</button>
+                            </form>
+                            }
+                        </li>
+                    }
+                }
+            }
+        </ul>
+        <ul class="navbar-nav navbar-nav-right">
+            <li class="nav-item dropdown d-none d-xl-inline-block">
+                <a class="nav-link dropdown-toggle" id="UserDropdown" href="#" data-toggle="dropdown" aria-expanded="false">
+                    <span class="mdi mdi-account"></span>
+                    <span class="profile-text m-0"><user-full-name /> </span>
+                </a>
+                <div class="dropdown-menu dropdown-menu-right navbar-dropdown py-2" aria-labelledby="UserDropdown">
+                    <a title="Two Factor Authentication" href="@Url.Action("TwoFactorAuthentication", "AdminManage", new { Area = "Admin"})" class="dropdown-item">Two Factor Authentication</a>
+                    <a title="Change Password" href="@Url.Action("ChangePassword", "AdminManage", new { Area = "Admin"})" class="dropdown-item">Change Password</a>
+                    <form class="m-0 p-0" asp-action="Logout" asp-controller="AdminAccount">
+                        <input type="submit" class="dropdown-item text-left bg-transparent shadow-none border-0 w-100" value="Sign Out" />
+                    </form>
+                </div>
+            </li>
+        </ul>
+        <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button" data-toggle="offcanvas">
+            <span class="icon-menu"></span>
+        </button>
+    </div>
+</nav>

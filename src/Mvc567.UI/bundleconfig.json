@@ -1,0 +1,20 @@
+﻿[
+  {
+    "outputFileName": "./Views/Components/_GeneratedStyle.cshtml",
+    "inputFiles": [
+      "./Styles/utilities/style-start.html",
+      "./Styles/css/style.vendors.min.css",
+      "./Styles/css/style.min.css",
+      "./Styles/utilities/style-end.html"
+    ]
+  },
+  {
+    "outputFileName": "./Views/Components/_GeneratedScripts.cshtml",
+    "inputFiles": [
+      "./Scripts/utilities/script-start.html",
+      "./Scripts/js/scripts.vendors.min.js",
+      "./Scripts/js/scripts.min.js",
+      "./Scripts/utilities/script-end.html"
+    ]
+  }
+]
