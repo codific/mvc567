@@ -12,6 +12,8 @@
     <Authors>Georgi Karagogov</Authors>
     <Copyright>Georgi Karagogov</Copyright>
     <PackageTags>MVC, .Net Core, CMS, Asp.Net Core, Asp.Net</PackageTags>
+    <PackageIconUrl>https://cdn.gsk567.com/external/mvc567/assets/images/icon128.png</PackageIconUrl>
+    <Version>1.0.1</Version>
   </PropertyGroup>
   
   <ItemGroup>
