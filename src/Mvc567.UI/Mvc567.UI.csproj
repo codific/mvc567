@@ -12,9 +12,9 @@
     <Copyright>Georgi Karagogov</Copyright>
     <PackageTags>MVC, .Net Core, CMS, Asp.Net Core, Asp.Net</PackageTags>
     <PackageIconUrl>https://cdn.gsk567.com/external/mvc567/assets/images/icon128.png</PackageIconUrl>
-    <AssemblyVersion>1.0.1.0</AssemblyVersion>
-    <FileVersion>1.0.1.0</FileVersion>
-    <Version>1.0.1</Version>
+    <AssemblyVersion>1.0.3.0</AssemblyVersion>
+    <FileVersion>1.0.3.0</FileVersion>
+    <Version>1.0.3</Version>
   </PropertyGroup>
   <ItemGroup>
     <None Remove="Styles\css\vendors\vendor.bundle.addons.css" />

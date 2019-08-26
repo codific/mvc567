@@ -43,23 +43,28 @@ namespace Mvc567.Services.Infrastructure
 
         public async Task<IEnumerable<Claim>> GetUserClaimsAsync(User user)
         {
-            var claims = await this.userManager.GetClaimsAsync(user);
-            var userRoles = await this.userManager.GetRolesAsync(user);
-            foreach (var roleName in userRoles)
+            if (user != null)
             {
-                Role currentRole = await this.roleManager.FindByNameAsync(roleName);
-                var roleClaims = await this.roleManager.GetClaimsAsync(currentRole);
-                claims.Add(new Claim(ClaimTypes.Role, roleName));
-                foreach (var roleClaim in roleClaims)
+                var claims = await this.userManager.GetClaimsAsync(user);
+                var userRoles = await this.userManager.GetRolesAsync(user);
+                foreach (var roleName in userRoles)
                 {
-                    claims.Add(roleClaim);
+                    Role currentRole = await this.roleManager.FindByNameAsync(roleName);
+                    var roleClaims = await this.roleManager.GetClaimsAsync(currentRole);
+                    claims.Add(new Claim(ClaimTypes.Role, roleName));
+                    foreach (var roleClaim in roleClaims)
+                    {
+                        claims.Add(roleClaim);
+                    }
                 }
-            }
-            claims.Add(new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()));
-            claims.Add(new Claim(ClaimTypes.Name, user.Email));
-            claims.Add(new Claim(ClaimTypes.Email, user.Email));
+                claims.Add(new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()));
+                claims.Add(new Claim(ClaimTypes.Name, user.Email));
+                claims.Add(new Claim(ClaimTypes.Email, user.Email));
 
-            return claims.ToList();
+                return claims.ToList();
+            }
+
+            return null;
         }
 
         public async Task<SignInResult> SignInAsync(User user, string password, HttpContext httpContext, string authenticationScheme, AuthenticationProperties authenticationProperties)
@@ -70,6 +75,10 @@ namespace Mvc567.Services.Infrastructure
             }
 
             var claims = await GetUserClaimsAsync(user);
+            if (claims == null)
+            {
+                return SignInResult.Failed;
+            }
 
             var claimsIdentity = new ClaimsIdentity(claims, authenticationScheme);
 
@@ -115,6 +124,10 @@ namespace Mvc567.Services.Infrastructure
         {
             bool userHasAdministrationAccessRights = false;
             var userClaims = await GetUserClaimsAsync(user);
+            if (userClaims == null)
+            {
+                return false;
+            }
             if (userClaims.Where(x => x.Type == CustomClaimTypes.Permission && x.Value == ApplicationPermissions.AccessAdministration).Any())
             {
                 userHasAdministrationAccessRights = true;
@@ -156,6 +169,10 @@ namespace Mvc567.Services.Infrastructure
             }
 
             var claims = await GetUserClaimsAsync(user);
+            if (claims == null)
+            {
+                return SignInResult.Failed;
+            }
 
             var claimsIdentity = new ClaimsIdentity(claims, authenticationScheme);
 

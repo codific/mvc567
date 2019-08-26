@@ -56,13 +56,13 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
                                             case TableCellType.Time:
                                             case TableCellType.DateTime:
                                             case TableCellType.Number:
-                                                <span>@cell.Content</span>
+                                                <span>@cell?.Content</span>
                                                 break;
                                             case TableCellType.File:
-                                                <root-file-link id="@cell.Content"></root-file-link>
+                                                <root-file-link id="@cell?.Content"></root-file-link>
                                                 break;
                                             case TableCellType.Flag:
-                                                if (cell.Content.ToLower() == "true")
+                                                if (cell?.Content?.ToLower() == "true")
                                                 {
                                                     <div class="badge badge-success badge-pill p-1 font-size-12"><i class="mdi mdi-check"></i></div>
                                                 }
@@ -72,7 +72,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
                                                 }
                                                 break;
                                             case TableCellType.TextArea:
-                                                <button type="button" class="btn p-1" data-placement="right" data-toggle="popover" data-content="@cell.Content">See Content</button>
+                                                <button type="button" class="btn p-1" data-placement="right" data-toggle="popover" data-content="@cell?.Content">See Content</button>
                                                 break;
                                             default:
                                                 break;
@@ -106,7 +106,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
             </div>
             <nav class="d-flex mt-4">
                 <ul class="pagination m-auto">
-                    @if (Model.Pagination.PreviousPage != null)
+                    @if (Model.Pagination.PreviousPage != null && Model.Pagination.PreviousPagesCount > 0)
                     {
                         <li class="page-item mx-0">
                             <a class="page-link btn btn-secondary p-2" href="@Url.Action(Model.Action, Model.Controller, new { Area = Model.Area, p = Model.Pagination.PreviousPage, q = ViewData["searchQuery"] })">⯇</a>
@@ -133,7 +133,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
                             </li>
                         }
                     }
-                    @if (Model.Pagination.NextPage != null)
+                    @if (Model.Pagination.NextPage != null && Model.Pagination.NextPagesCount > 0)
                     {
                         <li class="page-item mx-0">
                             <a class="page-link btn btn-secondary p-2" href="@Url.Action(Model.Action, Model.Controller, new { Area = Model.Area, p = Model.Pagination.NextPage, q = ViewData["searchQuery"] })">⯈</a>

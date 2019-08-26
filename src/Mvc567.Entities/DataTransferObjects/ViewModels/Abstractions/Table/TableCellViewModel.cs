@@ -53,7 +53,7 @@ namespace Mvc567.Entities.ViewModels.Abstractions.Table
                 switch (Type)
                 {
                     case TableCellType.Text:
-                        resultContent = this.content.ToString();
+                        resultContent = this.content?.ToString();
                         break;
                     case TableCellType.Date:
                         resultContent = !string.IsNullOrEmpty(this.content?.ToString()) ? ((DateTime)this.content).ToString(Constants.DateFormat) : string.Empty;
