@@ -66,14 +66,7 @@ namespace Mvc567
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<TDatabaseContext>(options =>
-            {
-                options.UseSqlServer(Configuration.GetConnectionString("DatabaseConnection"), b => b.MigrationsAssembly(this.applicationAssembly));
-            });
-
-            services.AddIdentity<User, Role>()
-                .AddEntityFrameworkStores<TDatabaseContext>()
-                .AddDefaultTokenProviders();
+            RegisterDbContext(ref services);
 
             services.AddHealthChecks();
 
@@ -92,6 +85,7 @@ namespace Mvc567
                 configuration.AddMaps("Mvc567.Entities");
                 configuration.AllowNullCollections = true;
                 configuration.AllowNullDestinationValues = true;
+                configuration.AddMaps(this.applicationAssembly);
                 RegisterMappingProfiles(ref configuration);
             })));
 
@@ -161,6 +155,18 @@ namespace Mvc567
                 })
                 .AddXmlSerializerFormatters();
             services.AddHttpContextAccessor();
+        }
+
+        protected virtual void RegisterDbContext(ref IServiceCollection services)
+        {
+            services.AddDbContext<TDatabaseContext>(options =>
+            {
+                options.UseSqlServer(Configuration.GetConnectionString("DatabaseConnection"), b => b.MigrationsAssembly(this.applicationAssembly));
+            });
+
+            services.AddIdentity<User, Role>()
+                .AddEntityFrameworkStores<TDatabaseContext>()
+                .AddDefaultTokenProviders();
         }
 
         protected virtual void RegisterServices(ref IServiceCollection services)
