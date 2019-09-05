@@ -45,6 +45,7 @@ namespace Mvc567.Controllers.MVC.Admin
         private readonly RoleManager<Role> roleManager;
         private readonly ISignInService signInService;
         private readonly IHostingEnvironment hostingEnvironment;
+        private readonly ISingletonSecurityService securityService;
 
         public AdminAccountController(
             UserManager<User> userManager,
@@ -55,7 +56,8 @@ namespace Mvc567.Controllers.MVC.Admin
             IConfiguration configuration, 
             IEmailService emailService,
             IHostingEnvironment hostingEnvironment,
-            ILanguageService languageService)
+            ILanguageService languageService,
+            ISingletonSecurityService securityService)
             : base(configuration, emailService, languageService)
         {
             this.userManager = userManager;
@@ -64,6 +66,7 @@ namespace Mvc567.Controllers.MVC.Admin
             this.identityService = identityService;
             this.signInService = signInService;
             this.hostingEnvironment = hostingEnvironment;
+            this.securityService = securityService;
         }
 
         [Route("/admin/login")]
@@ -197,16 +200,22 @@ namespace Mvc567.Controllers.MVC.Admin
 
         [Route("/admin/auth/init")]
         [HttpGet]
-        public IActionResult Auth()
+        public async Task<IActionResult> Auth()
         {
+            int delaySeconds = 5 * this.securityService.AdminLoginFailedAttempts;
+            await Task.Delay(delaySeconds * 1000);
+
             return View();
         }
 
         [HttpPost]
         [Route("/admin/auth/init")]
         [ValidateAntiForgeryToken]
-        public IActionResult Auth([FromForm(Name = "AuthCode")]string code)
+        public async Task<IActionResult> Auth([FromForm(Name = "AuthCode")]string code)
         {
+            int delaySeconds = 5 * this.securityService.AdminLoginFailedAttempts;
+            await Task.Delay(delaySeconds * 1000);
+
             if (!string.IsNullOrEmpty(code) && code == Authenticator.GeneratePin(this.configuration["AdminLoginAuthenticator:SecretKey"]))
             {
                 string[] cookieValues = CookiesFunctions.GenerateAdminLoginCookieValues(
@@ -220,7 +229,8 @@ namespace Mvc567.Controllers.MVC.Admin
 
                 return RedirectToAction("Login", "AdminAccount", new { Area = "Admin" });
             }
-            Thread.Sleep(3000);
+
+            this.securityService.IncrementAdminLoginFailedAttempts();
 
             return NotFound();
         }

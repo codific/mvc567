@@ -34,7 +34,7 @@ namespace Mvc567.Common.Attributes
                 new string[] { context.HttpContext.Request.Headers["User-Agent"], DateTime.Now.Year.ToString() },
                 configuration["AdminLoginAuthenticator:SecretIndexes"]);
 
-            if (!hostingEnvornment.IsDevelopment())
+            if (!hostingEnvornment.IsDevelopment() || Convert.ToBoolean(configuration["AdminLoginAuthenticator:ShowForTestPurposes"]))
             {
                 if (!(context.HttpContext.Request.Cookies.ContainsKey(cookieValues[0]) || context.HttpContext.Request.Cookies[cookieValues[0]] == cookieValues[1]))
                 {

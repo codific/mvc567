@@ -34,6 +34,7 @@ namespace Mvc567.Services.Extensions
             services.AddScoped<IStaticPageService, StaticPageService>();
             services.AddScoped<ILanguageService, LanguageService>();
             services.AddScoped<ILogService, LogService>();
+            services.AddSingleton<ISingletonSecurityService, SingletonSecurityService>();
 
             return services;
         }

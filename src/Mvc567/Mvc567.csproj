@@ -7,12 +7,12 @@
     <PackageProjectUrl>https://github.com/intellisoft567/mvc567</PackageProjectUrl>
     <RepositoryUrl>https://github.com/intellisoft567/mvc567</RepositoryUrl>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-    <Description>mvc567 is a content management system library based on ASP.NET Core MVC developed to be used for SAAS  products.</Description>
+    <Description>mvc567 is a high performance, open-source ASP.NET Core-based web application platform. It provides CMS functionality to its users.</Description>
     <Authors>Georgi Karagogov</Authors>
     <Copyright>Georgi Karagogov</Copyright>
-    <PackageTags>MVC, .Net Core, CMS, Asp.Net Core, Asp.Net</PackageTags>
+    <PackageTags>MVC, .NET Core, CMS, ASP.NET Core, Vue.js</PackageTags>
     <PackageIconUrl>https://cdn.gsk567.com/external/mvc567/assets/images/icon128.png</PackageIconUrl>
-    <Version>1.0.4</Version>
+    <Version>1.0.5</Version>
   </PropertyGroup>
   <ItemGroup>
     <None Remove="Resources\icon200.png" />
