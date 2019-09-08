@@ -18,4 +18,4 @@ mvc567 init -n {projectName}
 You must replace the placeholder 'projectName' with the name of your project.
 The execution of the command must create a folder with the name of you set and the whole project structure.
 
-##### For more details please check the [official documentation](https://mvc567.com/documentation/getting-started/development-environment) of the mvc567.
+##### For more details please check the [official documentation](https://mvc567.com/documentation/getting-started/development-environment) of mvc567.
