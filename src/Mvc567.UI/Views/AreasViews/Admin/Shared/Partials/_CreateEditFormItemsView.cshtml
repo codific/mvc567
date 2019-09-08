@@ -61,7 +61,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
             <enum-radio model-name="@inputItem.Name" enum="inputItem.EnumType" selected-value="@((int)inputItem.Value)"></enum-radio>
             break;
         case CreateEntityInputType.DatabaseSelect:
-            <database-select name="@inputItem.Name" entity-type="inputItem.DatabaseEntityType" visible-property="@inputItem.DatabaseEntityVisibleProperty" selected-value="@inputItem.GuidValue" class="form-control"></database-select>
+            <database-select name="@inputItem.Name" entity-type="inputItem.DatabaseEntityType" visible-property="@inputItem.DatabaseEntityVisibleProperty" selected-value="@inputItem.GuidValue" has-empty="@inputItem.IsNullable" class="form-control"></database-select>
             break;
         case CreateEntityInputType.DatabaseCheckbox:
             <database-checkbox model-name="@inputItem.Name" entity-type="inputItem.DatabaseEntityType" visible-property="@inputItem.DatabaseEntityVisibleProperty" selected-values="@inputItem.GuidArrayValue"></database-checkbox>

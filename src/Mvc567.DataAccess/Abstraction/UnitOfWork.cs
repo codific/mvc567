@@ -63,7 +63,9 @@ namespace Mvc567.DataAccess.Abstraction
             {
                 return typeof(TContext)
                            .GetProperties()
-                           .Where(x => x.PropertyType.AssemblyQualifiedName.Contains("Microsoft.EntityFrameworkCore.DbSet"))
+                           .Where(x => 
+                               x.PropertyType.AssemblyQualifiedName.Contains("Microsoft.EntityFrameworkCore.DbSet") || 
+                               x.PropertyType.AssemblyQualifiedName.Contains("System.Collections.Generic.List"))
                            .ToDictionary(x => x.Name, x => x.PropertyType.GetTypeInfo().GenericTypeArguments[0]);
             }
         }

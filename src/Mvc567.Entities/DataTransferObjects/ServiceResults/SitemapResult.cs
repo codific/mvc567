@@ -16,11 +16,13 @@
 
 using System;
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 using System.Xml.Serialization;
 
 namespace Mvc567.Entities.DataTransferObjects.ServiceResults
 {
-    [XmlType(TypeName = "urlset")]
+    [XmlType(TypeName = "urlset", Namespace = "http://www.sitemaps.org/schemas/sitemap/0.9")]
+    [XmlRoot(Namespace = "http://www.sitemaps.org/schemas/sitemap/0.9", IsNullable = false)]
     [Serializable]
     public class SitemapResult
     {

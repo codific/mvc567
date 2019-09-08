@@ -72,5 +72,20 @@ namespace Mvc567.Entities.ViewModels.Abstractions
         public Type DatabaseEntityType { get; set; }
 
         public string DatabaseEntityVisibleProperty { get; set; }
+
+        public bool IsNullable
+        {
+            get
+            {
+                if (Value == null)
+                {
+                    return true;
+                }
+                else
+                {
+                    return Nullable.GetUnderlyingType(Value.GetType()) != null;
+                }
+            }
+        }
     }
 }
