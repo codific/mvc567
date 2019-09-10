@@ -76,8 +76,8 @@ This section is used to contains all connections to different databases used fro
 #### Admin Login Authenticator
 
 These configuration properties are used for the third factor of admin authentication. The properties are as follows: 
-* **SecretKey** - Key which is base 32 encoded string - e.g. "DJT752SP3M37RHD2"
-* **CookieFormat** - String contains 6 placeholders in C# style - e.g. "ab{0}cd{1}ef{2}gh{3}ij{4}kl{5}mn"
+* **SecretKey** - Key which is base 32 encoded string - e.g. "JZHDS3CPKBYHQODRF42ESNSEM5IUQ4BX"
+* **CookieFormat** - String contains 2 placeholders in C# style - e.g. "Hdg3fIA9GdNeRa4W{0}g77A_zpHvuEUApBe9bMr1qObWAP4zddLhyGx_MfjO8{1}FwkGnq"
 * **SecretIndexes** - String contains 6 indexes from 0 to 31, separated by comma - e.g. "3,4,16,17,29,30"
 * **ShowForTestPurposes** - Flag that indicates whether the authenticator to be showed for test purposes or not
 For optimal configuration you can use the [Admin Authenticator Generator](https://mvc567.com/utilities/admin-authenticator-generator) from the mvc567 website.
