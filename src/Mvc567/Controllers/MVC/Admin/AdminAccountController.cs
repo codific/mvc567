@@ -168,7 +168,7 @@ namespace Mvc567.Controllers.MVC.Admin
 
             var authenticatorCode = model.TwoFactorCode.Replace(" ", string.Empty).Replace("-", string.Empty);
 
-            var result = await this.signInService.SignInWith2faAsync(user, authenticatorCode, model.RememberBrowser, HttpContext, CookieAuthenticationDefaults.AuthenticationScheme, AuthenticationProperties);
+            var result = await this.signInService.SignInWith2faAsync(user, authenticatorCode, false, HttpContext, CookieAuthenticationDefaults.AuthenticationScheme, AuthenticationProperties);
 
             if (result.Succeeded)
             {

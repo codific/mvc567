@@ -1,9 +1,8 @@
-<Project Sdk="Microsoft.NET.Sdk.Razor">
+﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-	<Company>Intellisoft567</Company>
+	  <Company>Intellisoft567</Company>
     <Product>mvc567</Product>
-    <PackageLicenseUrl>https://github.com/intellisoft567/mvc567/blob/master/LICENSE</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/intellisoft567/mvc567</PackageProjectUrl>
     <RepositoryUrl>https://github.com/intellisoft567/mvc567</RepositoryUrl>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
@@ -12,13 +11,20 @@
     <Copyright>Georgi Karagogov</Copyright>
     <PackageTags>MVC, .NET Core, CMS, ASP.NET Core, Vue.js</PackageTags>
     <PackageIconUrl>https://cdn.gsk567.com/external/mvc567/assets/images/icon128.png</PackageIconUrl>
-    <AssemblyVersion>1.0.5.0</AssemblyVersion>
-    <FileVersion>1.0.5.0</FileVersion>
-    <Version>1.0.5</Version>
+    <Version>1.0.6</Version>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
   </PropertyGroup>
   <ItemGroup>
     <None Remove="Styles\css\vendors\vendor.bundle.addons.css" />
     <None Remove="Styles\css\vendors\vendor.bundle.base.css" />
+    <None Include="..\..\LICENSE">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+    <None Include="..\..\LICENSE">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Styles\css\vendors\vendor.bundle.addons.css">

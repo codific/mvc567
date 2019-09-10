@@ -14,11 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Mvc567.Entities.ViewModels.AdminViewModels
 {
@@ -28,7 +24,5 @@ namespace Mvc567.Entities.ViewModels.AdminViewModels
         [StringLength(7, ErrorMessage = "The authentication code must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
         [DataType(DataType.Text)]
         public string TwoFactorCode { get; set; }
-
-        public bool RememberBrowser { get; set; }
     }
 }
