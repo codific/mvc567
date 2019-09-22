@@ -32,7 +32,7 @@ To set up the properties of the application you can use the **appsettings.json**
   },
   "SmtpConfig": {
     "Host": "",
-    "Port": "",
+    "Port": 8888,
     "UseSSL": false,
     "Name": "",
     "Username": "",
