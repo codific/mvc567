@@ -15,8 +15,12 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Mvc567.DataAccess.Identity;
 using Mvc567.Entities.DataTransferObjects.Entities;
 using Mvc567.Services.Infrastructure;
 using Mvc567.Services.Validators;
@@ -25,6 +29,7 @@ using Mvc567.Services.Validators.Results;
 namespace Mvc567.Controllers.API
 {
     [Route("api/upload")]
+    [Authorize(Policy = Policies.AuthorizedUploadPolicy)]
     public class UploadController : Controller
     {
         private readonly IValidationProvider validationProvider;

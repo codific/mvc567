@@ -176,7 +176,11 @@ namespace Mvc567
 
         protected virtual void AddAuthorizationOptions(ref AuthorizationOptions options)
         {
-
+            options.AddPolicy(Policies.AuthorizedUploadPolicy, policy =>
+            {
+                policy.RequireAuthenticatedUser();
+                policy.AddAuthenticationSchemes(CookieAuthenticationDefaults.AuthenticationScheme, JwtBearerDefaults.AuthenticationScheme);
+            });
         }
 
         protected virtual void ConfigureMiddlewareBeforeAuthentication(ref IApplicationBuilder app)
