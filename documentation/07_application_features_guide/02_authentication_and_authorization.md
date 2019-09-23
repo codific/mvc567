@@ -17,6 +17,11 @@ To get these 6 numbers you must set up the authenticator by using the hash from 
 
 Admin login is a form where you must enter the admin email and password. This form is protected by Google ReCaptcha and CSRF. In case you fill wrong password 5 times your account will be locked.
 
+There are generated two profiles - one for admin and one for user. To login with these profiles use following credentials:
+
+* **Admin** - ```admin@example.com``` with password ```Admin123!```
+* **User** - ```user@example.com``` with password ```User123!```
+
 ##### Admin 2 Factor Authentication
 
 In case when you enter correct email and password you must enter your personal authenticator code. This form is protected by Google ReCaptcha and CSRF.
