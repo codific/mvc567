@@ -225,6 +225,9 @@ namespace Mvc567.Controllers.MVC.Admin
 
                 CookieOptions options = new CookieOptions();
                 options.Expires = DateTime.Now.AddHours(2);
+                options.HttpOnly = true;
+                options.IsEssential = true;
+                options.Secure = true;
                 Response.Cookies.Append(cookieValues[0], cookieValues[1], options);
 
                 return RedirectToAction("Login", "AdminAccount", new { Area = "Admin" });
