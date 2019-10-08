@@ -15,14 +15,18 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 using Mvc567.DataAccess.Abstraction.Entities;
+using Mvc567.Entities.DataTransferObjects.Api;
 using Mvc567.Entities.DataTransferObjects.ServiceResults;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Mvc567.Services.Infrastructure
 {
     public interface IEntityManager
     {
+        Task<IEnumerable<TEntityDto>> GetAllEntitiesAsync<TEntity, TEntityDto>() where TEntity : class, IEntityBase, new();
+
         Task<TEntityDto> GetEntityAsync<TEntity, TEntityDto>(Guid id) where TEntity : class, IEntityBase, new();
 
         Task<PaginatedEntitiesResult<TEntityDto>> GetAllEntitiesPaginatedAsync<TEntity, TEntityDto>(int page, string searchQuery = null) where TEntity : class, IEntityBase, new();
@@ -34,5 +38,7 @@ namespace Mvc567.Services.Infrastructure
         Task<bool> DeleteEntityAsync<TEntity>(Guid id) where TEntity : class, IEntityBase, new();
 
         Task MoveTempFileAsync<TEntity>(TEntity entity);
+
+        Task<PaginatedEntitiesResult<TEntityDto>> FilterEntitiesAsync<TEntity, TEntityDto>(FilterQueryRequest filterQuery) where TEntity : class, IEntityBase, new();
     }
 }

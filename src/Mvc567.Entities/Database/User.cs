@@ -38,5 +38,9 @@ namespace Mvc567.Entities.Database
         public DateTime RegistrationDate { get; set; }
 
         public bool IsLockedOut => this.LockoutEnabled && this.LockoutEnd >= DateTimeOffset.UtcNow;
+
+        public string RefreshToken { get; set; }
+
+        public DateTime? RefreshTokenExpiration { get; set; }
     }
 }

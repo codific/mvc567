@@ -114,7 +114,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
                     }
                     @if (Model.Pagination.PreviousPagesCount > 0)
                     {
-                        for (int i = 1; i <= Model.Pagination.PreviousPagesCount; i++)
+                        for (int i = Model.Pagination.PreviousPagesCount; i >= 1; i--)
                         {
                             <li class="page-item ml-1 mr-0">
                                 <a class="page-link btn btn-secondary p-2" href="@Url.Action(Model.Action, Model.Controller, new { Area = Model.Area, p = Model.Pagination.CurrentPage - i, q = ViewData["searchQuery"] })">@(Model.Pagination.CurrentPage - i)</a>

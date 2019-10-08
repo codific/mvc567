@@ -15,7 +15,6 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 using System;
-using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
@@ -43,7 +42,7 @@ namespace Mvc567.Controllers.MVC.Admin
         private readonly SignInManager<User> signInManager;
         private readonly IIdentityService identityService;
         private readonly RoleManager<Role> roleManager;
-        private readonly ISignInService signInService;
+        private readonly Services.Infrastructure.IAuthenticationService authenticationService;
         private readonly IHostingEnvironment hostingEnvironment;
         private readonly ISingletonSecurityService securityService;
 
@@ -52,7 +51,7 @@ namespace Mvc567.Controllers.MVC.Admin
             SignInManager<User> signInManager,
             RoleManager<Role> roleManager,
             IIdentityService identityService,
-            ISignInService signInService,
+            Services.Infrastructure.IAuthenticationService authenticationService,
             IConfiguration configuration, 
             IEmailService emailService,
             IHostingEnvironment hostingEnvironment,
@@ -64,7 +63,7 @@ namespace Mvc567.Controllers.MVC.Admin
             this.signInManager = signInManager;
             this.roleManager = roleManager;
             this.identityService = identityService;
-            this.signInService = signInService;
+            this.authenticationService = authenticationService;
             this.hostingEnvironment = hostingEnvironment;
             this.securityService = securityService;
         }
@@ -99,9 +98,9 @@ namespace Mvc567.Controllers.MVC.Admin
             {
                 var user = await this.userManager.FindByEmailAsync(model.Email);
 
-                if (await this.signInService.UserHasAdministrationAccessRightsAsync(user))
+                if (await this.authenticationService.UserHasAdministrationAccessRightsAsync(user))
                 {
-                    var result = await this.signInService.SignInAsync(user, model.Password, this.HttpContext, CookieAuthenticationDefaults.AuthenticationScheme, AuthenticationProperties);
+                    var result = await this.authenticationService.SignInAsync(user, model.Password, this.HttpContext, CookieAuthenticationDefaults.AuthenticationScheme, AuthenticationProperties);
 
                     if (result.RequiresTwoFactor)
                     {
@@ -133,8 +132,8 @@ namespace Mvc567.Controllers.MVC.Admin
             {
                 return AdminDashboardActionResult;
             }
-            var user = await this.signInService.GetTwoFactorAuthenticationUserAsync(HttpContext);
-            if (user == null || !(await this.signInService.UserHasAdministrationAccessRightsAsync(user)))
+            var user = await this.authenticationService.GetTwoFactorAuthenticationUserAsync(HttpContext);
+            if (user == null || !(await this.authenticationService.UserHasAdministrationAccessRightsAsync(user)))
             {
                 return NotFound();
             }
@@ -160,15 +159,15 @@ namespace Mvc567.Controllers.MVC.Admin
                 return View(model);
             }
 
-            var user = await this.signInService.GetTwoFactorAuthenticationUserAsync(HttpContext);
-            if (user == null || !(await this.signInService.UserHasAdministrationAccessRightsAsync(user)))
+            var user = await this.authenticationService.GetTwoFactorAuthenticationUserAsync(HttpContext);
+            if (user == null || !(await this.authenticationService.UserHasAdministrationAccessRightsAsync(user)))
             {
                 return NotFound();
             }
 
             var authenticatorCode = model.TwoFactorCode.Replace(" ", string.Empty).Replace("-", string.Empty);
 
-            var result = await this.signInService.SignInWith2faAsync(user, authenticatorCode, false, HttpContext, CookieAuthenticationDefaults.AuthenticationScheme, AuthenticationProperties);
+            var result = await this.authenticationService.SignInWith2faAsync(user, authenticatorCode, false, HttpContext, CookieAuthenticationDefaults.AuthenticationScheme, AuthenticationProperties);
 
             if (result.Succeeded)
             {
@@ -245,7 +244,7 @@ namespace Mvc567.Controllers.MVC.Admin
         [ValidateAdminCookie]
         public async Task<IActionResult> Logout()
         {
-            await this.signInService.SignOutAsync(HttpContext);
+            await this.authenticationService.SignOutAsync(HttpContext);
 
             return RedirectToAction("Index", "Home");
         }

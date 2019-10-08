@@ -16,6 +16,9 @@
 
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
+using System;
+using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
 
 namespace Mvc567.Common.Extensions
 {
@@ -33,6 +36,16 @@ namespace Mvc567.Common.Extensions
             }
 
             return languageCode;
+        }
+
+        public static Guid? GetJwtUserId(this HttpContext httpContext)
+        {
+            if (httpContext.User.Identity.IsAuthenticated && httpContext.User.Claims.Where(x => x.Type == JwtRegisteredClaimNames.Jti).Any())
+            {
+                return Guid.Parse(httpContext.User.Claims.Where(x => x.Type == JwtRegisteredClaimNames.Jti).Select(x => x.Value).FirstOrDefault());
+            }
+
+            return null;
         }
     }
 }

@@ -17,28 +17,39 @@
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
+using Mvc567.Common.Utilities;
+using Mvc567.DataAccess.Abstraction;
 using Mvc567.DataAccess.Identity;
 using Mvc567.Entities.Database;
+using Mvc567.Entities.DataTransferObjects.ServiceResults;
 using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace Mvc567.Services.Infrastructure
 {
-    public class SignInService : ISignInService
+    public class AuthenticationService : IAuthenticationService
     {
         private readonly UserManager<User> userManager;
         private readonly RoleManager<Role> roleManager;
         private readonly SignInManager<User> signInManager;
         private const string TwoFactorAuthenticationTokenProvider = "Authenticator";
+        private readonly IConfiguration configuration;
+        private readonly IUnitOfWork uow;
 
-        public SignInService(UserManager<User> userManager, RoleManager<Role> roleManager, SignInManager<User> signInManager)
+        public AuthenticationService(UserManager<User> userManager, RoleManager<Role> roleManager, SignInManager<User> signInManager, IConfiguration configuration, IUnitOfWork uow)
         {
             this.userManager = userManager;
             this.roleManager = roleManager;
             this.signInManager = signInManager;
+            this.configuration = configuration;
+            this.uow = uow;
         }
 
         public async Task<IEnumerable<Claim>> GetUserClaimsAsync(User user)
@@ -205,6 +216,129 @@ namespace Mvc567.Services.Infrastructure
         public async Task SignOutAsync(HttpContext httpContext)
         {
             await httpContext.SignOutAsync();
+        }
+
+        public async Task<BearerAuthResponse> BuildTokenAsync(string email, string password)
+        {
+            try
+            {
+                var user = await this.userManager.FindByEmailAsync(email);
+                if (user.EmailConfirmed && !(await this.userManager.IsLockedOutAsync(user)) && await this.userManager.CheckPasswordAsync(user, password))
+                {
+                    var userClaims = await GetAllUserClaimsAsync(user);
+                    string jwt = BuildJwtToken(user, userClaims);
+                    string refreshToken = $"{Guid.NewGuid().ToString().Replace("-", "0")}{Guid.NewGuid().ToString().Replace("-", "1")}";
+                    user.RefreshToken = refreshToken;
+                    user.RefreshTokenExpiration = DateTime.Now.AddMonths(1);
+                    this.uow.GetStandardRepository().Update<User>(user);
+                    await this.uow.SaveChangesAsync();
+
+                    return BearerAuthResponse.SuccessResult(jwt, refreshToken);
+                }
+                
+                return BearerAuthResponse.FailedResult;
+            }
+            catch (Exception)
+            {
+                return BearerAuthResponse.FailedResult;
+            }
+        }
+
+        public async Task<BearerAuthResponse> RefreshTokenAsync(Guid? userId, string refreshToken)
+        {
+            try
+            {
+                User user = null;
+                if (userId.HasValue)
+                {
+                    user = await this.userManager.FindByIdAsync(userId.ToString());
+                }
+                else
+                {
+                    user = (await this.uow.GetStandardRepository().QueryAsync<User>(x => x.RefreshToken == refreshToken)).FirstOrDefault();
+                }
+
+                if (user != null && user.RefreshToken == refreshToken && user.RefreshTokenExpiration.HasValue && user.RefreshTokenExpiration > DateTime.Now)
+                {
+                    var userClaims = await GetAllUserClaimsAsync(user);
+                    string jwt = BuildJwtToken(user, userClaims);
+
+                    return BearerAuthResponse.SuccessResult(jwt, refreshToken);
+                }
+
+                return BearerAuthResponse.FailedResult;
+            }
+            catch (Exception)
+            {
+                return BearerAuthResponse.FailedResult;
+            }
+        }
+
+        private string BuildJwtToken(User user, List<Claim> claims)
+        {
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(this.configuration["Jwt:Key"]));
+            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
+            DateTime expirationDate;
+            expirationDate = DateTime.Now.AddMinutes(15);
+
+            var token = new JwtSecurityToken(this.configuration["Jwt:Issuer"],
+              this.configuration["Jwt:Issuer"],
+              claims,
+              expires: expirationDate,
+              signingCredentials: creds);
+
+            return new JwtSecurityTokenHandler().WriteToken(token);
+        }
+
+        private async Task<List<Claim>> GetAllUserClaimsAsync(User user)
+        {
+            var userClaims = await this.userManager.GetClaimsAsync(user);
+            userClaims.Add(new Claim(JwtRegisteredClaimNames.Jti, user.Id.ToString()));
+            userClaims.Add(new Claim(JwtRegisteredClaimNames.Sub, user.Email));
+            var rolesClaims = new List<Claim>();
+            var userRoles = await this.userManager.GetRolesAsync(user);
+            foreach (string role in userRoles)
+            {
+                
+                if (role != UserRoles.Admin)
+                {
+                    var currentRole = await this.roleManager.FindByNameAsync(role);
+                    var currentRoleClaims = await this.roleManager.GetClaimsAsync(currentRole);
+                    foreach (var currentRoleClaim in currentRoleClaims)
+                    {
+                        if (!userClaims.Where(x => x.Type == currentRoleClaim.Type && x.Value == currentRoleClaim.Value).Any())
+                        {
+                            userClaims.Add(currentRoleClaim);
+                        }
+                    }
+                }
+            }
+
+            return userClaims?.ToList();
+        }
+
+        public async Task<bool> ResetUserRefreshTokensAsync(Guid userId)
+        {
+            try
+            {
+                var user = await this.userManager.FindByIdAsync(userId.ToString());
+                if (user != null)
+                {
+                    user.RefreshToken = null;
+                    user.RefreshTokenExpiration = null;
+                    this.uow.GetStandardRepository().Update<User>(user);
+                    await this.uow.SaveChangesAsync();
+
+                    return true;
+                }
+
+                return false;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
         }
     }
 

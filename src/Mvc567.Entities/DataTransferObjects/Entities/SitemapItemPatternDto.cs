@@ -30,30 +30,40 @@ namespace Mvc567.Entities.DataTransferObjects.Entities
         [DetailsOrder(0)]
         public string Id { get; set; }
 
-        [TableCell(2, "Single Page", TableCellType.Flag)]
-        [DetailsOrder(2)]
+        [TableCell(3, "Single Page", TableCellType.Flag)]
+        [DetailsOrder(3)]
         [CreateEditEntityInput("Single Page", CreateEntityInputType.BoolRadio)]
         public bool SinglePage { get; set; }
 
-        [TableCell(1, "Pattern", TableCellType.Text)]
+        [TableCell(1, "Domain", TableCellType.Text)]
         [DetailsOrder(1)]
+        [CreateEditEntityInput("Domain", CreateEntityInputType.Text)]
+        public string Domain { get; set; }
+
+        [TableCell(2, "Pattern", TableCellType.Text)]
+        [DetailsOrder(2)]
         [CreateEditEntityInput("Pattern", CreateEntityInputType.Text)]
         [Required(ErrorMessage = "Pattern field is required.")]
         public string Pattern { get; set; }
 
-        [TableCell(3, "Related Entity", TableCellType.Text)]
-        [DetailsOrder(3)]
+        [TableCell(4, "Related Entity", TableCellType.Text)]
+        [DetailsOrder(4)]
         [CreateEditEntityInput("Related Entity", CreateEntityInputType.DatabaseTablesSelect)]
         public string RelatedEntity { get; set; }
 
-        [TableCell(4, "Priority", TableCellType.Number)]
-        [DetailsOrder(4)]
+        [TableCell(5, "Priority", TableCellType.Number)]
+        [DetailsOrder(5)]
         [CreateEditEntityInput("Priority", CreateEntityInputType.Double)]
         public float Priority { get; set; }
 
-        [TableCell(5, "Change Frequency", TableCellType.Text)]
-        [DetailsOrder(5)]
+        [TableCell(6, "Change Frequency", TableCellType.Text)]
+        [DetailsOrder(6)]
         [CreateEditEntityInput("Change Frequency", CreateEntityInputType.EnumSelect)]
         public SeoChangeFrequencyTypes ChangeFrequency { get; set; }
+
+        [TableCell(7, "Domain Only", TableCellType.Flag)]
+        [DetailsOrder(7)]
+        [CreateEditEntityInput("Domain Only", CreateEntityInputType.BoolRadio)]
+        public bool DomainOnly { get; set; }
     }
 }

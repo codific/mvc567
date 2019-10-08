@@ -32,6 +32,32 @@ namespace Mvc567.Common.Extensions
             return propertyInfo.GetCustomAttributes(typeof(T), true).Any();
         }
 
+        public static bool IsNullableType(this Type objectType)
+        {
+            return Nullable.GetUnderlyingType(objectType) != null;
+        }
+
+        public static bool IsNumericType(this Type objectType)
+        {
+            switch (Type.GetTypeCode(objectType))
+            {
+                case TypeCode.Byte:
+                case TypeCode.SByte:
+                case TypeCode.UInt16:
+                case TypeCode.UInt32:
+                case TypeCode.UInt64:
+                case TypeCode.Int16:
+                case TypeCode.Int32:
+                case TypeCode.Int64:
+                case TypeCode.Decimal:
+                case TypeCode.Double:
+                case TypeCode.Single:
+                    return true;
+                default:
+                    return false;
+            }
+        }
+
         public static T GetAttribute<T>(this PropertyInfo propertyInfo)
         {
             if (propertyInfo.HasAttribute<T>())

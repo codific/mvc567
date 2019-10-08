@@ -27,6 +27,9 @@ namespace Mvc567.Entities.Database
         public bool SinglePage { get; set; }
 
         [SearchCriteria]
+        public string Domain { get; set; }
+
+        [SearchCriteria]
         public string Pattern { get; set; }
 
         [SearchCriteria]
@@ -36,5 +39,7 @@ namespace Mvc567.Entities.Database
 
         [SearchCriteria]
         public SeoChangeFrequencyTypes ChangeFrequency { get; set; }
+
+        public bool DomainOnly { get; set; }
     }
 }

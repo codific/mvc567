@@ -30,6 +30,10 @@ using Microsoft.AspNetCore.Hosting;
 using Mvc567.Common.Enums;
 using System.Reflection;
 using Microsoft.EntityFrameworkCore;
+using Mvc567.Entities.DataTransferObjects.Api;
+using System.Linq.Expressions;
+using Mvc567.Common.Utilities;
+using Mvc567.Entities.DataTransferObjects.Api.ExpressionFactories;
 
 namespace Mvc567.Services.Infrastructure
 {
@@ -40,6 +44,25 @@ namespace Mvc567.Services.Infrastructure
         public EntityManager(IUnitOfWork uow, IMapper mapper, IHostingEnvironment hostingEnvironment) : base(uow, mapper)
         {
             this.hostingEnvironment = hostingEnvironment;
+        }
+
+        public async Task<IEnumerable<TEntityDto>> GetAllEntitiesAsync<TEntity, TEntityDto>() where TEntity : class, IEntityBase, new()
+        {
+            List<TEntityDto> resultList = new List<TEntityDto>();
+            try
+            {
+                var entities = await this.standardRepository.GetAllAsync<TEntity>();
+                if (entities != null && entities.Count() > 0)
+                {
+                    resultList = this.mapper.Map<IEnumerable<TEntityDto>>(entities).ToList();
+                }
+            }
+            catch (Exception ex)
+            {
+                await LogErrorAsync(ex, nameof(GetAllEntitiesAsync));
+            }
+
+            return resultList;
         }
 
         public async Task<PaginatedEntitiesResult<TEntityDto>> GetAllEntitiesPaginatedAsync<TEntity, TEntityDto>(int page, string searchQuery = null) where TEntity : class, IEntityBase, new()
@@ -217,6 +240,65 @@ namespace Mvc567.Services.Infrastructure
             }
         }
 
+        public async Task<PaginatedEntitiesResult<TEntityDto>> FilterEntitiesAsync<TEntity, TEntityDto>(FilterQueryRequest filterQuery)
+             where TEntity : class, IEntityBase, new()
+        {
+            PaginatedEntitiesResult<TEntityDto> result = new PaginatedEntitiesResult<TEntityDto>();
+            try
+            {
+                Expression<Func<TEntity, bool>> searchQueryExpression = null;
+                if (filterQuery.FilterQueryStringItems != null && filterQuery.FilterQueryStringItems.Count > 0)
+                {
+                    searchQueryExpression = GetEntitySearchQueryExpressionByFilterQueryRequest<TEntity>(filterQuery);
+                }
+                else if (!string.IsNullOrEmpty(filterQuery.SearchQuery))
+                {
+                    searchQueryExpression = GetEntitySearchQueryExpression<TEntity>(filterQuery.SearchQuery);
+                }
+
+                var orderExpression = GetOrderExpressionByFilterQueryRequest<TEntity>(filterQuery);
+                var firstLevelIncludeQuery = GetFirstLevelIncludeQuery<TEntity>();
+
+                if (searchQueryExpression != null)
+                {
+                    result.Count = (await standardRepository.GetAllAsync<TEntity>()).Count();
+                }
+                else
+                {
+                    result.Count = (await standardRepository.QueryAsync<TEntity>(searchQueryExpression)).Count();
+                }
+
+                result.CurrentPage = filterQuery.Page.HasValue ? filterQuery.Page.Value : 1;
+                if (filterQuery.Page.HasValue)
+                {
+                    result.PageSize = filterQuery.PageSize.HasValue ? filterQuery.PageSize.Value : PaginationPageSize;
+                }
+                else
+                {
+                    result.PageSize = result.Count;
+                }
+
+                IEnumerable<TEntity> entities = null;
+
+                if (searchQueryExpression != null)
+                {
+                    entities = await this.standardRepository.QueryPageAsync<TEntity>(result.StartRow, result.PageSize, searchQueryExpression, orderExpression, firstLevelIncludeQuery);
+                }
+                else
+                {
+                    entities = await this.standardRepository.GetPageAsync<TEntity>(result.StartRow, result.PageSize, orderExpression, firstLevelIncludeQuery);
+                }
+
+                result.Entities = this.mapper.Map<IEnumerable<TEntityDto>>(entities);
+            }
+            catch (Exception ex)
+            {
+                await LogErrorAsync(ex, nameof(FilterEntitiesAsync));
+            }
+
+            return result;
+        }
+
         private Func<IQueryable<TEntity>, IQueryable<TEntity>> GetFirstLevelIncludeQuery<TEntity>() where TEntity : class, IEntityBase, new()
         {
             var targetProperties = typeof(TEntity).GetProperties().Where(x => x.HasAttribute<ForeignKeyAttribute>()).ToList();
@@ -231,6 +313,80 @@ namespace Mvc567.Services.Infrastructure
             };
 
             return includeQuery;
+        }
+
+        private Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> GetOrderExpressionByFilterQueryRequest<TEntity>(FilterQueryRequest filterQuery)
+        {
+            if (string.IsNullOrEmpty(filterQuery.OrderBy) || filterQuery.FilterQueryOrderItems == null || filterQuery.FilterQueryOrderItems.Count == 0)
+            {
+                return null;
+            }
+
+            Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> function = (x) =>
+            {
+                IOrderedQueryable<TEntity> mainOrderFunction = null;
+                foreach (var orderItem in filterQuery.FilterQueryOrderItems)
+                {
+                    if (mainOrderFunction != null)
+                    {
+                        if (orderItem.OrderType == FilterOrderType.Ascending)
+                        {
+                            mainOrderFunction = mainOrderFunction.ThenBy(y => y.GetType().GetProperty(orderItem.PropertyName).GetValue(y));
+                        }
+                        else
+                        {
+                            mainOrderFunction = mainOrderFunction.ThenByDescending(y => y.GetType().GetProperty(orderItem.PropertyName).GetValue(y));
+                        }
+                    }
+                    else
+                    {
+                        if (orderItem.OrderType == FilterOrderType.Ascending)
+                        {
+                            mainOrderFunction = x.OrderBy(y => y.GetType().GetProperty(orderItem.PropertyName).GetValue(y));
+                        }
+                        else
+                        {
+                            mainOrderFunction = x.OrderByDescending(y => y.GetType().GetProperty(orderItem.PropertyName).GetValue(y));
+                        }
+                    }
+                    
+                }
+
+                return mainOrderFunction;
+            };
+
+            return function;
+        }
+
+        protected virtual Expression<Func<TEntity, bool>> GetEntitySearchQueryExpressionByFilterQueryRequest<TEntity>(FilterQueryRequest filterQuery)
+        {
+            if (filterQuery.EmptyQuery)
+            {
+                return null;
+            }
+
+            Type entityType = typeof(TEntity);
+            var expressionsList = new List<Expression<Func<TEntity, bool>>>();
+            if (filterQuery.FilterQueryStringItems != null && filterQuery.FilterQueryStringItems.Count > 0)
+            {
+                var expressionFactories = new ExpressionFactories();
+                foreach (var queryStringItem in filterQuery.FilterQueryStringItems)
+                {
+                    Expression<Func<TEntity, bool>> currentExpression = expressionFactories[queryStringItem.EqualityType].BuildExpressionByQueryStringItem<TEntity>(queryStringItem);
+                    if (currentExpression != null)
+                    {
+                        expressionsList.Add(currentExpression);
+                    }
+                }
+            }
+
+            var resultExpression = expressionsList.FirstOrDefault();
+            for (int i = 1; i < expressionsList.Count; i++)
+            {
+                resultExpression = ExpressionFunctions.AndAlso<TEntity>(resultExpression, expressionsList[i]);
+            }
+
+            return resultExpression;
         }
     }
 }

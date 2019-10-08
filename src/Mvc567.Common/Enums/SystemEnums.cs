@@ -222,4 +222,21 @@ namespace Mvc567.Common.Enums
         Private = 0,
         Public = 1
     }
+
+    public enum FilterSearchQueryEqualityType
+    {
+        Equals = 0,
+        Contains = 1,
+        GreaterThan = 2,
+        LessThan = 3,
+        GreaterOrEqualsThan = 4,
+        LessOrEqualsThan = 5,
+        NotEqual = 6
+    }
+
+    public enum FilterOrderType
+    {
+        Ascending = 0,
+        Descending = 1
+    }
 }

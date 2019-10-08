@@ -16,6 +16,7 @@
 
 using Mvc567.Common.Attributes;
 using Mvc567.Common.Extensions;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,12 +25,16 @@ namespace Mvc567.Entities.ViewModels.Abstractions
 {
     public class CreateEditEntityViewModel : ICreateEditEntityDto
     {
+        [JsonIgnore]
         public string EntityName { get; set; }
 
+        [JsonIgnore]
         public string Area { get; set; }
 
+        [JsonIgnore]
         public string Controller { get; set; }
 
+        [JsonIgnore]
         public string Action { get; set; }
 
         public List<CreateEditInputViewModel> GetModelInputList()

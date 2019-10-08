@@ -18,13 +18,15 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Mvc567.Entities.Database;
+using Mvc567.Entities.DataTransferObjects.ServiceResults;
+using System;
 using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace Mvc567.Services.Infrastructure
 {
-    public interface ISignInService
+    public interface IAuthenticationService
     {
         Task<IEnumerable<Claim>> GetUserClaimsAsync(User user);
 
@@ -37,5 +39,11 @@ namespace Mvc567.Services.Infrastructure
         Task<User> GetTwoFactorAuthenticationUserAsync(HttpContext httpContext);
 
         Task SignOutAsync(HttpContext httpContext);
+
+        Task<BearerAuthResponse> BuildTokenAsync(string email, string password);
+
+        Task<BearerAuthResponse> RefreshTokenAsync(Guid? userId, string refreshToken);
+
+        Task<bool> ResetUserRefreshTokensAsync(Guid userId);
     }
 }

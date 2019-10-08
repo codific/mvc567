@@ -44,11 +44,13 @@ namespace Mvc567.Controllers.MVC.Admin
     {
         private readonly IIdentityService identityService;
         private readonly IEmailService emailService;
+        private readonly IAuthenticationService authenticationService;
 
-        public AdminUsersController(IIdentityService identityService, IEntityManager entityManager, IEmailService emailService) : base(entityManager)
+        public AdminUsersController(IIdentityService identityService, IEntityManager entityManager, IEmailService emailService, IAuthenticationService authenticationService) : base(entityManager)
         {
             this.identityService = identityService;
             this.emailService = emailService;
+            this.authenticationService = authenticationService;
 
             HasDelete = false;
             HasEdit = false;
@@ -79,6 +81,24 @@ namespace Mvc567.Controllers.MVC.Admin
             }
 
             return NotFound();
+        }
+
+        [HttpPost]
+        [Route("{userId}/reset-refresh-token")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ResetUserRefreshToken(Guid userId)
+        {
+            bool successRefresh = await this.authenticationService.ResetUserRefreshTokensAsync(userId);
+            if (successRefresh)
+            {
+                TempData["SuccessStatusMessage"] = "Refresh token has been reset successfully.";
+            }
+            else
+            {
+                TempData["ErrorStatusMessage"] = "Refresh token reset failed.";
+            }
+
+            return RedirectToAction(nameof(GetAll));
         }
 
         [HttpPost]
@@ -126,6 +146,9 @@ namespace Mvc567.Controllers.MVC.Admin
         {
             base.TableViewActionsInit(ref actions);
             actions.Insert(1, TableMapper.CreateAction("Send Email", MaterialDesignIcons.Email, Color.ForestGreen, TableRowActionMethod.Get, $"/{this.controllerRoute}{{0}}/send-email", "[Id]"));
+            var resetRefreshTokenAction = TableMapper.CreateAction("Reset Refresh Token", MaterialDesignIcons.Refresh, Color.PaleVioletRed, TableRowActionMethod.Post, $"/{this.controllerRoute}{{0}}/reset-refresh-token", "[Id]");
+            resetRefreshTokenAction.SetConfirmation("Reset Refresh Token", "Are you sure you want to reset refresh token of this user?");
+            actions.Insert(2, resetRefreshTokenAction);
         }
     }
 }

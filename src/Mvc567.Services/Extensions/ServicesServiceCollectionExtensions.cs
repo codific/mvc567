@@ -30,7 +30,7 @@ namespace Mvc567.Services.Extensions
             services.AddScoped<ISEOService, SEOService>();
             services.AddScoped<IFileSystemService, FileSystemService>();
             services.AddScoped<IIdentityService, IdentityService>();
-            services.AddScoped<ISignInService, SignInService>();
+            services.AddScoped<IAuthenticationService, AuthenticationService>();
             services.AddScoped<IStaticPageService, StaticPageService>();
             services.AddScoped<ILanguageService, LanguageService>();
             services.AddScoped<ILogService, LogService>();

@@ -82,31 +82,34 @@ namespace Mvc567.Services.Infrastructure
         {
             var patternsEntities = await this.standardRepository.GetAllAsync<SitemapItemPattern>();
             
-
             SitemapResult result = new SitemapResult();
             foreach (var pattern in patternsEntities)
             {
-                if (!pattern.SinglePage)
+                if ((pattern.DomainOnly && this.baseUrl == pattern.Domain) || !pattern.DomainOnly)
                 {
-                    var petternUrls = GetUrlsByPattern(pattern.Pattern, pattern.RelatedEntity);
-                    foreach (var url in petternUrls)
+                    string domain = string.IsNullOrEmpty(pattern.Domain) ? this.baseUrl : pattern.Domain;
+                    if (!pattern.SinglePage)
+                    {
+                        var petternUrls = GetUrlsByPattern(pattern.Pattern, pattern.RelatedEntity);
+                        foreach (var url in petternUrls)
+                        {
+                            result.Urls.Add(new Url
+                            {
+                                Location = $"{domain}{url}",
+                                Priority = pattern.Priority.ToString(),
+                                ChangeFrequency = pattern.ChangeFrequency.ToString()
+                            });
+                        }
+                    }
+                    else
                     {
                         result.Urls.Add(new Url
                         {
-                            Location = $"{this.baseUrl}{url}",
+                            Location = $"{domain}{pattern.Pattern}",
                             Priority = pattern.Priority.ToString(),
                             ChangeFrequency = pattern.ChangeFrequency.ToString()
                         });
                     }
-                }
-                else
-                {
-                    result.Urls.Add(new Url
-                    {
-                        Location = $"{this.baseUrl}{pattern.Pattern}",
-                        Priority = pattern.Priority.ToString(),
-                        ChangeFrequency = pattern.ChangeFrequency.ToString()
-                    });
                 }
             }
 

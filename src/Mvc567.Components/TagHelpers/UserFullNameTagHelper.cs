@@ -36,7 +36,14 @@ namespace Mvc567.Components.TagHelpers
             output.TagName = "span";
             output.TagMode = TagMode.StartTagAndEndTag;
             var user = this.uow.GetStandardRepository().Get<User>(this.uow.CurrentUserId.Value);
-            output.Content.SetContent($"{user.FirstName} {user.LastName}");
+            string firstName = string.Empty;
+            string lastName = string.Empty;
+            if (user != null)
+            {
+                firstName = user.FirstName;
+                lastName = user.LastName;
+            }
+            output.Content.SetContent($"{firstName} {lastName}");
         }
     }
 }
