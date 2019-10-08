@@ -12,7 +12,7 @@ The business layer is the business logic container of the application. Communica
 | LogErrorAsync | Exception exception, string method | Task | Create log item to database. |
 | LogError | Exception exception, string method | void | Create log item to database. |
 | GetEntitySearchQueryExpression\<TEntity> | string searchQuery | Expression<Func<TEntity, bool>> | Create where expression from query string. |
-
+---
 #### IEntityManager
 
 Generic service that contains the main CRUD functions for entities that implement **IEntityBase**.
@@ -25,7 +25,8 @@ Generic service that contains the main CRUD functions for entities that implemen
 | ModifyEntityAsync\<TEntity, TEntityDto> | Guid id, TEntityDto modifiedEntity | Task\<Guid?> | Modify entity |
 | DeleteEntityAsync\<TEntity> | Guid id | Task\<bool> | Delete entity |
 | MoveTempFileAsync\<TEntity> | TEntity entity | Task | Move temp entity file into its pre-defined directory. |
-
+| FilterEntitiesAsync\<TEntity, TEntityDto> | FilterQueryRequest filterQuery | Task\<PaginatedEntitiesResult<TEntityDto>> | Filter entities by using parsed query string parameters. |
+---
 #### IEmailService
 
 Service that provides the email functionality.
@@ -33,8 +34,8 @@ Service that provides the email functionality.
 | Method | Parameters | Return | Description |
 | --- | --- | --- | --- |
 | SendEmailAsync | string viewName, AbstractEmailModel model | Task\<EmailServiceResult> | Send email by using pre-defined email view and specific email model. |
-
-#### ISignInService
+---
+#### IAuthenticationService
 
 Service that provides login functionality.
 
@@ -46,7 +47,10 @@ Service that provides login functionality.
 | SignInWith2faAsync | User user, string authenticationCode, bool rememberBrowser, HttpContext httpContext, string authenticationScheme, AuthenticationProperties authenticationProperties | Task\<SignInResult> | Sign in user using two factor authentication. |
 | GetTwoFactorAuthenticationUserAsync | HttpContext httpContext | Task\<User> | Get user that activate its two factor authentication form from HttpContext. |
 | SignOutAsync | HttpContext httpContext | Task | Sign out user. |
-
+| BuildTokenAsync | string email, string password | Task\<BearerAuthResponse> | Build json web token from user credentials. |
+| RefreshTokenAsync | Guid? userId, string refreshToken | Task\<BearerAuthResponse> | Refresh json web token by using refresh token. |
+| ResetUserRefreshTokensAsync | Guid userId | Task\<bool> | Reset refresh token and its expiration time. |
+---
 #### Other services
 
 Into package Mvc567.Services there are available more services than shown ones. These services are directly related to platform functionality and it is quite possible to be useless for your purposes. In case you want to explore them find their source on [GitHub Repository](https://github.com/intellisoft567/mvc567/tree/master/src/Mvc567.Services/Infrastructure).
