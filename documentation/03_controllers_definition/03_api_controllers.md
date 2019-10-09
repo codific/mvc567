@@ -14,15 +14,17 @@ The main purpuse of this end point is to allow users to get list of all entities
 ```
 [HTTP GET] https://example-domain.com/api/entities/
 ```
-
+---
 #### Get By Id
 The main purpuse of this end point is to allow users to get specific element by element Id. An example **Get By Id** request is:
 ```
 [HTTP GET] https://example-domain.com/api/entities/83bc4eda-f7ee-4b34-be4c-cddf03d2acbe
 ```
-
+---
 #### Filter
 Filter end poind is using to make specific query to entities from the database. This end point has more complex logic than other API request because there are many possible options you can pass to the query string:
+
+
 
 ##### Query String Options:
 | Options | Specifications | Description |
@@ -31,6 +33,7 @@ Filter end poind is using to make specific query to entities from the database. 
 | `order` | A list of properties of the current entity in specific pattern (available in the table below). The order of the properties is the order which be used in the order expression. | Order elements. |
 | `page` | A number that represent the current page of the paginated entities. | Get elements on selected page. |
 | `page-size` | A number that represent the page size of paginated result. | Separate elements on pages with specified size. |
+
 
 
 ###### Query Option Patterns
@@ -45,6 +48,8 @@ Filter end poind is using to make specific query to entities from the database. 
 | `@PropertyName!=value;` | Check whether **PropertyName** is not equal to **value** |
 
 
+
+
 ###### Order Option Patterns
 | Pattern | Description |
 | --- | --- |
@@ -56,7 +61,7 @@ An example **Filter** request is:
 ```
 [HTTP GET] https://example-domain.com/api/entities/filter?query=@Name~=Ivan;@Age>32;&order=@Created:d;@Age:a;&page-size=20&page=2
 ```
-
+---
 #### Create
 
 Create end point is using to create entities by using the provided API. To create an entity there is a requirement of entitity DTO passed into the body of HTTP POST request. An example **Create** request is:
@@ -71,7 +76,7 @@ Example Request Body:
     "age": 32
 }
 ```
-
+---
 #### Modify
 
 Modify end point is using to modify entities by using the provided API. To modify an entity there is a requirement of entitity DTO passed into the body of HTTP PUT request and the Id of target entity. An example **Modify** request is:
@@ -87,7 +92,7 @@ Example Request Body:
     "age": 33
 }
 ```
-
+---
 #### Delete
 
 Delete end point is using to delete entities by using the provided API. To delete an entity its Id is a must. An example **Delete** request is:
