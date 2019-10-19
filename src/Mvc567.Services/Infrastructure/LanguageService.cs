@@ -148,5 +148,18 @@ namespace Mvc567.Services.Infrastructure
                 return false;
             }
         }
+
+        public string TranslateKey(string key, string languageCode)
+        {
+            try
+            {
+                string value = this.standardRepository.Query<TranslationValue>(x => x.Language.Code.ToLower() == languageCode.ToLower() && x.TranslationKey.Key == key).FirstOrDefault()?.Value;
+                return string.IsNullOrEmpty(value) ? key : value;
+            }
+            catch (Exception)
+            {
+                return key;
+            }
+        }
     }
 }

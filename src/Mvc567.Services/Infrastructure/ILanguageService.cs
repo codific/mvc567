@@ -31,5 +31,7 @@ namespace Mvc567.Services.Infrastructure
         Task<LanguageDto> GetDefaultLanguageAsync();
 
         Task<bool> GenerateLanguageTranslationFileAsync(Guid languageId);
+
+        string TranslateKey(string key, string languageCode);
     }
 }
