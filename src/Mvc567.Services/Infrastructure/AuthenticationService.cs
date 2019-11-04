@@ -223,7 +223,19 @@ namespace Mvc567.Services.Infrastructure
             try
             {
                 var user = await this.userManager.FindByEmailAsync(email);
-                if (user.EmailConfirmed && !(await this.userManager.IsLockedOutAsync(user)) && await this.userManager.CheckPasswordAsync(user, password))
+
+                if (await this.userManager.IsLockedOutAsync(user))
+                {
+                    return BearerAuthResponse.FailedResult;
+                }
+
+                if (!(await this.userManager.CheckPasswordAsync(user, password)))
+                {
+                    await this.userManager.AccessFailedAsync(user);
+                    return BearerAuthResponse.FailedResult;
+                }
+
+                if (user.EmailConfirmed)
                 {
                     var userClaims = await GetAllUserClaimsAsync(user);
                     string jwt = BuildJwtToken(user, userClaims);

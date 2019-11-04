@@ -75,7 +75,7 @@ namespace Mvc567
             services.RegisterValidationProvider();
             services.RegisterServices<TDatabaseContext>();
 
-            services.AddScoped<IDatabaseInitializer, DatabaseInitializer<TDatabaseContext>>();
+            services.AddScoped<IApplicationDatabaseInitializer, DatabaseInitializer<TDatabaseContext>>();
 
             services.ConfigureRazorViews();
 
@@ -91,16 +91,7 @@ namespace Mvc567
 
             services.Configure<IdentityOptions>(options =>
             {
-                options.User.RequireUniqueEmail = true;
-
-                options.Password.RequireDigit = true;
-                options.Password.RequiredLength = 8;
-                options.Password.RequireNonAlphanumeric = true;
-                options.Password.RequireUppercase = true;
-                options.Password.RequireLowercase = true;
-
-                options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(30);
-                options.Lockout.MaxFailedAccessAttempts = 5;
+                ConfigureIdentityOptions(ref options);
             });
 
             services.AddAuthentication(options =>
@@ -215,6 +206,20 @@ namespace Mvc567
         protected virtual void RegisterFeatureProviders(ref ApplicationPartManager applicationPartManager)
         {
 
+        }
+
+        protected virtual void ConfigureIdentityOptions(ref IdentityOptions options)
+        {
+            options.User.RequireUniqueEmail = true;
+
+            options.Password.RequireDigit = true;
+            options.Password.RequiredLength = 8;
+            options.Password.RequireNonAlphanumeric = true;
+            options.Password.RequireUppercase = true;
+            options.Password.RequireLowercase = true;
+
+            options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(30);
+            options.Lockout.MaxFailedAccessAttempts = 5;
         }
 
         protected virtual void RegisterRoutes(ref IRouteBuilder routes)

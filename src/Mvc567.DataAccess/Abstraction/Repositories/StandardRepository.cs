@@ -154,11 +154,6 @@ namespace Mvc567.DataAccess.Abstraction.Repositories
                 query = query.Where(filter);
             }
 
-            if (take != null && skip != null)
-            {
-                query = query.Skip(skip.Value).Take(take.Value);
-            }
-
             if (includes != null)
             {
                 query = includes(query);
@@ -167,6 +162,11 @@ namespace Mvc567.DataAccess.Abstraction.Repositories
             if (orderBy != null)
             {
                 query = orderBy(query);
+            }
+
+            if (take != null && skip != null)
+            {
+                query = query.Skip(skip.Value).Take(take.Value);
             }
 
             return query;

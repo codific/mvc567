@@ -1,4 +1,4 @@
-// This file is part of the mvc567 distribution (https://github.com/intellisoft567/mvc567).
+﻿// This file is part of the mvc567 distribution (https://github.com/intellisoft567/mvc567).
 // Copyright (C) 2019 Georgi Karagogov
 // 
 // This program is free software: you can redistribute it and/or modify
@@ -14,20 +14,16 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-using System.Linq;
+using System.Collections.Generic;
 
-namespace Mvc567.Common.Extensions
+namespace Mvc567.Seed
 {
-    public static class StringExtensions
+    public interface IApplicationDatabaseInitializer : IDatabaseInitializer
     {
-        public static string ToPluralString(this string targetString)
-        {
-            return targetString.ToLower().EndsWith("s") ? $"{targetString}es" : $"{targetString}s";
-        }
-
-        public static string ToFirstUpper(this string stringValue)
-        {
-            return stringValue.First().ToString().ToUpper() + stringValue.Substring(1);
-        }
+        /// <summary>
+        /// Load additonal roles for the database initializer
+        /// </summary>
+        /// <param name="roles">Dictionary that contains role name as a key and array of role permissions (string array) as a value.</param>
+        void LoadAdditionalRoles(Dictionary<string, string[]> roles);
     }
 }

@@ -259,7 +259,7 @@ namespace Mvc567.Services.Infrastructure
                 var orderExpression = GetOrderExpressionByFilterQueryRequest<TEntity>(filterQuery);
                 var firstLevelIncludeQuery = GetFirstLevelIncludeQuery<TEntity>();
 
-                if (searchQueryExpression != null)
+                if (searchQueryExpression == null)
                 {
                     result.Count = (await standardRepository.GetAllAsync<TEntity>()).Count();
                 }

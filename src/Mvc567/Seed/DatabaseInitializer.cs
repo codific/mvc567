@@ -22,16 +22,19 @@ using Mvc567.DataAccess.Identity;
 using Mvc567.Entities.Database;
 using Mvc567.Services.Infrastructure;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace Mvc567.Seed
 {
-    public class DatabaseInitializer<TDatabaseContext> : IDatabaseInitializer where TDatabaseContext : AbstractDatabaseContext<TDatabaseContext>
+    public class DatabaseInitializer<TDatabaseContext> : IApplicationDatabaseInitializer where TDatabaseContext : AbstractDatabaseContext<TDatabaseContext>
     {
         private readonly TDatabaseContext context;
         private readonly UserManager<User> userManager;
         private readonly IIdentityService identityService;
+
+        private Dictionary<string, string[]> additionalRoles = null;
 
         public DatabaseInitializer(TDatabaseContext context, UserManager<User> userManager, IIdentityService identityService)
         {
@@ -40,14 +43,26 @@ namespace Mvc567.Seed
             this.identityService = identityService;
         }
 
+        public void LoadAdditionalRoles(Dictionary<string, string[]> roles)
+        {
+            this.additionalRoles = roles;
+        }
+
         public async Task SeedAsync()
         {
             await this.context.Database.MigrateAsync();
 
             if (!await this.context.Roles.AnyAsync())
             {
-                await EnsureRoleAsync(UserRoles.Admin, "Administrator", ApplicationPermissions.GetAllPermissionValues());
-                await EnsureRoleAsync(UserRoles.User, "User", new string[] { });
+                await EnsureRoleAsync(UserRoles.Admin, UserRoles.Admin, ApplicationPermissions.GetAllPermissionValues());
+                await EnsureRoleAsync(UserRoles.User, UserRoles.User, new string[] { });
+                if (this.additionalRoles != null && this.additionalRoles.Count > 0)
+                {
+                    foreach (var role in this.additionalRoles)
+                    {
+                        await EnsureRoleAsync(role.Key, role.Key, role.Value);
+                    }
+                }
             }
 
             if (!await this.context.Users.AnyAsync())
