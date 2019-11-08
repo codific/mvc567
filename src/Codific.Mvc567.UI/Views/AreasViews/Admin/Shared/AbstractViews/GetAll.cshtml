@@ -1,0 +1,43 @@
+@*
+This file is part of the mvc567 distribution (https://github.com/intellisoft567/mvc567).
+Copyright (C) 2019 Codific Ltd.
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
+*@
+
+@model AllEntitiesViewModel
+
+@{
+    ViewData["Title"] = Model.Title;
+    ViewData["NavigationActions"] = Model.NavigationActions;
+}
+<div class="w-100 float-left px-3 py-2">
+    @if (TempData["EntityDeletedStatus"] != null)
+    {
+        bool entityDeletedStatus = Convert.ToBoolean(TempData["EntityDeletedStatus"]);
+        string statusClass = entityDeletedStatus ? "alert-success" : "alert-danger";
+        string statusMessage = entityDeletedStatus ? $"{Model.SingleEntityName} has been deleted successfully." : $"{Model.SingleEntityName} deletion failed.";
+        <div class="alert @statusClass" role="alert"> @statusMessage </div>
+    }
+    @if (TempData["SuccessStatusMessage"] != null)
+    {
+        <div class="alert alert-success" role="alert"> @TempData["SuccessStatusMessage"] </div>
+    }
+    @if (TempData["ErrorStatusMessage"] != null)
+    {
+        <div class="alert alert-danger" role="alert"> @TempData["ErrorStatusMessage"] </div>
+    }
+</div>
+
+@await Html.PartialAsync(Partials.TablePartial, Model.Table)

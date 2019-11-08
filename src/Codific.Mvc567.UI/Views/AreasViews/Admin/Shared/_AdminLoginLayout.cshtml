@@ -1,0 +1,48 @@
+@*
+This file is part of the mvc567 distribution (https://github.com/intellisoft567/mvc567).
+Copyright (C) 2019 Codific Ltd.
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
+*@
+
+<!DOCTYPE html>
+<html>
+<head>
+    @await Html.PartialAsync("_AdminSharedHead")
+</head>
+<body>
+    <div class="container-scroller">
+        <div class="container-fluid page-body-wrapper full-page-wrapper">
+            <div class="content-wrapper d-flex align-items-center auth auth-bg-1 theme-one">
+                <div class="row w-100 m-0">
+                    <div class="mx-auto">
+                        <div class="d-flex brand-form-container">
+                            <a target="_blank" href="https://Mvc567.com/">
+                                <img class="brand-logo-form" src="/resources/images/logo_svg.svg" />
+                                <p class="brand-text-form"><strong>mvc</strong><span class="text-red">567</span></p>
+                            </a>
+                        </div>
+                        <div class="auto-form-wrapper">
+                            @RenderBody()
+                        </div>
+                        <p class="footer-text text-center">Copyright © @DateTime.Now.Year <a class="text-red" href="https://www.intellisoft567.com/" target="_blank">Intellisoft567</a>. All rights reserved. </p>
+                        <a class="footer-text text-left text-small" href="/"><span class="mdi mdi-arrow-left"></span> Go Back to Index</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @await Html.PartialAsync("_AdminSharedScripts")
+</body>
+</html>

@@ -1,0 +1,114 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <Company>Intellisoft567</Company>
+    <Product>mvc567</Product>
+    <PackageProjectUrl>https://github.com/intellisoft567/mvc567</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/intellisoft567/mvc567</RepositoryUrl>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    <Description>mvc567 is a high performance, open-source ASP.NET Core-based web application platform. It provides CMS functionality to its users.</Description>
+    <Authors>Georgi Karagogov</Authors>
+    <Copyright>Georgi Karagogov</Copyright>
+    <PackageTags>MVC, .NET Core, CMS, ASP.NET Core, Vue.js</PackageTags>
+    <PackageIconUrl>https://cdn.gsk567.com/external/mvc567/assets/images/icon128.png</PackageIconUrl>
+    <Version>1.1.4</Version>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <AssemblyName>Codific.Mvc567</AssemblyName>
+    <RootNamespace>Codific.Mvc567</RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Remove="Resources\icon200.png" />
+    <None Remove="Resources\icon32.ico" />
+    <None Remove="Resources\icon32.png" />
+    <None Remove="Resources\logo.svg" />
+    <None Remove="Resources\mdi\css\materialdesignicons.css" />
+    <None Remove="Resources\mdi\css\materialdesignicons.css.map" />
+    <None Remove="Resources\mdi\css\materialdesignicons.min.css" />
+    <None Remove="Resources\mdi\css\materialdesignicons.min.css.map" />
+    <None Remove="Resources\mdi\fonts\materialdesignicons-webfont.eot" />
+    <None Remove="Resources\mdi\fonts\materialdesignicons-webfont.svg" />
+    <None Remove="Resources\mdi\fonts\materialdesignicons-webfont.ttf" />
+    <None Remove="Resources\mdi\fonts\materialdesignicons-webfont.woff" />
+    <None Remove="Resources\mdi\fonts\materialdesignicons-webfont.woff2" />
+    <None Remove="Resources\puse-icons-feather\css\feather.css" />
+    <None Remove="Resources\puse-icons-feather\fonts\feather-webfont.eot" />
+    <None Remove="Resources\puse-icons-feather\fonts\feather-webfont.svg" />
+    <None Remove="Resources\puse-icons-feather\fonts\feather-webfont.ttf" />
+    <None Remove="Resources\puse-icons-feather\fonts\feather-webfont.woff" />
+    <None Include="..\..\LICENSE">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Resources\icon200.png" />
+    <Content Include="Resources\icon32.ico" />
+    <Content Include="Resources\icon32.png" />
+    <Content Include="Resources\logo.svg" />
+    <Content Include="Resources\mdi\css\materialdesignicons.css" />
+    <Content Include="Resources\mdi\css\materialdesignicons.css.map" />
+    <Content Include="Resources\mdi\css\materialdesignicons.min.css" />
+    <Content Include="Resources\mdi\css\materialdesignicons.min.css.map" />
+    <Content Include="Resources\mdi\fonts\materialdesignicons-webfont.eot" />
+    <Content Include="Resources\mdi\fonts\materialdesignicons-webfont.svg" />
+    <Content Include="Resources\mdi\fonts\materialdesignicons-webfont.ttf" />
+    <Content Include="Resources\mdi\fonts\materialdesignicons-webfont.woff" />
+    <Content Include="Resources\mdi\fonts\materialdesignicons-webfont.woff2" />
+    <Content Include="Resources\puse-icons-feather\css\feather.css" />
+    <Content Include="Resources\puse-icons-feather\fonts\feather-webfont.eot" />
+    <Content Include="Resources\puse-icons-feather\fonts\feather-webfont.svg" />
+    <Content Include="Resources\puse-icons-feather\fonts\feather-webfont.ttf" />
+    <Content Include="Resources\puse-icons-feather\fonts\feather-webfont.woff" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="8.1.1" />
+    <PackageReference Include="Microsoft.AspNetCore" Version="2.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.Cookies" Version="2.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="2.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="2.2.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Diagnostics.HealthChecks" Version="2.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Formatters.Xml" Version="2.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.SpaServices" Version="2.2.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.2.4" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="2.2.4" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="2.2.0" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.BrowserLink" Version="2.2.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
+    <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="4.0.1" />
+    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="4.0.1" />
+    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="4.0.1" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Codific.Mvc567.Common\Codific.Mvc567.Common.csproj" />
+    <ProjectReference Include="..\Codific.Mvc567.Components\Codific.Mvc567.Components.csproj" />
+    <ProjectReference Include="..\Codific.Mvc567.DataAccess\Codific.Mvc567.DataAccess.csproj" />
+    <ProjectReference Include="..\Codific.Mvc567.Entities\Codific.Mvc567.Entities.csproj" />
+    <ProjectReference Include="..\Codific.Mvc567.Services\Codific.Mvc567.Services.csproj" />
+    <ProjectReference Include="..\Codific.Mvc567.UI\Codific.Mvc567.UI.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Update="Resources.Designer.cs">
+      <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+    <Compile Update="Configuration\ScaffoldingResources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ScaffoldingResources.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Update="Resources.resx">
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <Generator>ResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Configuration\ScaffoldingResources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>ScaffoldingResources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+</Project>

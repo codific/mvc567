@@ -1,0 +1,146 @@
+@*
+This file is part of the mvc567 distribution (https://github.com/intellisoft567/mvc567).
+Copyright (C) 2019 Codific Ltd.
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
+*@
+
+@model TableViewModel
+
+<div class="col-12 grid-margin stretch-card">
+    <div class="card">
+        <div class="card-body">
+            <form method="get" class="mb-4" action="@Url.Action(Model.Action, Model.Controller, new { Area = Model.Area })">
+                <div class="d-flex m-0">
+                    <input type="text" name="q" class="form-control" value="@ViewData["searchQuery"]" placeholder="Search..">
+                    <button class="btn btn-primary ml-3" type="submit">Search</button>
+                </div>
+            </form>
+            <div class="responsive-table">
+                <table class="table table-hover table-striped table-bordered">
+                    <thead class="text-center">
+                        <tr>
+                            @foreach (TableHeaderCellViewModel cell in Model.Header.Cells)
+                            {
+                                <th class="p-2 h-auto">@cell.Name</th>
+                            }
+                            @if (Model.HasActions)
+                            {
+                                <th class="p-2 h-auto">Actions</th>
+                            }
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (TableRowViewModel row in Model.Rows)
+                        {
+                            <tr>
+                                @foreach (TableCellViewModel cell in row.Cells)
+                                {
+                                <td class="px-2 py-0 @((cell.Type == TableCellType.Flag || cell.Type == TableCellType.File || cell.Type == TableCellType.TextArea) ? "text-center" : string.Empty)">
+                                    @{
+                                        switch (cell.Type)
+                                        {
+                                            case TableCellType.Text:
+                                            case TableCellType.Date:
+                                            case TableCellType.Time:
+                                            case TableCellType.DateTime:
+                                            case TableCellType.Number:
+                                                <span>@cell?.Content</span>
+                                                break;
+                                            case TableCellType.File:
+                                                <root-file-link id="@cell?.Content"></root-file-link>
+                                                break;
+                                            case TableCellType.Flag:
+                                                if (cell?.Content?.ToLower() == "true")
+                                                {
+                                                    <div class="badge badge-success badge-pill p-1 font-size-12"><i class="mdi mdi-check"></i></div>
+                                                }
+                                                else
+                                                {
+                                                    <div class="badge badge-danger badge-pill p-1 font-size-12"><i class="mdi mdi-close"></i></div>
+                                                }
+                                                break;
+                                            case TableCellType.TextArea:
+                                                <button type="button" class="btn p-1" data-placement="right" data-toggle="popover" data-content="@cell?.Content">See Content</button>
+                                                break;
+                                            default:
+                                                break;
+                                        }
+                                    }
+                                </td>
+                                }
+                                @if (Model.HasActions)
+                                {
+                                    <td class="px-2 py-1 text-center">
+                                        @foreach (TableRowActionViewModel action in row.Actions)
+                                        {
+                                            if (action.Method == TableRowActionMethod.Get)
+                                            {
+                                                <a class="btn btn-icons action-btn btn-@action.Color.Name" title="@action.Title" href="@action.Url"><i class="mdi @action.Icon"></i></a>
+                                            }
+                                            else if (action.Method == TableRowActionMethod.Post)
+                                            {
+                                                <form class="d-inline-block" method="post" action="@action.Url" onsubmit="@(action.HasConfirmation ? $"showConfirmationMessage(event, '{action.ConfirmationTitle}', '{action.ConfirmationMessage}')" : string.Empty)">
+                                                    @Html.AntiForgeryToken()
+                                                    <button type="submit" title="@action.Title" class="btn btn-icons action-btn btn-@action.Color.Name"><i class="mdi @action.Icon"></i></button>
+                                                </form>
+                                            }
+                                        }
+                                    </td>
+                                }
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            <nav class="d-flex mt-4">
+                <ul class="pagination m-auto">
+                    @if (Model.Pagination.PreviousPage != null && Model.Pagination.PreviousPagesCount > 0)
+                    {
+                        <li class="page-item mx-0">
+                            <a class="page-link btn btn-secondary p-2" href="@Url.Action(Model.Action, Model.Controller, new { Area = Model.Area, p = Model.Pagination.PreviousPage, q = ViewData["searchQuery"] })">⯇</a>
+                        </li>
+                    }
+                    @if (Model.Pagination.PreviousPagesCount > 0)
+                    {
+                        for (int i = Model.Pagination.PreviousPagesCount; i >= 1; i--)
+                        {
+                            <li class="page-item ml-1 mr-0">
+                                <a class="page-link btn btn-secondary p-2" href="@Url.Action(Model.Action, Model.Controller, new { Area = Model.Area, p = Model.Pagination.CurrentPage - i, q = ViewData["searchQuery"] })">@(Model.Pagination.CurrentPage - i)</a>
+                            </li>
+                        }
+                    }
+                    <li class="page-item active mx-1 mb-0">
+                        <p class="page-link btn btn-primary p-2">@Model.Pagination.CurrentPage</p>
+                    </li>
+                    @if (Model.Pagination.NextPagesCount > 0)
+                    {
+                        for (int i = 1; i <= Model.Pagination.NextPagesCount; i++)
+                        {
+                            <li class="page-item mr-1 ml-0">
+                                <a class="page-link btn btn-secondary p-2" href="@Url.Action(Model.Action, Model.Controller, new { Area = Model.Area, p = Model.Pagination.CurrentPage + i, q = ViewData["searchQuery"] })">@(Model.Pagination.CurrentPage + i)</a>
+                            </li>
+                        }
+                    }
+                    @if (Model.Pagination.NextPage != null && Model.Pagination.NextPagesCount > 0)
+                    {
+                        <li class="page-item mx-0">
+                            <a class="page-link btn btn-secondary p-2" href="@Url.Action(Model.Action, Model.Controller, new { Area = Model.Area, p = Model.Pagination.NextPage, q = ViewData["searchQuery"] })">⯈</a>
+                        </li>
+                    }
+                </ul>
+            </nav>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,92 @@
+@*
+This file is part of the mvc567 distribution (https://github.com/intellisoft567/mvc567).
+Copyright (C) 2019 Codific Ltd.
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
+*@
+
+@model MetaTagsModel
+
+<meta charset="utf-8">
+
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<title>@Model.Title</title>
+
+<meta name="title" content="@Model.Title" />
+<meta name="description" content="@Model.Description" />
+<meta name="keywords" content="@Model.Keywords" />
+@if (!string.IsNullOrEmpty(Model.Author))
+{
+<meta name="author" content="@Model.Author" />
+}
+@if (!string.IsNullOrEmpty(Model.Canonical))
+{
+    <link rel="canonical" href="@Model.Canonical" />
+}
+
+<meta name="robots" content="index, follow" />
+
+@if (!string.IsNullOrEmpty(Model.OpenGraphType))
+{
+    <meta property="og:type" content="@Model.OpenGraphType" />
+}
+@if (!string.IsNullOrEmpty(Model.OpenGraphTitle))
+{
+    <meta property="og:title" content="@Model.OpenGraphTitle" />
+}
+@if (!string.IsNullOrEmpty(Model.OpenGraphDescription))
+{
+    <meta property="og:description" content="@Model.OpenGraphDescription" />
+}
+@if (!string.IsNullOrEmpty(Model.OpenGraphImage))
+{
+    <meta property="og:image" content="@Model.OpenGraphImage" />
+}
+@if (!string.IsNullOrEmpty(Model.OpenGraphUrl))
+{
+    <meta property="og:url" content="@Model.OpenGraphUrl" />
+}
+@if (!string.IsNullOrEmpty(Model.OpenGraphSiteName))
+{
+    <meta property="og:site_name" content="@Model.OpenGraphSiteName" />
+}
+@if (!string.IsNullOrEmpty(Model.FacebookAppId))
+{
+    <meta property="fb:app_id" content="@Model.FacebookAppId" />
+}
+@if (!string.IsNullOrEmpty(Model.TwitterCard))
+{
+    <meta name="twitter:card" content="@Model.TwitterCard">
+}
+@if (!string.IsNullOrEmpty(Model.TwitterTitle))
+{
+    <meta name="twitter:title" content="@Model.TwitterTitle">
+}
+@if (!string.IsNullOrEmpty(Model.TwitterDescription))
+{
+    <meta name="twitter:description" content="@Model.TwitterDescription">
+}
+@if (!string.IsNullOrEmpty(Model.TwitterImage))
+{
+    <meta name="twitter:image" content="@Model.TwitterImage">
+}
+@if (!string.IsNullOrEmpty(Model.TwitterSite))
+{
+    <meta name="twitter:site" content="@Model.TwitterSite">
+}
+@if (!string.IsNullOrEmpty(Model.TwitterCreator))
+{
+    <meta name="twitter:creator" content="@Model.TwitterCreator">
+}

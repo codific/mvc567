@@ -1,0 +1,41 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+	  <Company>Intellisoft567</Company>
+    <Product>mvc567</Product>
+    <PackageProjectUrl>https://github.com/intellisoft567/mvc567</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/intellisoft567/mvc567</RepositoryUrl>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    <Description>mvc567 is a high performance, open-source ASP.NET Core-based web application platform. It provides CMS functionality to its users.</Description>
+    <Authors>Georgi Karagogov</Authors>
+    <Copyright>Georgi Karagogov</Copyright>
+    <PackageTags>MVC, .NET Core, CMS, ASP.NET Core, Vue.js</PackageTags>
+    <PackageIconUrl>https://cdn.gsk567.com/external/mvc567/assets/images/icon128.png</PackageIconUrl>
+    <Version>1.1.0</Version>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <AssemblyName>Codific.Mvc567.UI</AssemblyName>
+    <RootNamespace>Codific.Mvc567.UI</RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Include="..\..\LICENSE">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+    <None Include="..\..\LICENSE">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.2.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Codific.Mvc567.Common\Codific.Mvc567.Common.csproj" />
+    <ProjectReference Include="..\Codific.Mvc567.Components\Codific.Mvc567.Components.csproj" />
+    <ProjectReference Include="..\Codific.Mvc567.Entities\Codific.Mvc567.Entities.csproj" />
+  </ItemGroup>
+  <Target Name="AfterCompile">
+    <Exec Command="if &quot;$(PlatformName)&quot; == &quot;AnyCPU&quot; (if &quot;$(ConfigurationName)&quot; == &quot;Release&quot; (powershell.exe  -ExecutionPolicy Bypass -File  &quot;$(ProjectDir)confuserEx\confuserps.ps1&quot; &quot;'C:\ConfuserEx_bin\Confuser.CLI.exe'&quot; &quot;'$(ProjectDir)confuserEx\confuser.crproj'&quot; &quot;'$(ProjectDir)obj\$(ConfigurationName)\'&quot; &quot;'$(ProjectDir)obj\$(ConfigurationName)\$(TargetFileName)'&quot; &quot;$(ProjectDir)bin\$(ConfigurationName)&quot;)&#xD;&#xA;) else (if &quot;$(ConfigurationName)&quot; == &quot;Release&quot; (powershell.exe  -ExecutionPolicy Bypass -File  &quot;$(ProjectDir)confuserEx\confuserps.ps1&quot; &quot;'C:\ConfuserEx_bin\Confuser.CLI.exe'&quot; &quot;'$(ProjectDir)confuserEx\confuser.crproj'&quot; &quot;'$(ProjectDir)obj\$(PlatformName)\$(ConfigurationName)\'&quot; &quot;'$(ProjectDir)obj\$(PlatformName)\$(ConfigurationName)\$(TargetFileName)'&quot; &quot;$(ProjectDir)bin\$(PlatformName)\$(ConfigurationName)&quot;)&#xD;&#xA;)" />
+  </Target>
+</Project>
