@@ -54,7 +54,7 @@ namespace Mvc567.Components.TagHelpers
             {
                 valueAttribute = $" value=\"{Value.Value}\"";
             }
-            contentStringBuilder.Append($"<input type=\"file\" id=\"{itemId}\" class=\"dropify\"/>");
+            contentStringBuilder.Append($"<input type=\"file\" id=\"{itemId}\" class=\"upload-file-input\"/>");
             contentStringBuilder.Append($"<input type=\"hidden\"{valueAttribute} id=\"target-{itemId}\" name=\"{ModelName}\"/>");
 
             return contentStringBuilder.ToString();

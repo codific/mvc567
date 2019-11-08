@@ -15,8 +15,6 @@
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
   </PropertyGroup>
   <ItemGroup>
-    <None Remove="Styles\css\vendors\vendor.bundle.addons.css" />
-    <None Remove="Styles\css\vendors\vendor.bundle.base.css" />
     <None Include="..\..\LICENSE">
       <Pack>True</Pack>
       <PackagePath></PackagePath>
@@ -25,14 +23,6 @@
       <Pack>True</Pack>
       <PackagePath></PackagePath>
     </None>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Styles\css\vendors\vendor.bundle.addons.css">
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-    </Content>
-    <Content Include="Styles\css\vendors\vendor.bundle.base.css">
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-    </Content>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.2.0" />

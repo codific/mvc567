@@ -1,7 +1,6 @@
 (function($) {
   'use strict';
-    $('.dropify').dropify();
-    $('.dropify').on('change', function () {
+    $('.upload-file-input').on('change', function () {
         uploadFile($(this), transferUploadedFileToHiddenInput);
     });
 

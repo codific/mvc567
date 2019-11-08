@@ -97,8 +97,9 @@ namespace Mvc567.Services.Abstractions
                 if (property.GetCustomAttributes(typeof(SearchCriteriaAttribute), false).Length > 0)
                 {
                     Expression<Func<TEntity, bool>> currentExpression = x =>
-                        x.GetType().GetProperty(property.Name).GetValue(x).ToString().ToLower().Contains(searchQuery.ToLower()) ||
-                        searchQueryArray.Contains(x.GetType().GetProperty(property.Name).GetValue(x).ToString().ToLower());
+                           x.GetType().GetProperty(property.Name).GetValue(x) != null &&
+                           (x.GetType().GetProperty(property.Name).GetValue(x).ToString().ToLower().Contains(searchQuery.ToLower()) ||
+                            searchQueryArray.Contains(x.GetType().GetProperty(property.Name).GetValue(x).ToString().ToLower()));
 
                     expressionsList.Add(currentExpression);
                 }

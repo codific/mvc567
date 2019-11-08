@@ -52,12 +52,14 @@ gulp.task('styles', function () {
 gulp.task('styles:vendors', function () {
     return gulp
         .src([
-            './Styles/css/vendors/vendor.bundle.base.css',
-            './Styles/css/vendors/vendor.bundle.addons.css',
+            './node_modules/bootstrap/dist/css/bootstrap.min.css',
+            './node_modules/perfect-scrollbar/css/perfect-scrollbar.css',
             './Styles/css/shared/editor/codemirror.css',
             './Styles/css/shared/editor/foldgutter.css',
             './Styles/css/shared/editor/dialog.css',
-            './Styles/css/shared/editor/eclipse.css'
+            './Styles/css/shared/editor/eclipse.css',
+            './node_modules/jquery-tags-input/dist/jquery.tagsinput.min.css',
+            './node_modules/sweetalert2/dist/sweetalert2.min.css',
         ])
         .pipe(cssmin({ keepSpecialComments: 0 }))
         .pipe(concat('style.vendors.min.css'))
@@ -75,7 +77,7 @@ gulp.task('scripts', function () {
         "./Scripts/js/shared/clipboard.js",
         "./Scripts/js/shared/form-addons.js",
         "./Scripts/js/shared/formpickers.js",
-        "./Scripts/js/shared/dropify.js",
+        "./Scripts/js/shared/upload-file-input.js",
         "./Scripts/js/shared/editor/codemirror.js",
         "./Scripts/js/shared/editor/*.js",
         "./Scripts/js/shared/obfuscator.js",
@@ -88,8 +90,13 @@ gulp.task('scripts', function () {
 
 gulp.task('scripts:vendors', function () {
     return gulp.src([
-        "./Scripts/js/vendors/vendor.bundle.base.js",
-        "./Scripts/js/vendors/vendor.bundle.addons.js"
+        './node_modules/jquery/dist/jquery.min.js',
+        './node_modules/popper.js/dist/umd/popper.min.js',
+        './node_modules/bootstrap/dist/js/bootstrap.min.js',
+        './node_modules/perfect-scrollbar/dist/perfect-scrollbar.min.js',
+        './node_modules/clipboard/dist/clipboard.min.js',
+        './node_modules/jquery-tags-input/dist/jquery.tagsinput.min.js',
+        './node_modules/sweetalert/dist/sweetalert.min.js',
     ])
         .pipe(uglify())
         .pipe(concat("scripts.vendors.min.js"))

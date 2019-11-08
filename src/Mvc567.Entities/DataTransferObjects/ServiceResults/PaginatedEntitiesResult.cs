@@ -36,6 +36,11 @@ namespace Mvc567.Entities.DataTransferObjects.ServiceResults
         public int Pages {
             get
             {
+                if (PageSize == 0)
+                {
+                    return 1;
+                }
+
                 return (Count / PageSize) + (Count % PageSize == 0 ? 0 : 1);
             }
         }
