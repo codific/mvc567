@@ -19,7 +19,7 @@ using System.Linq;
 using Codific.Mvc567.Common.Attributes;
 using Codific.Mvc567.Common.Utilities;
 using Codific.Mvc567.Common.Enums;
-using Codific.Mvc567.Entities.ViewModels.Abstractions.Details;
+using Codific.Mvc567.Dtos.ViewModels.Abstractions.Details;
 using Codific.Mvc567.Common.Extensions;
 
 namespace Codific.Mvc567.Entities.ViewModels.Mapping

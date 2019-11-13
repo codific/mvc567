@@ -20,7 +20,7 @@ using System.Drawing;
 using System.Linq;
 using Codific.Mvc567.Common.Attributes;
 using Codific.Mvc567.Common;
-using Codific.Mvc567.Entities.ViewModels.Abstractions.Table;
+using Codific.Mvc567.Dtos.ViewModels.Abstractions.Table;
 using Codific.Mvc567.Dtos.ServiceResults;
 
 namespace Codific.Mvc567.Entities.ViewModels.Mapping

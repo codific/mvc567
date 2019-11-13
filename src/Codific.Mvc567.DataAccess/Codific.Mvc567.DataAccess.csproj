@@ -24,16 +24,17 @@
     <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.2.2" />
     <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.2.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="2.2.0" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.2.4" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.0.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="3.0.0" />
-	<PackageReference Include="System.ComponentModel.Annotations" Version="4.5.0" />
+	<PackageReference Include="System.ComponentModel.Annotations" Version="4.6.0" />
 	<PackageReference Include="AutoMapper" Version="9.0.0" />
   </ItemGroup>
   
   <ItemGroup>
     <ProjectReference Include="..\Codific.Mvc567.Common\Codific.Mvc567.Common.csproj" />
-    <ProjectReference Include="..\..\..\Application\Codific.Mvc567.DataAccess.Abstractions\Codific.Mvc567.DataAccess.Abstractions.csproj" />
+    <ProjectReference Include="..\Codific.Mvc567.DataAccess.Abstractions\Codific.Mvc567.DataAccess.Abstractions.csproj" />
+    <ProjectReference Include="..\Codific.Mvc567.Entities\Codific.Mvc567.Entities.csproj" />
   </ItemGroup>
   
   <ItemGroup>

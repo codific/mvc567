@@ -16,21 +16,21 @@
 
 using System;
 using System.Threading.Tasks;
+using Codific.Mvc567.Common.Attributes;
+using Codific.Mvc567.Common.Utilities;
+using Codific.Mvc567.Controllers.Abstractions;
+using Codific.Mvc567.DataAccess.Identity;
+using Codific.Mvc567.Dtos.ViewModels.AdminViewModels;
+using Codific.Mvc567.Entities.Database;
+using Codific.Mvc567.Services.Abstractions;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Authentication.Cookies;
-using Codific.Mvc567.Common.Utilities;
-using Codific.Mvc567.Services.Infrastructure;
-using Microsoft.AspNetCore.Hosting;
-using Codific.Mvc567.Controllers.Abstractions;
-using Codific.Mvc567.Common.Attributes;
-using Codific.Mvc567.Entities.ViewModels.AdminViewModels;
-using Codific.Mvc567.Entities.Database;
-using Codific.Mvc567.DataAccess.Identity;
 
 namespace Codific.Mvc567.Controllers.MVC.Admin
 {
@@ -42,21 +42,19 @@ namespace Codific.Mvc567.Controllers.MVC.Admin
         private readonly SignInManager<User> signInManager;
         private readonly IIdentityService identityService;
         private readonly RoleManager<Role> roleManager;
-        private readonly Services.Infrastructure.IAuthenticationService authenticationService;
+        private readonly Codific.Mvc567.Services.Abstractions.IAuthenticationService authenticationService;
         private readonly IHostingEnvironment hostingEnvironment;
-        private readonly ISingletonSecurityService securityService;
 
         public AdminAccountController(
             UserManager<User> userManager,
             SignInManager<User> signInManager,
             RoleManager<Role> roleManager,
             IIdentityService identityService,
-            Services.Infrastructure.IAuthenticationService authenticationService,
+            Services.Abstractions.IAuthenticationService authenticationService,
             IConfiguration configuration, 
             IEmailService emailService,
             IHostingEnvironment hostingEnvironment,
-            ILanguageService languageService,
-            ISingletonSecurityService securityService)
+            ILanguageService languageService)
             : base(configuration, emailService, languageService)
         {
             this.userManager = userManager;
@@ -65,7 +63,6 @@ namespace Codific.Mvc567.Controllers.MVC.Admin
             this.identityService = identityService;
             this.authenticationService = authenticationService;
             this.hostingEnvironment = hostingEnvironment;
-            this.securityService = securityService;
         }
 
         [Route("/admin/login")]
@@ -132,7 +129,7 @@ namespace Codific.Mvc567.Controllers.MVC.Admin
             {
                 return AdminDashboardActionResult;
             }
-            var user = await this.authenticationService.GetTwoFactorAuthenticationUserAsync(HttpContext);
+            var user = await this.authenticationService.GetTwoFactorAuthenticationUserAsync<User>(HttpContext);
             if (user == null || !(await this.authenticationService.UserHasAdministrationAccessRightsAsync(user)))
             {
                 return NotFound();
@@ -159,7 +156,7 @@ namespace Codific.Mvc567.Controllers.MVC.Admin
                 return View(model);
             }
 
-            var user = await this.authenticationService.GetTwoFactorAuthenticationUserAsync(HttpContext);
+            var user = await this.authenticationService.GetTwoFactorAuthenticationUserAsync<User>(HttpContext);
             if (user == null || !(await this.authenticationService.UserHasAdministrationAccessRightsAsync(user)))
             {
                 return NotFound();
@@ -195,46 +192,6 @@ namespace Codific.Mvc567.Controllers.MVC.Admin
             }
 
             return View();
-        }
-
-        [Route("/admin/auth/init")]
-        [HttpGet]
-        public async Task<IActionResult> Auth()
-        {
-            int delaySeconds = 5 * this.securityService.AdminLoginFailedAttempts;
-            await Task.Delay(delaySeconds * 1000);
-
-            return View();
-        }
-
-        [HttpPost]
-        [Route("/admin/auth/init")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Auth([FromForm(Name = "AuthCode")]string code)
-        {
-            int delaySeconds = 5 * this.securityService.AdminLoginFailedAttempts;
-            await Task.Delay(delaySeconds * 1000);
-
-            if (!string.IsNullOrEmpty(code) && code == Authenticator.GeneratePin(this.configuration["AdminLoginAuthenticator:SecretKey"]))
-            {
-                string[] cookieValues = CookiesFunctions.GenerateAdminLoginCookieValues(
-                    configuration["AdminLoginAuthenticator:CookieFormat"],
-                    new string[] { this.HttpContext.Request.Headers["User-Agent"], DateTime.Now.Year.ToString() },
-                    configuration["AdminLoginAuthenticator:SecretIndexes"]);
-
-                CookieOptions options = new CookieOptions();
-                options.Expires = DateTime.Now.AddHours(2);
-                options.HttpOnly = true;
-                options.IsEssential = true;
-                options.Secure = true;
-                Response.Cookies.Append(cookieValues[0], cookieValues[1], options);
-
-                return RedirectToAction("Login", "AdminAccount", new { Area = "Admin" });
-            }
-
-            this.securityService.IncrementAdminLoginFailedAttempts();
-
-            return NotFound();
         }
 
         [HttpPost]

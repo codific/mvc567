@@ -33,7 +33,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Codific.Mvc567.Common\Codific.Mvc567.Common.csproj" />
     <ProjectReference Include="..\Codific.Mvc567.Components\Codific.Mvc567.Components.csproj" />
-    <ProjectReference Include="..\..\..\Application\Codific.Mvc567.Dtos\Codific.Mvc567.Dtos.csproj" />
+    <ProjectReference Include="..\Codific.Mvc567.Dtos\Codific.Mvc567.Dtos.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Content Remove="Views\AreasViews\Admin\AdminRoots\Root.cshtml" />

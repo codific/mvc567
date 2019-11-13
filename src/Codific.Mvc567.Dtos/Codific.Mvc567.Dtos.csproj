@@ -10,6 +10,7 @@
     <Folder Include="ServiceResults\" />
     <Folder Include="ViewModels\" />
     <Folder Include="Abstractions\" />
+    <Folder Include="Entities\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Codific.Mvc567.Common\Codific.Mvc567.Common.csproj" />

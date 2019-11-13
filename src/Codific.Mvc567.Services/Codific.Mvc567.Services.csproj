@@ -43,9 +43,10 @@
     <ProjectReference Include="..\Codific.Mvc567.Common\Codific.Mvc567.Common.csproj" />
     <ProjectReference Include="..\Codific.Mvc567.DataAccess\Codific.Mvc567.DataAccess.csproj" />
     <ProjectReference Include="..\Codific.Mvc567.Entities\Codific.Mvc567.Entities.csproj" />
-    <ProjectReference Include="..\..\..\Application\Codific.Mvc567.Services.Abstractions\Codific.Mvc567.Services.Abstractions.csproj" />
-    <ProjectReference Include="..\..\..\Application\Codific.Mvc567.Dtos\Codific.Mvc567.Dtos.csproj" />
     <ProjectReference Include="..\..\..\Application\Codific.Mvc567.ViewModels\Codific.Mvc567.ViewModels.csproj" />
+    <ProjectReference Include="..\Codific.Mvc567.DataAccess.Abstractions\Codific.Mvc567.DataAccess.Abstractions.csproj" />
+    <ProjectReference Include="..\Codific.Mvc567.Services.Abstractions\Codific.Mvc567.Services.Abstractions.csproj" />
+    <ProjectReference Include="..\Codific.Mvc567.Dtos\Codific.Mvc567.Dtos.csproj" />
   </ItemGroup>
 
 </Project>

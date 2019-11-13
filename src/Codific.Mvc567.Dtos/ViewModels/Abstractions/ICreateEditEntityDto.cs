@@ -18,7 +18,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Codific.Mvc567.Entities.ViewModels.Abstractions
+namespace Codific.Mvc567.Dtos.ViewModels.Abstractions
 {
     public interface ICreateEditEntityDto
     {

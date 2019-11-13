@@ -16,6 +16,7 @@
 
 using System.Threading.Tasks;
 using Codific.Mvc567.DataAccess.Abstraction;
+using Codific.Mvc567.Dtos.Entities;
 using Codific.Mvc567.Services.Abstractions;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
@@ -44,7 +45,7 @@ namespace Codific.Mvc567.Components.TagHelpers
 
             var userEmail = this.ViewContext.HttpContext.User.Identity.Name;
 
-            var user = await this.identityService.GetUserByEmailAsync(userEmail);
+            var user = await this.identityService.GetUserByEmailAsync<SimpleUserDto>(userEmail);
 
             string firstName = string.Empty;
             string lastName = string.Empty;

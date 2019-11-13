@@ -19,7 +19,7 @@ using System.Globalization;
 using Codific.Mvc567.Common.Enums;
 using Codific.Mvc567.Common;
 
-namespace Codific.Mvc567.Entities.ViewModels.Abstractions.Table
+namespace Codific.Mvc567.Dtos.ViewModels.Abstractions.Table
 {
     public class TableCellViewModel
     {

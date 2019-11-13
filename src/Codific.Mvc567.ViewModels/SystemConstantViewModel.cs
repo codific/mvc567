@@ -19,7 +19,7 @@ using Codific.Mvc567.Common.Enums;
 using Codific.Mvc567.Common.Attributes;
 using Codific.Mvc567.Entities.Database;
 using System.ComponentModel.DataAnnotations;
-using Codific.Mvc567.Entities.ViewModels.Abstractions;
+using Codific.Mvc567.Dtos.ViewModels.Abstractions;
 using System;
 
 namespace Codific.Mvc567.ViewModels

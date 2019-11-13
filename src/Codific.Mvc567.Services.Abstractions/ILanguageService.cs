@@ -26,9 +26,9 @@ namespace Codific.Mvc567.Services.Abstractions
 
         string[] GetAllLanguageCodes();
 
-        ILanguageDto GetDefaultLanguage();
+        TLanguageModel GetDefaultLanguage<TLanguageModel>();
 
-        Task<ILanguageDto> GetDefaultLanguageAsync();
+        Task<TLanguageModel> GetDefaultLanguageAsync<TLanguageModel>();
 
         Task<bool> GenerateLanguageTranslationFileAsync(Guid languageId);
 

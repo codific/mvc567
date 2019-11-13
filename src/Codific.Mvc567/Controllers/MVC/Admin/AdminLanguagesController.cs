@@ -18,18 +18,18 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
 using Codific.Mvc567.Common;
 using Codific.Mvc567.Common.Attributes;
 using Codific.Mvc567.Controllers.Abstractions;
 using Codific.Mvc567.DataAccess.Identity;
+using Codific.Mvc567.Dtos.ViewModels.Abstractions;
+using Codific.Mvc567.Dtos.ViewModels.Abstractions.Table;
 using Codific.Mvc567.Entities.Database;
-using Codific.Mvc567.Entities.DataTransferObjects.Entities;
-using Codific.Mvc567.Entities.ViewModels.Abstractions;
-using Codific.Mvc567.Entities.ViewModels.Abstractions.Table;
 using Codific.Mvc567.Entities.ViewModels.Mapping;
-using Codific.Mvc567.Services.Infrastructure;
+using Codific.Mvc567.Services.Abstractions;
+using Codific.Mvc567.ViewModels;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Codific.Mvc567.Controllers.MVC.Admin
 {
@@ -38,7 +38,7 @@ namespace Codific.Mvc567.Controllers.MVC.Admin
     [ValidateAdminCookie]
     [Authorize(Policy = ApplicationPermissions.AccessAdministrationPolicy)]
     [Authorize(Policy = ApplicationPermissions.LanguagesManagementPolicy)]
-    public class AdminLanguagesController : AbstractEntityController<Language, LanguageDto>
+    public class AdminLanguagesController : AbstractEntityController<Language, LanguageViewModel>
     {
         private readonly ILanguageService languageService;
 

@@ -15,6 +15,7 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 using Codific.Mvc567.Common.Extensions;
+using Codific.Mvc567.Dtos.Entities;
 using Codific.Mvc567.Services.Abstractions;
 using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -60,7 +61,7 @@ namespace Codific.Mvc567.Components.TagHelpers
                 languageCode = ViewContext.HttpContext.GetLanguageCode();
                 if (string.IsNullOrEmpty(languageCode))
                 {
-                    languageCode = this.languageService.GetDefaultLanguage()?.Code?.ToLower();
+                    languageCode = this.languageService.GetDefaultLanguage<SimpleLanguageDto>()?.Code?.ToLower();
                 }
             }
 

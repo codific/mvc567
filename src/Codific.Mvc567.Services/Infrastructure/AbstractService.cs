@@ -26,9 +26,9 @@ using Codific.Mvc567.DataAccess.Abstraction;
 using Codific.Mvc567.DataAccess.Abstractions.Repositories;
 using Codific.Mvc567.Entities.Database;
 
-namespace Codific.Mvc567.Services.Abstractions
+namespace Codific.Mvc567.Services.Infrastructure
 {
-    public abstract class AbstractService : IAbstractService
+    public abstract class AbstractService
     {
         protected readonly IUnitOfWork uow;
         protected readonly IMapper mapper;

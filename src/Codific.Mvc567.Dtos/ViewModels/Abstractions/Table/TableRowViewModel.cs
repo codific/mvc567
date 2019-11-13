@@ -15,10 +15,11 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 using Codific.Mvc567.Common.Enums;
+using Codific.Mvc567.Dtos.ViewModels.Abstractions.Table;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Codific.Mvc567.Entities.ViewModels.Abstractions.Table
+namespace Codific.Mvc567.Dtos.ViewModels.Abstractions.Table
 {
     public class TableRowViewModel
     {

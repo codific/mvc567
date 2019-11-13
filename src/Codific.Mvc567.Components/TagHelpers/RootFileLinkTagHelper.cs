@@ -17,6 +17,7 @@
 using System;
 using System.Threading.Tasks;
 using Codific.Mvc567.Common;
+using Codific.Mvc567.Dtos.Entities;
 using Codific.Mvc567.Services.Abstractions;
 using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Razor.TagHelpers;
@@ -54,7 +55,7 @@ namespace Codific.Mvc567.Components.TagHelpers
             Guid parsedFildId = Guid.Empty;
             if (!string.IsNullOrEmpty(FileId) && Guid.TryParse(FileId, out parsedFildId))
             {
-                var fileEntity = fileSystemService.GetFileById(parsedFildId);
+                var fileEntity = fileSystemService.GetFileById<SimpleFileDto>(parsedFildId);
                 string rootHref = "/admin/roots/";
                 if (fileEntity != null && fileEntity.Path.Contains(Constants.PrivateRootFolderName))
                 {

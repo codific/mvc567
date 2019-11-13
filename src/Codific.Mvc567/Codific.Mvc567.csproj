@@ -92,7 +92,10 @@
     <ProjectReference Include="..\Codific.Mvc567.Entities\Codific.Mvc567.Entities.csproj" />
     <ProjectReference Include="..\Codific.Mvc567.Services\Codific.Mvc567.Services.csproj" />
     <ProjectReference Include="..\Codific.Mvc567.UI\Codific.Mvc567.UI.csproj" />
-    <ProjectReference Include="..\..\..\Application\Codific.Mvc567.ViewModels\Codific.Mvc567.ViewModels.csproj" />
+    <ProjectReference Include="..\Codific.Mvc567.Dtos\Codific.Mvc567.Dtos.csproj" />
+    <ProjectReference Include="..\Codific.Mvc567.ViewModels\Codific.Mvc567.ViewModels.csproj" />
+    <ProjectReference Include="..\Codific.Mvc567.DataAccess.Abstractions\Codific.Mvc567.DataAccess.Abstractions.csproj" />
+    <ProjectReference Include="..\Codific.Mvc567.Services.Abstractions\Codific.Mvc567.Services.Abstractions.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Compile Update="Resources.Designer.cs">
@@ -115,5 +118,8 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>ScaffoldingResources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Profiles\" />
   </ItemGroup>
 </Project>

@@ -21,7 +21,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Codific.Mvc567.Entities.ViewModels.Abstractions
+namespace Codific.Mvc567.Dtos.ViewModels.Abstractions
 {
     public class CreateEditEntityViewModel : ICreateEditEntityDto
     {

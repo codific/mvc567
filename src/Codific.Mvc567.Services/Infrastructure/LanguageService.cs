@@ -23,10 +23,8 @@ using AutoMapper;
 using Codific.Mvc567.Common;
 using Codific.Mvc567.Common.Extensions;
 using Codific.Mvc567.DataAccess.Abstraction;
-using Codific.Mvc567.Dtos.Abstractions;
 using Codific.Mvc567.Entities.Database;
 using Codific.Mvc567.Services.Abstractions;
-using Codific.Mvc567.ViewModels;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
@@ -74,35 +72,35 @@ namespace Codific.Mvc567.Services.Infrastructure
             }
         }
 
-        public ILanguageDto GetDefaultLanguage()
+        public TLanguageModel GetDefaultLanguage<TLanguageModel>()
         {
             try
             {
                 var languageEntity = this.standardRepository.Query<Language>(x => x.IsDefault).FirstOrDefault();
-                var mappedLanguage = this.mapper.Map<LanguageViewModel>(languageEntity);
+                var mappedLanguage = this.mapper.Map<TLanguageModel>(languageEntity);
 
                 return mappedLanguage;
             }
             catch (Exception ex)
             {
                 LogError(ex, nameof(GetAllLanguageCodesAsync));
-                return null;
+                return default(TLanguageModel);
             }
         }
 
-        public async Task<ILanguageDto> GetDefaultLanguageAsync()
+        public async Task<TLanguageModel> GetDefaultLanguageAsync<TLanguageModel>()
         {
             try
             {
                 var languageEntity = (await this.standardRepository.QueryAsync<Language>(x => x.IsDefault)).FirstOrDefault();
-                var mappedLanguage = this.mapper.Map<LanguageViewModel>(languageEntity);
+                var mappedLanguage = this.mapper.Map<TLanguageModel>(languageEntity);
 
                 return mappedLanguage;
             }
             catch (Exception ex)
             {
                 await LogErrorAsync(ex, nameof(GetAllLanguageCodesAsync));
-                return null;
+                return default(TLanguageModel);
             }
         }
 

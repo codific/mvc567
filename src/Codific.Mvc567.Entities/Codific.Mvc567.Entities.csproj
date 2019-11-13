@@ -25,7 +25,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Application\Codific.Mvc567.DataAccess.Abstractions\Codific.Mvc567.DataAccess.Abstractions.csproj" />
+    <ProjectReference Include="..\Codific.Mvc567.DataAccess.Abstractions\Codific.Mvc567.DataAccess.Abstractions.csproj" />
+    <ProjectReference Include="..\Codific.Mvc567.Common\Codific.Mvc567.Common.csproj" />
   </ItemGroup>
 
   <ItemGroup>

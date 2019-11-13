@@ -16,7 +16,7 @@
 
 using Codific.Mvc567.Common.Enums;
 
-namespace Codific.Mvc567.Entities.ViewModels.Abstractions.Details
+namespace Codific.Mvc567.Dtos.ViewModels.Abstractions.Details
 {
     public class DetailsPropertyViewModel
     {

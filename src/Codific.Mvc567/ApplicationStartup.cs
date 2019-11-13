@@ -22,9 +22,12 @@ using Codific.Mvc567.Common;
 using Codific.Mvc567.Common.Attributes;
 using Codific.Mvc567.Common.Options;
 using Codific.Mvc567.DataAccess;
+using Codific.Mvc567.DataAccess.Abstractions.Repositories;
+using Codific.Mvc567.DataAccess.Core;
 using Codific.Mvc567.DataAccess.Identity;
 using Codific.Mvc567.Entities.Database;
 using Codific.Mvc567.Middlewares;
+using Codific.Mvc567.Profiles;
 using Codific.Mvc567.Seed;
 using Codific.Mvc567.Services.Extensions;
 using Codific.Mvc567.UI;
@@ -86,6 +89,7 @@ namespace Codific.Mvc567
                 configuration.AllowNullCollections = true;
                 configuration.AllowNullDestinationValues = true;
                 configuration.AddMaps(this.applicationAssembly);
+                configuration.AddProfile<BaseMappingProfile>();
                 RegisterMappingProfiles(ref configuration);
             })));
 

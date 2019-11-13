@@ -17,8 +17,9 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Codific.Mvc567.DataAccess.Abstractions.Entities;
 
-namespace Codific.Mvc567.DataAccess.Abstractions.Entities
+namespace Codific.Mvc567.Entities.Database
 {
     public class EntityBase : IEntityBase
     {

@@ -14,10 +14,10 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-using Codific.Mvc567.Entities.ViewModels.Abstractions.Table;
+using Codific.Mvc567.Dtos.ViewModels.Abstractions.Table;
 using System.Collections.Generic;
 
-namespace Codific.Mvc567.Entities.ViewModels.Abstractions
+namespace Codific.Mvc567.Dtos.ViewModels.Abstractions
 {
     public class AllEntitiesViewModel
     {

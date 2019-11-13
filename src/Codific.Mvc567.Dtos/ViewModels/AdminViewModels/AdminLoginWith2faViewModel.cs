@@ -16,7 +16,7 @@
 
 using System.ComponentModel.DataAnnotations;
 
-namespace Codific.Mvc567.Entities.ViewModels.AdminViewModels
+namespace Codific.Mvc567.Dtos.ViewModels.AdminViewModels
 {
     public class AdminLoginWith2faViewModel
     {

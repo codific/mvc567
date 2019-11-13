@@ -14,13 +14,12 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+using System;
+using Codific.Mvc567.DataAccess.Core.Context;
+using Codific.Mvc567.Entities.Database;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using Codific.Mvc567.DataAccess.Abstraction.Context;
-using Codific.Mvc567.Entities.Database;
-using System;
-using Codific.Mvc567.DataAccess.Core.Context;
 
 namespace Codific.Mvc567.DataAccess
 {

@@ -14,17 +14,16 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using Codific.Mvc567.Common.Enums;
-using Codific.Mvc567.DataAccess;
-using Codific.Mvc567.DataAccess.Identity;
-using Codific.Mvc567.Entities.Database;
-using Codific.Mvc567.Services.Infrastructure;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Codific.Mvc567.DataAccess;
+using Codific.Mvc567.DataAccess.Identity;
+using Codific.Mvc567.Entities.Database;
+using Codific.Mvc567.Services.Abstractions;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 namespace Codific.Mvc567.Seed
 {

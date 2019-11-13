@@ -16,7 +16,7 @@
 
 using System.Collections.Generic;
 
-namespace Codific.Mvc567.Entities.ViewModels.Abstractions.Details
+namespace Codific.Mvc567.Dtos.ViewModels.Abstractions.Details
 {
     public class DetailsViewModel
     {

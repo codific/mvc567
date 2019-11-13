@@ -20,7 +20,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Codific.Mvc567.Entities.ViewModels.AdminViewModels
+namespace Codific.Mvc567.Dtos.ViewModels.AdminViewModels
 {
     public class AdminLoginViewModel
     {

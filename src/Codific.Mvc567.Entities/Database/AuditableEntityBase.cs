@@ -14,17 +14,20 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-using Microsoft.AspNetCore.Identity;
 using System;
 using System.ComponentModel.DataAnnotations.Schema;
+using Codific.Mvc567.DataAccess.Abstractions.Entities;
 
-namespace Codific.Mvc567.DataAccess.Abstractions.Entities
+namespace Codific.Mvc567.Entities.Database
 {
-    public abstract class AuditableByUserEntityBase<TUser> : AuditableEntityBase
+    public class AuditableEntityBase : EntityBase, IAuditableEntityBase
     {
-        public Guid UserId { get; set; }
+        public DateTime CreatedOn { get; set; }
 
-        [ForeignKey("UserId")]
-        public virtual TUser User { get; set; }
+        public string CreatedBy { get; set; }
+
+        public DateTime UpdatedOn { get; set; }
+
+        public string UpdatedBy { get; set; }
     }
 }

@@ -37,10 +37,10 @@ namespace Codific.Mvc567.Services.Abstractions
 
         Task<FileSystemResult> GetFileAsync(string filePath, string baseDirectory = "");
 
-        Task<IFileDto> UploadFileAsync(IFormFile formFile);
+        Task<TFileModel> UploadFileAsync<TFileModel>(IFormFile formFile);
 
-        Task<IFileDto> GetFileByIdAsync(Guid id);
+        Task<TFileModel> GetFileByIdAsync<TFileModel>(Guid id);
 
-        IFileDto GetFileById(Guid id);
+        TFileModel GetFileById<TFileModel>(Guid id);
     }
 }

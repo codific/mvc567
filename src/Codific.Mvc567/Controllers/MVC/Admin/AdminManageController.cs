@@ -14,16 +14,16 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using Codific.Mvc567.Common.Attributes;
-using Codific.Mvc567.DataAccess.Identity;
-using Codific.Mvc567.Entities.Database;
-using Codific.Mvc567.Entities.DataTransferObjects.ViewModels.AdminViewModels;
 using System.Text;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
+using Codific.Mvc567.Common.Attributes;
+using Codific.Mvc567.DataAccess.Identity;
+using Codific.Mvc567.Dtos.ViewModels.AdminViewModels;
+using Codific.Mvc567.Entities.Database;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Codific.Mvc567.Controllers.MVC.Admin
 {
