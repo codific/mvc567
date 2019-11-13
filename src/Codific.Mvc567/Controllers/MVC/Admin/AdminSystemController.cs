@@ -14,11 +14,9 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-using System.Threading.Tasks;
+using Codific.Mvc567.DataAccess.Identity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Codific.Mvc567.Common.Attributes;
-using Codific.Mvc567.DataAccess.Identity;
 
 namespace Codific.Mvc567.Controllers.MVC.Admin
 {
@@ -27,12 +25,5 @@ namespace Codific.Mvc567.Controllers.MVC.Admin
     [ApiExplorerSettings(IgnoreApi = true)]
     [Authorize(Policy = ApplicationPermissions.AccessAdministrationPolicy)]
     public class AdminSystemController : Controller
-    {
-        [HttpGet]
-        [Route("swagger")]
-        public IActionResult Swagger()
-        {
-            return View();
-        }
-    }
+    { }
 }

@@ -16,7 +16,6 @@
 
 using System;
 using System.Text;
-//using Swashbuckle.AspNetCore.Swagger;
 using AutoMapper;
 using Codific.Mvc567.Common;
 using Codific.Mvc567.Common.Attributes;
@@ -26,7 +25,6 @@ using Codific.Mvc567.DataAccess.Abstractions.Repositories;
 using Codific.Mvc567.DataAccess.Core;
 using Codific.Mvc567.DataAccess.Identity;
 using Codific.Mvc567.Entities.Database;
-using Codific.Mvc567.Middlewares;
 using Codific.Mvc567.Profiles;
 using Codific.Mvc567.Seed;
 using Codific.Mvc567.Services.Extensions;
@@ -107,7 +105,7 @@ namespace Codific.Mvc567
             })
             .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, options =>
             {
-                options.LoginPath = "/login";
+                options.LoginPath = "/admin/login";
                 options.LogoutPath = "/";
                 options.ExpireTimeSpan = TimeSpan.FromDays(7);
             })
@@ -146,11 +144,6 @@ namespace Codific.Mvc567
             services.AddScoped<VisibleReCaptchaValidateAttribute>();
 
             services.Configure<SmtpConfig>(Configuration.GetSection("SmtpConfig"));
-
-            //services.AddSwaggerGen(c =>
-            //{
-            //    c.SwaggerDoc("v1", new Info { Title = "Mvc567 API", Version = "v1" });
-            //});
 
             RegisterServices(ref services);
 
@@ -243,16 +236,6 @@ namespace Codific.Mvc567
             routes.MapRoute(
                 name: "default-languages",
                 template: Constants.LanguageControllerPageRoute + "/{controller=Home}/{action=Index}/{id?}");
-
-            //routes.MapRoute(
-            //    name: "static-pages",
-            //    template: Constants.ControllerStaticPageRoute,
-            //    defaults: new { controller = "StaticPage", action = "PageAction" });
-
-            //routes.MapRoute(
-            //    name: "static-pages-languages",
-            //    template: Constants.LanguageControllerStaticPageRoute,
-            //    defaults: new { controller = "StaticPage", action = "PageAction" });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -276,14 +259,6 @@ namespace Codific.Mvc567
             app.UseHealthChecks("/system/health");
             app.UseStaticFiles();
             app.UseAuthentication();
-            app.UseAdminRedirection();
-            //app.UseSwaggerAdminValidation();
-            //app.UseSwagger();
-
-            //app.UseSwaggerUI(c =>
-            //{
-            //    c.SwaggerEndpoint("/swagger/v1/swagger.json", "API V1");
-            //});
 
             ConfigureMiddlewareAfterAuthentication(ref app);
 
