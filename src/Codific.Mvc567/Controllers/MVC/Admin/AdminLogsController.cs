@@ -26,12 +26,12 @@ using Codific.Mvc567.Entities.ViewModels.Abstractions;
 using Codific.Mvc567.Entities.Database;
 using Codific.Mvc567.Entities.DataTransferObjects.Entities;
 using Codific.Mvc567.Controllers.Abstractions;
+using Codific.Mvc567.Services.Abstractions;
 
 namespace Codific.Mvc567.Controllers.MVC.Admin
 {
     [Area("Admin")]
     [Route("admin/system/logs/")]
-    [ValidateAdminCookie]
     [Authorize(Policy = ApplicationPermissions.AccessAdministrationPolicy)]
     [Authorize(Policy = ApplicationPermissions.AccessErrorLogsPolicy)]
     public class AdminLogsController : AbstractEntityController<Log, LogDto>

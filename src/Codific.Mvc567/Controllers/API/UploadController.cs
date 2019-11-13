@@ -15,16 +15,14 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Codific.Mvc567.DataAccess.Identity;
+using Codific.Mvc567.ViewModels;
+using Codific.Mvc567.Services.Abstractions;
+using Codific.Mvc567.Services.Validators;
+using Codific.Mvc567.Services.Validators.Results;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Codific.Mvc567.DataAccess.Identity;
-using Codific.Mvc567.Entities.DataTransferObjects.Entities;
-using Codific.Mvc567.Services.Infrastructure;
-using Codific.Mvc567.Services.Validators;
-using Codific.Mvc567.Services.Validators.Results;
 
 namespace Codific.Mvc567.Controllers.API
 {
@@ -44,15 +42,15 @@ namespace Codific.Mvc567.Controllers.API
         [HttpPost]
         [Route("file")]
         [ProducesResponseType(typeof(ValidationResult), StatusCodes.Status415UnsupportedMediaType)]
-        [ProducesResponseType(typeof(FileDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(FileViewModel), StatusCodes.Status200OK)]
         public async Task<IActionResult> File([FromForm]IFormCollection formCollection)
         {
             var formFile = GetFormFileFromFormCollection(formCollection);
             var validationResult = this.validationProvider.ValidateFormFile(formFile);
             if (validationResult.Success)
             {
-                var file = await this.fileSystemService.UploadFileAsync(formFile);
-                if (file != null)
+                var file = await this.fileSystemService.UploadFileAsync<FileViewModel>(formFile);
+                if (!(file is null))
                 {
                     return Ok(file);
                 }

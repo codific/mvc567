@@ -14,14 +14,12 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+using System;
+using System.Threading.Tasks;
+using Codific.Mvc567.Common;
+using Codific.Mvc567.Services.Abstractions;
 using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Razor.TagHelpers;
-using Codific.Mvc567.Common;
-using Codific.Mvc567.Services.Infrastructure;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Codific.Mvc567.Components.TagHelpers
 {

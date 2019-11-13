@@ -17,7 +17,7 @@
 using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 using Codific.Mvc567.Components.TagHelpers.Utilities;
-using Codific.Mvc567.DataAccess.Abstraction.Repositories;
+using Codific.Mvc567.DataAccess.Abstractions.Repositories;
 using System;
 using System.Text;
 using System.Threading.Tasks;

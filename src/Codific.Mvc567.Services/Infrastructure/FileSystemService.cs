@@ -27,9 +27,10 @@ using Codific.Mvc567.Common;
 using Codific.Mvc567.Common.Extensions;
 using Codific.Mvc567.Common.Utilities;
 using Codific.Mvc567.DataAccess.Abstraction;
-using Codific.Mvc567.Entities.DataTransferObjects.Entities;
-using Codific.Mvc567.Entities.DataTransferObjects.ServiceResults;
 using Codific.Mvc567.Services.Abstractions;
+using Codific.Mvc567.Dtos.ServiceResults;
+using Codific.Mvc567.Dtos.Abstractions;
+using Codific.Mvc567.ViewModels;
 
 namespace Codific.Mvc567.Services.Infrastructure
 {
@@ -68,13 +69,13 @@ namespace Codific.Mvc567.Services.Infrastructure
             return null;
         }
 
-        public async Task<FileDto> GetFileByIdAsync(Guid id)
+        public async Task<IFileDto> GetFileByIdAsync(Guid id)
         {
             try
             {
                 var standardRepository = this.uow.GetStandardRepository();
                 var file = await standardRepository.GetAsync<Mvc567.Entities.Database.File>(id);
-                var fileDto = this.mapper.Map<FileDto>(file);
+                var fileDto = this.mapper.Map<FileViewModel>(file);
 
                 return fileDto;
             }
@@ -84,13 +85,13 @@ namespace Codific.Mvc567.Services.Infrastructure
             }
         }
 
-        public FileDto GetFileById(Guid id)
+        public IFileDto GetFileById(Guid id)
         {
             try
             {
                 var standardRepository = this.uow.GetStandardRepository();
                 var file = standardRepository.Get<Mvc567.Entities.Database.File>(id);
-                var fileDto = this.mapper.Map<FileDto>(file);
+                var fileDto = this.mapper.Map<FileViewModel>(file);
 
                 return fileDto;
             }
@@ -157,7 +158,7 @@ namespace Codific.Mvc567.Services.Infrastructure
             return await ScanDirectoryAsync(PublicRootDirectory, PublicRootDirectory);
         }
 
-        public async Task<FileDto> UploadFileAsync(IFormFile formFile)
+        public async Task<IFileDto> UploadFileAsync(IFormFile formFile)
         {
             try
             {
@@ -188,7 +189,7 @@ namespace Codific.Mvc567.Services.Infrastructure
                 this.uow.GetStandardRepository().Add<Mvc567.Entities.Database.File>(fileEntity);
                 await this.uow.SaveChangesAsync();
 
-                var fileDto = this.mapper.Map<FileDto>(fileEntity);
+                var fileDto = this.mapper.Map<IFileDto>(fileEntity);
                 return fileDto;
             }
             catch (Exception ex)

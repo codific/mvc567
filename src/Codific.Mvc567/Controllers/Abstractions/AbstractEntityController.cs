@@ -20,7 +20,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Codific.Mvc567.Common.Utilities;
-using Codific.Mvc567.DataAccess.Abstraction.Entities;
+using Codific.Mvc567.DataAccess.Abstractions.Entities;
 using Codific.Mvc567.Services.Infrastructure;
 using Codific.Mvc567.Common;
 using System.Net.Http;
@@ -30,6 +30,7 @@ using Codific.Mvc567.Entities.ViewModels.Mapping;
 using Codific.Mvc567.Entities.ViewModels.Abstractions;
 using Codific.Mvc567.Common.Attributes;
 using Codific.Mvc567.Common.Extensions;
+using Codific.Mvc567.Services.Abstractions;
 
 namespace Codific.Mvc567.Controllers.Abstractions
 {

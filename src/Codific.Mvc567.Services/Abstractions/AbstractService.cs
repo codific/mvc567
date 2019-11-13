@@ -14,17 +14,17 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-using AutoMapper;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using Codific.Mvc567.DataAccess.Abstraction;
-using Codific.Mvc567.Common.Utilities;
+using AutoMapper;
 using Codific.Mvc567.Common.Attributes;
+using Codific.Mvc567.Common.Utilities;
+using Codific.Mvc567.DataAccess.Abstraction;
+using Codific.Mvc567.DataAccess.Abstractions.Repositories;
 using Codific.Mvc567.Entities.Database;
-using Codific.Mvc567.DataAccess.Abstraction.Repositories;
 
 namespace Codific.Mvc567.Services.Abstractions
 {

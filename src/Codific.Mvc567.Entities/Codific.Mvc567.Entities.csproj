@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
 	  <Company>Intellisoft567</Company>
     <Product>mvc567</Product>
     <PackageProjectUrl>https://github.com/intellisoft567/mvc567</PackageProjectUrl>
@@ -19,12 +19,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="AutoMapper" Version="8.1.1" />
+    <PackageReference Include="AutoMapper" Version="9.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.0.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Codific.Mvc567.DataAccess\Codific.Mvc567.DataAccess.csproj" />
+    <ProjectReference Include="..\..\..\Application\Codific.Mvc567.DataAccess.Abstractions\Codific.Mvc567.DataAccess.Abstractions.csproj" />
   </ItemGroup>
 
   <ItemGroup>
@@ -34,4 +35,8 @@
     </None>
   </ItemGroup>
 
+  <ItemGroup>
+    <Compile Remove="Database\StaticPage.cs" />
+    <Compile Remove="Database\SitemapItemPattern.cs" />
+  </ItemGroup>
 </Project>

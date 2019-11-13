@@ -14,6 +14,15 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+using System;
+using System.IO;
+using System.Net;
+using System.Net.Mail;
+using System.Threading.Tasks;
+using Codific.Mvc567.Common.Options;
+using Codific.Mvc567.Dtos.EmailModels.Abstraction;
+using Codific.Mvc567.Dtos.ServiceResults;
+using Codific.Mvc567.Services.Abstractions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Abstractions;
@@ -23,14 +32,6 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Options;
-using Codific.Mvc567.Common.Options;
-using Codific.Mvc567.Entities.DataTransferObjects.EmailModels.Abstraction;
-using Codific.Mvc567.Entities.DataTransferObjects.ServiceResults;
-using System;
-using System.IO;
-using System.Net;
-using System.Net.Mail;
-using System.Threading.Tasks;
 
 namespace Codific.Mvc567.Services.Infrastructure
 {

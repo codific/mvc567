@@ -16,7 +16,7 @@
 
 using AutoMapper.Configuration.Annotations;
 using Codific.Mvc567.Common.Attributes;
-using Codific.Mvc567.DataAccess.Abstraction.Entities;
+using Codific.Mvc567.DataAccess.Abstractions.Entities;
 using System;
 using System.ComponentModel.DataAnnotations.Schema;
 

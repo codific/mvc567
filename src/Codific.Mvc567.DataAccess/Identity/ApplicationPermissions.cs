@@ -33,7 +33,7 @@ namespace Codific.Mvc567.DataAccess.Identity
         public const string PublicRootAccessPolicy = "Public Root Access";
         public const string PrivateRootAccessPolicy = "Private Root Access";
 
-        public const string StaticPageManagementPolicy = "Static Page Management";
+        //public const string StaticPageManagementPolicy = "Static Page Management";
         public const string SearchEngineOptimizationManagementPolicy = "Search Engine Optimization Management";
         public const string LanguagesManagementPolicy = "Languages Management";
 
@@ -46,7 +46,7 @@ namespace Codific.Mvc567.DataAccess.Identity
         public static ApplicationPermission PublicRootAccess = new ApplicationPermission(PublicRootAccessPolicy);
         public static ApplicationPermission PrivateRootAccess = new ApplicationPermission(PrivateRootAccessPolicy);
 
-        public static ApplicationPermission StaticPageManagement = new ApplicationPermission(StaticPageManagementPolicy);
+        //public static ApplicationPermission StaticPageManagement = new ApplicationPermission(StaticPageManagementPolicy);
         public static ApplicationPermission SearchEngineOptimizationManagement = new ApplicationPermission(SearchEngineOptimizationManagementPolicy);
         public static ApplicationPermission LanguagesManagement = new ApplicationPermission(LanguagesManagementPolicy);
 
@@ -62,7 +62,7 @@ namespace Codific.Mvc567.DataAccess.Identity
                 PublicRootAccess,
                 PrivateRootAccess,
 
-                StaticPageManagement,
+                //StaticPageManagement,
                 SearchEngineOptimizationManagement,
                 LanguagesManagement
             };

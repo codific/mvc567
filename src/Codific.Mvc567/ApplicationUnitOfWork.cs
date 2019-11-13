@@ -15,8 +15,8 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 using Microsoft.AspNetCore.Http;
-using Codific.Mvc567.DataAccess.Abstraction;
-using Codific.Mvc567.DataAccess.Abstraction.Context;
+using Codific.Mvc567.DataAccess.Abstractions;
+using Codific.Mvc567.DataAccess.Abstractions.Context;
 using Codific.Mvc567.Entities.Database;
 using System;
 

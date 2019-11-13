@@ -16,7 +16,7 @@
 
 using Codific.Mvc567.Common.Enums;
 using Codific.Mvc567.Common.Attributes;
-using Codific.Mvc567.DataAccess.Abstraction.Entities;
+using Codific.Mvc567.DataAccess.Abstractions.Entities;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Codific.Mvc567.Entities.Database

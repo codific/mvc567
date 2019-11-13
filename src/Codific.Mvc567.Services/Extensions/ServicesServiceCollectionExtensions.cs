@@ -15,9 +15,11 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 using Microsoft.Extensions.DependencyInjection;
-using Codific.Mvc567.DataAccess.Abstraction.Context;
+using Codific.Mvc567.DataAccess.Abstractions.Context;
 using Codific.Mvc567.Entities.Database;
 using Codific.Mvc567.Services.Infrastructure;
+using Codific.Mvc567.DataAccess.Core.Context;
+using Codific.Mvc567.Services.Abstractions;
 
 namespace Codific.Mvc567.Services.Extensions
 {
@@ -27,14 +29,11 @@ namespace Codific.Mvc567.Services.Extensions
         {
             services.AddScoped<IEmailService, EmailService>();
             services.AddScoped<IEntityManager, EntityManager>();
-            services.AddScoped<ISEOService, SEOService>();
             services.AddScoped<IFileSystemService, FileSystemService>();
             services.AddScoped<IIdentityService, IdentityService>();
             services.AddScoped<IAuthenticationService, AuthenticationService>();
-            services.AddScoped<IStaticPageService, StaticPageService>();
             services.AddScoped<ILanguageService, LanguageService>();
             services.AddScoped<ILogService, LogService>();
-            services.AddSingleton<ISingletonSecurityService, SingletonSecurityService>();
 
             return services;
         }
