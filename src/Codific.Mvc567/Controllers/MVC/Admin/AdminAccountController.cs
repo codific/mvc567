@@ -42,7 +42,7 @@ namespace Codific.Mvc567.Controllers.MVC.Admin
         private readonly SignInManager<User> signInManager;
         private readonly IIdentityService identityService;
         private readonly RoleManager<Role> roleManager;
-        private readonly Codific.Mvc567.Services.Abstractions.IAuthenticationService authenticationService;
+        private readonly Services.Abstractions.IAuthenticationService authenticationService;
         private readonly IHostingEnvironment hostingEnvironment;
 
         public AdminAccountController(
