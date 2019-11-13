@@ -18,12 +18,11 @@ using Codific.Mvc567.Common.Enums;
 using System;
 using AutoMapper;
 using Codific.Mvc567.Entities.Database;
-using Codific.Mvc567.Dtos.Abstractions;
 
 namespace Codific.Mvc567.ViewModels
 {
     [AutoMap(typeof(File), ReverseMap = true)]
-    public class FileViewModel : IFileDto
+    public class FileViewModel
     {
         public Guid Id { get; set; }
 

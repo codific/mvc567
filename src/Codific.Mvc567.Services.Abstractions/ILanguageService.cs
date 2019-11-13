@@ -16,7 +16,6 @@
 
 using System;
 using System.Threading.Tasks;
-using Codific.Mvc567.Dtos.Abstractions;
 
 namespace Codific.Mvc567.Services.Abstractions
 {

@@ -36,7 +36,7 @@ namespace Codific.Mvc567.Entities.Database
             Description = description;
         }
 
-        [Column(TypeName = "ntext")]
+        [Column(TypeName = "text")]
         public string Description { get; set; }
     }
 }

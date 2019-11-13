@@ -47,7 +47,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 
-
 namespace Codific.Mvc567
 {
     public class ApplicationStartup<TDatabaseContext, TStandardRepository>
@@ -86,6 +85,7 @@ namespace Codific.Mvc567
             services.AddSingleton<IMapper>(new Mapper(new MapperConfiguration(configuration =>
             {
                 configuration.AddMaps("Codific.Mvc567.Entities");
+                configuration.AddMaps("Codific.Mvc567.ViewModels");
                 configuration.AllowNullCollections = true;
                 configuration.AllowNullDestinationValues = true;
                 configuration.AddMaps(this.applicationAssembly);
@@ -168,10 +168,14 @@ namespace Codific.Mvc567
 
         protected virtual void RegisterDbContext(ref IServiceCollection services)
         {
-            services.AddDbContext<TDatabaseContext>(options =>
-            {
-                options.UseSqlServer(Configuration.GetConnectionString("DatabaseConnection"), b => b.MigrationsAssembly(this.applicationAssembly));
-            });
+            var connectionString = Configuration.GetConnectionString("DatabaseConnection");
+
+            services.AddEntityFrameworkNpgsql()
+                .AddDbContext<TDatabaseContext>(options =>
+                {
+                    options.UseNpgsql(connectionString, b => b.MigrationsAssembly(this.applicationAssembly));
+                })
+                .BuildServiceProvider();
 
             services.AddIdentity<User, Role>()
                 .AddEntityFrameworkStores<TDatabaseContext>()

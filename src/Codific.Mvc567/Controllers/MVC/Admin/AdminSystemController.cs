@@ -25,7 +25,6 @@ namespace Codific.Mvc567.Controllers.MVC.Admin
     [Area("Admin")]
     [Route("admin/system/")]
     [ApiExplorerSettings(IgnoreApi = true)]
-    [ValidateAdminCookie]
     [Authorize(Policy = ApplicationPermissions.AccessAdministrationPolicy)]
     public class AdminSystemController : Controller
     {

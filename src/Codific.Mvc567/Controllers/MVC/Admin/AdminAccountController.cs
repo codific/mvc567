@@ -67,7 +67,6 @@ namespace Codific.Mvc567.Controllers.MVC.Admin
 
         [Route("/admin/login")]
         [HttpGet]
-        [ValidateAdminCookie]
         public IActionResult Login()
         {
             if (User.Identity.IsAuthenticated)
@@ -82,7 +81,6 @@ namespace Codific.Mvc567.Controllers.MVC.Admin
 
         [Route("/admin/login")]
         [ValidateAntiForgeryToken]
-        [ValidateAdminCookie]
         [ServiceFilter(typeof(VisibleReCaptchaValidateAttribute))]
         [HttpPost]
         public async Task<IActionResult> Login(AdminLoginViewModel model)
@@ -122,7 +120,6 @@ namespace Codific.Mvc567.Controllers.MVC.Admin
 
         [Route("/admin/login-2fa")]
         [HttpGet]
-        [ValidateAdminCookie]
         public async Task<IActionResult> LoginWith2fa()
         {
             if (User.Identity.IsAuthenticated)
@@ -144,7 +141,6 @@ namespace Codific.Mvc567.Controllers.MVC.Admin
         [Route("/admin/login-2fa")]
         [ServiceFilter(typeof(VisibleReCaptchaValidateAttribute))]
         [ValidateAntiForgeryToken]
-        [ValidateAdminCookie]
         public async Task<IActionResult> LoginWith2fa(AdminLoginWith2faViewModel model)
         {
             if (User.Identity.IsAuthenticated)
@@ -183,7 +179,6 @@ namespace Codific.Mvc567.Controllers.MVC.Admin
 
         [Route("/admin/lockout")]
         [HttpGet]
-        [ValidateAdminCookie]
         public IActionResult Lockout()
         {
             if (User.Identity.IsAuthenticated)
@@ -198,7 +193,6 @@ namespace Codific.Mvc567.Controllers.MVC.Admin
         [Route("admin/logout")]
         [Authorize(Policy = ApplicationPermissions.AccessAdministrationPolicy)]
         [ValidateAntiForgeryToken]
-        [ValidateAdminCookie]
         public async Task<IActionResult> Logout()
         {
             await this.authenticationService.SignOutAsync(HttpContext);

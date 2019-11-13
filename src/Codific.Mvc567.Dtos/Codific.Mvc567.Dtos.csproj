@@ -9,7 +9,6 @@
     <Folder Include="EmailModels\" />
     <Folder Include="ServiceResults\" />
     <Folder Include="ViewModels\" />
-    <Folder Include="Abstractions\" />
     <Folder Include="Entities\" />
   </ItemGroup>
   <ItemGroup>

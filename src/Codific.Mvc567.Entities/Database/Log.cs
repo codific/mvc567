@@ -23,13 +23,14 @@ namespace Codific.Mvc567.Entities.Database
     public class Log : AuditableEntityBase
     {
         [SearchCriteria]
-        [Column(TypeName = "ntext")]
+        [Column(TypeName = "text")]
         public string StackTrace { get; set; }
 
         [SearchCriteria]
         public string Source { get; set; }
 
         [SearchCriteria]
+        [Column(TypeName = "text")]
         public string Message { get; set; }
 
         [SearchCriteria]

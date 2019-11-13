@@ -30,7 +30,6 @@ namespace Codific.Mvc567.Controllers.MVC.Admin
     [Area("Admin")]
     [Route("admin/manage/")]
     [ApiExplorerSettings(IgnoreApi = true)]
-    [ValidateAdminCookie]
     [Authorize(Policy = ApplicationPermissions.AccessAdministrationPolicy)]
     public class AdminManageController : Controller
     {

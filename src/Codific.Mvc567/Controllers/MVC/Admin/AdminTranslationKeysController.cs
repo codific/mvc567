@@ -31,7 +31,6 @@ namespace Codific.Mvc567.Controllers.MVC.Admin
 {
     [Area("Admin")]
     [Route("admin/languages/translations/keys/")]
-    [ValidateAdminCookie]
     [Authorize(Policy = ApplicationPermissions.AccessAdministrationPolicy)]
     [Authorize(Policy = ApplicationPermissions.LanguagesManagementPolicy)]
     public class AdminTranslationKeysController : AbstractEntityController<TranslationKey, TranslationKeyViewModel>

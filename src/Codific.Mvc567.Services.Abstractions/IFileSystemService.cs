@@ -17,7 +17,6 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Codific.Mvc567.Dtos.Abstractions;
 using Codific.Mvc567.Dtos.ServiceResults;
 using Microsoft.AspNetCore.Http;
 

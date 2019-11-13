@@ -22,15 +22,6 @@ namespace Codific.Mvc567.Common.Utilities
 {
     public static class CookiesFunctions
     {
-        [DebuggerHidden]
-        public static string[] GenerateAdminLoginCookieValues(string cookieStringFormat, string[] cookieParams, string secretIndexesString)
-        {
-            string cookieValue = CryptoFunctions.MD5Hash(string.Format(cookieStringFormat, cookieParams));
-            char[] cookieValueArray = cookieValue.ToCharArray();
-            int[] secretIndexes = secretIndexesString.Split(',').Select(x => int.Parse(x)).ToArray();
-            string cookieName = $"MVC.Allow.{CryptoFunctions.MD5Hash($"{cookieValueArray[secretIndexes[0]]}{cookieValueArray[secretIndexes[1]]}{cookieValueArray[secretIndexes[2]]}_login_cookie_value_{cookieValueArray[secretIndexes[3]]}{cookieValueArray[secretIndexes[4]]}{cookieValueArray[secretIndexes[5]]}")}";
 
-            return new string[] { cookieName, cookieValue };
-        }
     }
 }

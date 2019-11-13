@@ -37,7 +37,6 @@ namespace Codific.Mvc567.Controllers.MVC.Admin
 {
     [Area("Admin")]
     [Route("admin/users/")]
-    [ValidateAdminCookie]
     [Authorize(Policy = ApplicationPermissions.AccessAdministrationPolicy)]
     [Authorize(Policy = ApplicationPermissions.UsersManagementPolicy)]
     public class AdminUsersController : AbstractEntityController<User, UserViewModel>

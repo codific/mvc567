@@ -20,12 +20,11 @@ using Codific.Mvc567.Common.Attributes;
 using Codific.Mvc567.Entities.Database;
 using System;
 using Codific.Mvc567.Dtos.ViewModels.Abstractions;
-using Codific.Mvc567.Dtos.Abstractions;
 
 namespace Codific.Mvc567.ViewModels
 {
     [AutoMap(typeof(Language), ReverseMap = true)]
-    public class LanguageViewModel : CreateEditEntityViewModel, ILanguageDto
+    public class LanguageViewModel : CreateEditEntityViewModel
     {
         [EntityIdentifier]
         [DetailsOrder(0)]

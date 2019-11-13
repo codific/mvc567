@@ -19,12 +19,11 @@ using Codific.Mvc567.Common.Enums;
 using Codific.Mvc567.Common.Attributes;
 using Codific.Mvc567.Entities.Database;
 using System;
-using Codific.Mvc567.Dtos.Abstractions;
 
 namespace Codific.Mvc567.ViewModels
 {
     [AutoMap(typeof(User), ReverseMap = true)]
-    public class UserViewModel : IUserDto
+    public class UserViewModel
     {
         [DetailsOrder(0)]
         public string Id { get; set; }

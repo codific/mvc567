@@ -12,6 +12,8 @@ namespace Codific.Mvc567.Profiles
             CreateMap<File, SimpleFileDto>().ReverseMap();
 
             CreateMap<Language, SimpleLanguageDto>().ReverseMap();
+
+            CreateMap<User, SimpleUserDto>().ReverseMap();
         }
     }
 }
