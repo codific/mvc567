@@ -1,0 +1,18 @@
+version: 1.0.{build}
+image: Visual Studio 2019
+clone_depth: 1
+environment:
+  DOTNET_CLI_TELEMETRY_OPTOUT: 1
+before_build:
+- cmd: dotnet restore
+build:
+  project: Mvc567.sln
+  publish_nuget: true
+  publish_aspnet_core: true
+  publish_core_console: true
+  verbosity: minimal
+deploy:
+- provider: Environment
+  name: Nuget Production
+  on:
+    branch: master
