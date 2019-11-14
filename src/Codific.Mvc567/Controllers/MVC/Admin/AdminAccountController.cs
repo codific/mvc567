@@ -17,7 +17,6 @@
 using System;
 using System.Threading.Tasks;
 using Codific.Mvc567.Common.Attributes;
-using Codific.Mvc567.Common.Utilities;
 using Codific.Mvc567.Controllers.Abstractions;
 using Codific.Mvc567.DataAccess.Identity;
 using Codific.Mvc567.Dtos.ViewModels.AdminViewModels;
@@ -27,10 +26,10 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Hosting;
 
 namespace Codific.Mvc567.Controllers.MVC.Admin
 {
@@ -42,8 +41,8 @@ namespace Codific.Mvc567.Controllers.MVC.Admin
         private readonly SignInManager<User> signInManager;
         private readonly IIdentityService identityService;
         private readonly RoleManager<Role> roleManager;
-        private readonly Codific.Mvc567.Services.Abstractions.IAuthenticationService authenticationService;
-        private readonly IHostingEnvironment hostingEnvironment;
+        private readonly Services.Abstractions.IAuthenticationService authenticationService;
+        private readonly IWebHostEnvironment hostingEnvironment;
 
         public AdminAccountController(
             UserManager<User> userManager,
@@ -53,7 +52,7 @@ namespace Codific.Mvc567.Controllers.MVC.Admin
             Services.Abstractions.IAuthenticationService authenticationService,
             IConfiguration configuration, 
             IEmailService emailService,
-            IHostingEnvironment hostingEnvironment,
+            IWebHostEnvironment hostingEnvironment,
             ILanguageService languageService)
             : base(configuration, emailService, languageService)
         {
