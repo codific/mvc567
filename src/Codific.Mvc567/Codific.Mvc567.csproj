@@ -96,6 +96,7 @@
     <ProjectReference Include="..\Codific.Mvc567.ViewModels\Codific.Mvc567.ViewModels.csproj" />
     <ProjectReference Include="..\Codific.Mvc567.DataAccess.Abstractions\Codific.Mvc567.DataAccess.Abstractions.csproj" />
     <ProjectReference Include="..\Codific.Mvc567.Services.Abstractions\Codific.Mvc567.Services.Abstractions.csproj" />
+    <ProjectReference Include="..\Codific.Mvc567.CommonCore\Codific.Mvc567.CommonCore.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Compile Update="Resources.Designer.cs">
