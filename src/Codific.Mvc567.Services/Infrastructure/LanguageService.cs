@@ -22,6 +22,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Codific.Mvc567.Common;
 using Codific.Mvc567.Common.Extensions;
+using Codific.Mvc567.CommonCore;
 using Codific.Mvc567.DataAccess.Abstraction;
 using Codific.Mvc567.Entities.Database;
 using Codific.Mvc567.Services.Abstractions;
@@ -33,9 +34,9 @@ namespace Codific.Mvc567.Services.Infrastructure
 {
     public class LanguageService : AbstractService, ILanguageService
     {
-        private readonly IHostingEnvironment hostingEnvironment;
+        private readonly IWebHostEnvironment hostingEnvironment;
 
-        public LanguageService(IUnitOfWork uow, IMapper mapper, IHostingEnvironment hostingEnvironment) : base(uow, mapper)
+        public LanguageService(IUnitOfWork uow, IMapper mapper, IWebHostEnvironment hostingEnvironment) : base(uow, mapper)
         {
             this.hostingEnvironment = hostingEnvironment;
         }

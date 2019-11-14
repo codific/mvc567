@@ -29,14 +29,15 @@ using Codific.Mvc567.Common.Utilities;
 using Codific.Mvc567.DataAccess.Abstraction;
 using Codific.Mvc567.Services.Abstractions;
 using Codific.Mvc567.Dtos.ServiceResults;
+using Codific.Mvc567.CommonCore;
 
 namespace Codific.Mvc567.Services.Infrastructure
 {
     public class FileSystemService : AbstractService, IFileSystemService
     {
-        private readonly IHostingEnvironment hostingEnvironment;
+        private readonly IWebHostEnvironment hostingEnvironment;
         
-        public FileSystemService(IUnitOfWork uow, IMapper mapper, IHostingEnvironment hostingEnvironment) : base(uow, mapper)
+        public FileSystemService(IUnitOfWork uow, IMapper mapper, IWebHostEnvironment hostingEnvironment) : base(uow, mapper)
         {
             this.hostingEnvironment = hostingEnvironment;
         }

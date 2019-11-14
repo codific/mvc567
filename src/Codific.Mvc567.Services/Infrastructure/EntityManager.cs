@@ -24,6 +24,7 @@ using AutoMapper;
 using Codific.Mvc567.Common.Enums;
 using Codific.Mvc567.Common.Extensions;
 using Codific.Mvc567.Common.Utilities;
+using Codific.Mvc567.CommonCore;
 using Codific.Mvc567.DataAccess.Abstraction;
 using Codific.Mvc567.DataAccess.Abstractions.Entities;
 using Codific.Mvc567.Dtos.Api;
@@ -38,9 +39,9 @@ namespace Codific.Mvc567.Services.Infrastructure
 {
     public class EntityManager : AbstractService, IEntityManager
     {
-        private readonly IHostingEnvironment hostingEnvironment;
+        private readonly IWebHostEnvironment hostingEnvironment;
 
-        public EntityManager(IUnitOfWork uow, IMapper mapper, IHostingEnvironment hostingEnvironment) : base(uow, mapper)
+        public EntityManager(IUnitOfWork uow, IMapper mapper, IWebHostEnvironment hostingEnvironment) : base(uow, mapper)
         {
             this.hostingEnvironment = hostingEnvironment;
         }

@@ -47,6 +47,7 @@
     <ProjectReference Include="..\Codific.Mvc567.DataAccess.Abstractions\Codific.Mvc567.DataAccess.Abstractions.csproj" />
     <ProjectReference Include="..\Codific.Mvc567.Services.Abstractions\Codific.Mvc567.Services.Abstractions.csproj" />
     <ProjectReference Include="..\Codific.Mvc567.Dtos\Codific.Mvc567.Dtos.csproj" />
+    <ProjectReference Include="..\Codific.Mvc567.CommonCore\Codific.Mvc567.CommonCore.csproj" />
   </ItemGroup>
 
 </Project>
