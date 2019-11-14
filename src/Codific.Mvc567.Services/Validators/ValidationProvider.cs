@@ -24,15 +24,16 @@ using Codific.Mvc567.Common.Options;
 using Codific.Mvc567.Services.Validators.Handlers;
 using Codific.Mvc567.Services.Validators.Results;
 using Newtonsoft.Json;
+using Codific.Mvc567.CommonCore;
 
 namespace Codific.Mvc567.Services.Validators
 {
     public class ValidationProvider : IValidationProvider
     {
-        private readonly IHostingEnvironment hostingEnvironment;
+        private readonly IWebHostEnvironment hostingEnvironment;
         private readonly ConfigurationConstants configurationConstants;
 
-        public ValidationProvider(IHostingEnvironment hostingEnvironment)
+        public ValidationProvider(IWebHostEnvironment hostingEnvironment)
         {
             this.hostingEnvironment = hostingEnvironment;
             string configPath = Path.Combine(this.hostingEnvironment.GetPrivateRoot(), "config.json");
