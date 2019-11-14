@@ -11,7 +11,7 @@
     <Copyright>Georgi Karagogov</Copyright>
     <PackageTags>MVC, .NET Core, CMS, ASP.NET Core, Vue.js</PackageTags>
     <PackageIconUrl>https://cdn.gsk567.com/external/mvc567/assets/images/icon128.png</PackageIconUrl>
-    <Version>1.1.4</Version>
+    <Version>1.1.5</Version>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <AssemblyName>Codific.Mvc567</AssemblyName>
     <RootNamespace>Codific.Mvc567</RootNamespace>
