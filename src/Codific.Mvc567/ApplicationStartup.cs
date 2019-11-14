@@ -154,8 +154,8 @@ namespace Codific.Mvc567
                     p.ApplicationParts.Add(UIAssemblyPart.AssemblyPart);
                     p.FeatureProviders.Add(new ViewComponentFeatureProvider());
                     RegisterFeatureProviders(ref p);
-                })
-                .AddXmlSerializerFormatters();
+                });
+
             services.AddHttpContextAccessor();
         }
 

@@ -31,7 +31,7 @@ namespace Codific.Mvc567.ViewModels
         [DetailsOrder(0)]
         public string Id { get; set; }
 
-        [TableCell(1, "Key", TableCellType.Text)]
+        [TableCell(1, "Key", TableCellType.Text, Editable = true, RelatedProperty = "Key")]
         [DetailsOrder(1)]
         [Required(ErrorMessage = "Key is required field.")]
         [CreateEditEntityInput("Key", CreateEntityInputType.Text)]

@@ -58,7 +58,11 @@ namespace Codific.Mvc567.Entities.ViewModels.Mapping
                         if (property.GetCustomAttributes(typeof(TableCellAttribute), false).Length > 0)
                         {
                             TableCellAttribute propertyAttribute = (TableCellAttribute)property.GetCustomAttributes(typeof(TableCellAttribute), false).FirstOrDefault();
-                            tableRow.AddCell(propertyAttribute.Order, property.GetValue(entity), propertyAttribute.Type);
+                            tableRow.AddCell(propertyAttribute.Order,
+                                property.GetValue(entity),
+                                propertyAttribute.Type,
+                                propertyAttribute.Editable,
+                                propertyAttribute.RelatedProperty);
                         }
                     }
 

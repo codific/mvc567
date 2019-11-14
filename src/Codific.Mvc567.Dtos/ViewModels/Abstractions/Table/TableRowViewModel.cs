@@ -16,6 +16,7 @@
 
 using Codific.Mvc567.Common.Enums;
 using Codific.Mvc567.Dtos.ViewModels.Abstractions.Table;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -42,9 +43,11 @@ namespace Codific.Mvc567.Dtos.ViewModels.Abstractions.Table
             }
         }
 
-        public void AddCell(int order, object content, TableCellType type)
+        public string Identifier { get; set; } = Guid.NewGuid().ToString();
+
+        public void AddCell(int order, object content, TableCellType type, bool editable, string relatedProperty)
         {
-            TableCellViewModel tableCell = new TableCellViewModel(order, content, type);
+            TableCellViewModel tableCell = new TableCellViewModel(order, content, type, editable, relatedProperty);
             this.cells.Add(tableCell);
         }
 

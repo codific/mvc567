@@ -36,31 +36,18 @@ namespace Codific.Mvc567.Controllers.MVC.Admin
 {
     [Area("Admin")]
     [ApiExplorerSettings(IgnoreApi = true)]
-    public class AdminAccountController : AbstractController
+    public class AdminAccountController : Controller
     {
         private readonly UserManager<User> userManager;
-        private readonly SignInManager<User> signInManager;
-        private readonly IIdentityService identityService;
-        private readonly RoleManager<Role> roleManager;
         private readonly Codific.Mvc567.Services.Abstractions.IAuthenticationService authenticationService;
         private readonly IHostingEnvironment hostingEnvironment;
 
         public AdminAccountController(
             UserManager<User> userManager,
-            SignInManager<User> signInManager,
-            RoleManager<Role> roleManager,
-            IIdentityService identityService,
             Services.Abstractions.IAuthenticationService authenticationService,
-            IConfiguration configuration, 
-            IEmailService emailService,
-            IHostingEnvironment hostingEnvironment,
-            ILanguageService languageService)
-            : base(configuration, emailService, languageService)
+            IHostingEnvironment hostingEnvironment)
         {
             this.userManager = userManager;
-            this.signInManager = signInManager;
-            this.roleManager = roleManager;
-            this.identityService = identityService;
             this.authenticationService = authenticationService;
             this.hostingEnvironment = hostingEnvironment;
         }
