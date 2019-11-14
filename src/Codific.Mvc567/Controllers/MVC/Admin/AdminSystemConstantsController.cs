@@ -14,22 +14,21 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
 using Codific.Mvc567.Common.Attributes;
 using Codific.Mvc567.Controllers.Abstractions;
 using Codific.Mvc567.DataAccess.Identity;
 using Codific.Mvc567.Entities.Database;
-using Codific.Mvc567.Entities.DataTransferObjects.Entities;
-using Codific.Mvc567.Services.Infrastructure;
+using Codific.Mvc567.Services.Abstractions;
+using Codific.Mvc567.ViewModels;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Codific.Mvc567.Controllers.MVC.Admin
 {
     [Area("Admin")]
     [Route("admin/system/constants/")]
-    [ValidateAdminCookie]
     [Authorize(Policy = ApplicationPermissions.AccessAdministrationPolicy)]
-    public class AdminSystemConstantsController : AbstractEntityController<SystemConstant, SystemConstantDto>
+    public class AdminSystemConstantsController : AbstractEntityController<SystemConstant, SystemConstantViewModel>
     {
         public AdminSystemConstantsController(IEntityManager entityManager) : base(entityManager)
         {

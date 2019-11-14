@@ -14,15 +14,16 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+using System;
+using System.Linq;
+using Codific.Mvc567.Common;
+using Codific.Mvc567.Common.Extensions;
+using Codific.Mvc567.Dtos.Entities;
+using Codific.Mvc567.Services.Abstractions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Configuration;
-using Codific.Mvc567.Common;
-using Codific.Mvc567.Common.Extensions;
-using Codific.Mvc567.Services.Infrastructure;
-using System;
-using System.Linq;
 
 namespace Codific.Mvc567.Controllers.Abstractions
 {
@@ -42,7 +43,7 @@ namespace Codific.Mvc567.Controllers.Abstractions
         protected void ManageLanguageCookie()
         {
             string languageCode = this.HttpContext.GetLanguageCode();
-            var defaultLanguage = this.languageService.GetDefaultLanguage();
+            var defaultLanguage = this.languageService.GetDefaultLanguage<SimpleLanguageDto>();
             if (defaultLanguage == null)
             {
                 return;
@@ -72,7 +73,7 @@ namespace Codific.Mvc567.Controllers.Abstractions
             string[] allowedLanguages = this.languageService.GetAllLanguageCodes();
             string[] filteredAllowedLanguages = allowedLanguages;
             string languageCode = this.HttpContext.GetLanguageCode();
-            var defaultLanguage = this.languageService.GetDefaultLanguage();
+            var defaultLanguage = this.languageService.GetDefaultLanguage<SimpleLanguageDto>();
             if (defaultLanguage != null)
             {
                 filteredAllowedLanguages = allowedLanguages.Where(x => x != defaultLanguage.Code.ToLower()).ToArray();

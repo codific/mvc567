@@ -14,12 +14,12 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+using System;
+using Codific.Mvc567.DataAccess.Core.Context;
+using Codific.Mvc567.Entities.Database;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using Codific.Mvc567.DataAccess.Abstraction.Context;
-using Codific.Mvc567.Entities.Database;
-using System;
 
 namespace Codific.Mvc567.DataAccess
 {
@@ -32,22 +32,20 @@ namespace Codific.Mvc567.DataAccess
 
         public DbSet<Log> Logs { get; set; }
         public DbSet<File> Files { get; set; }
-        public DbSet<SitemapItemPattern> SitemapItemPatterns { get; set; }
         public DbSet<SystemConstant> SystemConstants { get; set; }
         public DbSet<Language> Languages { get; set; }
         public DbSet<TranslationKey> TranslationKeys { get; set; }
         public DbSet<TranslationValue> TranslationValues { get; set; }
-        public DbSet<StaticPage> StaticPages { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
 
-            builder.Entity<Language>().HasIndex(x => x.Code).IsUnique();
+            //builder.Entity<Language>()
+            //    .HasIndex(x => x.Code).IsUnique();
 
             builder.Entity<Language>().HasOne(x => x.Image).WithOne().OnDelete(DeleteBehavior.Restrict);
-            builder.Entity<StaticPage>().HasOne(x => x.Image).WithOne().OnDelete(DeleteBehavior.Restrict);
 
             builder.Entity<User>().ToTable("Users");
             builder.Entity<Role>().ToTable("Roles");

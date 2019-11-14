@@ -20,19 +20,20 @@ using Codific.Mvc567.Common.Attributes;
 using Codific.Mvc567.Controllers.Abstractions;
 using Codific.Mvc567.DataAccess.Identity;
 using Codific.Mvc567.Entities.Database;
-using Codific.Mvc567.Entities.DataTransferObjects.Entities;
+using Codific.Mvc567.Dtos.Entities;
 using Codific.Mvc567.Services.Infrastructure;
 using System;
 using System.Threading.Tasks;
+using Codific.Mvc567.ViewModels;
+using Codific.Mvc567.Services.Abstractions;
 
 namespace Codific.Mvc567.Controllers.MVC.Admin
 {
     [Area("Admin")]
     [Route("admin/languages/translations/keys/")]
-    [ValidateAdminCookie]
     [Authorize(Policy = ApplicationPermissions.AccessAdministrationPolicy)]
     [Authorize(Policy = ApplicationPermissions.LanguagesManagementPolicy)]
-    public class AdminTranslationKeysController : AbstractEntityController<TranslationKey, TranslationKeyDto>
+    public class AdminTranslationKeysController : AbstractEntityController<TranslationKey, TranslationKeyViewModel>
     {
         public AdminTranslationKeysController(IEntityManager entityManager) : base(entityManager)
         {
@@ -57,7 +58,7 @@ namespace Codific.Mvc567.Controllers.MVC.Admin
         [Breadcrumb("Languages", true, 0, "GetAll", "AdminLanguages")]
         [Breadcrumb(BreadcrumbEntityNamePluralPlaceholder, true, 1, nameof(GetAll))]
         [Breadcrumb("Create", false, 2)]
-        public override Task<IActionResult> Create(TranslationKeyDto model)
+        public override Task<IActionResult> Create(TranslationKeyViewModel model)
         {
             return base.Create(model);
         }
@@ -73,7 +74,7 @@ namespace Codific.Mvc567.Controllers.MVC.Admin
         [Breadcrumb("Languages", true, 0, "GetAll", "AdminLanguages")]
         [Breadcrumb(BreadcrumbEntityNamePluralPlaceholder, true, 1, nameof(GetAll))]
         [Breadcrumb("Edit", false, 2)]
-        public override Task<IActionResult> Edit(Guid id, TranslationKeyDto model)
+        public override Task<IActionResult> Edit(Guid id, TranslationKeyViewModel model)
         {
             return base.Edit(id, model);
         }

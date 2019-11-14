@@ -14,9 +14,8 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-using Codific.Mvc567.Common.Attributes;
-using Codific.Mvc567.DataAccess.Abstraction.Entities;
 using System.ComponentModel.DataAnnotations.Schema;
+using Codific.Mvc567.Common.Attributes;
 
 namespace Codific.Mvc567.Entities.Database
 {
@@ -24,13 +23,14 @@ namespace Codific.Mvc567.Entities.Database
     public class Log : AuditableEntityBase
     {
         [SearchCriteria]
-        [Column(TypeName = "ntext")]
+        [Column(TypeName = "text")]
         public string StackTrace { get; set; }
 
         [SearchCriteria]
         public string Source { get; set; }
 
         [SearchCriteria]
+        [Column(TypeName = "text")]
         public string Message { get; set; }
 
         [SearchCriteria]

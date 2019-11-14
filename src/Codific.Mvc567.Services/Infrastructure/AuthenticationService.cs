@@ -14,16 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Configuration;
-using Microsoft.IdentityModel.Tokens;
-using Codific.Mvc567.Common.Utilities;
-using Codific.Mvc567.DataAccess.Abstraction;
-using Codific.Mvc567.DataAccess.Identity;
-using Codific.Mvc567.Entities.Database;
-using Codific.Mvc567.Entities.DataTransferObjects.ServiceResults;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
@@ -31,10 +21,21 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using Codific.Mvc567.DataAccess.Abstraction;
+using Codific.Mvc567.DataAccess.Identity;
+using Codific.Mvc567.Dtos.ServiceResults;
+using Codific.Mvc567.Entities.Database;
+using Codific.Mvc567.Services.Abstractions;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
+using SignInResult = Microsoft.AspNetCore.Identity.SignInResult;
 
 namespace Codific.Mvc567.Services.Infrastructure
 {
-    public class AuthenticationService : IAuthenticationService
+    public class AuthenticationService : Codific.Mvc567.Services.Abstractions.IAuthenticationService
     {
         private readonly UserManager<User> userManager;
         private readonly RoleManager<Role> roleManager;
@@ -52,7 +53,13 @@ namespace Codific.Mvc567.Services.Infrastructure
             this.uow = uow;
         }
 
-        public async Task<IEnumerable<Claim>> GetUserClaimsAsync(User user)
+        public async Task<IEnumerable<Claim>> GetUserClaimsAsync<TUser>(TUser user)
+        {
+            return await this.GetUserClaimsActionAsync<User>(user as User);
+        }
+
+
+        private async Task<IEnumerable<Claim>> GetUserClaimsActionAsync<TUser>(TUser user) where TUser : User
         {
             if (user != null)
             {
@@ -78,14 +85,15 @@ namespace Codific.Mvc567.Services.Infrastructure
             return null;
         }
 
-        public async Task<SignInResult> SignInAsync(User user, string password, HttpContext httpContext, string authenticationScheme, AuthenticationProperties authenticationProperties)
+        public async Task<SignInResult> SignInAsync<TUser>(TUser user, string password, HttpContext httpContext, string authenticationScheme, AuthenticationProperties authenticationProperties)
         {
-            if (await this.userManager.IsLockedOutAsync(user))
+            var parsedUser = user as User;
+            if (await this.userManager.IsLockedOutAsync(parsedUser))
             {
                 return SignInResult.LockedOut;
             }
 
-            var claims = await GetUserClaimsAsync(user);
+            var claims = await GetUserClaimsAsync(parsedUser);
             if (claims == null)
             {
                 return SignInResult.Failed;
@@ -94,27 +102,27 @@ namespace Codific.Mvc567.Services.Infrastructure
             var claimsIdentity = new ClaimsIdentity(claims, authenticationScheme);
 
             SignInResult signInResult = SignInResult.Failed;
-            var isPasswordCorrect = await this.userManager.CheckPasswordAsync(user, password);
+            var isPasswordCorrect = await this.userManager.CheckPasswordAsync(parsedUser, password);
             if (isPasswordCorrect)
             {
-                if (!user.TwoFactorEnabled && !user.IsLockedOut)
+                if (!parsedUser.TwoFactorEnabled && !parsedUser.IsLockedOut)
                 {
                     await httpContext.SignInAsync(authenticationScheme, new ClaimsPrincipal(claimsIdentity), authenticationProperties);
                     signInResult = SignInResult.Success;
                 }
-                else if (user.TwoFactorEnabled)
+                else if (parsedUser.TwoFactorEnabled)
                 {
-                    await httpContext.SignInAsync(IdentityConstants.TwoFactorUserIdScheme, StoreTwoFactorInfo(user.Id, null));
+                    await httpContext.SignInAsync(IdentityConstants.TwoFactorUserIdScheme, StoreTwoFactorInfo(parsedUser.Id, null));
                     signInResult = SignInResult.TwoFactorRequired;
                 }
-                else if (user.IsLockedOut)
+                else if (parsedUser.IsLockedOut)
                 {
                     signInResult = SignInResult.LockedOut;
                 }
             }
             else
             {
-                await this.userManager.AccessFailedAsync(user);
+                await this.userManager.AccessFailedAsync(parsedUser);
             }
 
             return signInResult;
@@ -131,7 +139,7 @@ namespace Codific.Mvc567.Services.Infrastructure
             return new ClaimsPrincipal(identity);
         }
 
-        public async Task<bool> UserHasAdministrationAccessRightsAsync(User user)
+        public async Task<bool> UserHasAdministrationAccessRightsAsync<TUser>(TUser user)
         {
             bool userHasAdministrationAccessRights = false;
             var userClaims = await GetUserClaimsAsync(user);
@@ -161,20 +169,21 @@ namespace Codific.Mvc567.Services.Infrastructure
             return null;
         }
 
-        public async Task<User> GetTwoFactorAuthenticationUserAsync(HttpContext httpContext)
+        public async Task<TUser> GetTwoFactorAuthenticationUserAsync<TUser>(HttpContext httpContext) where TUser : class
         {
             var info = await RetrieveTwoFactorInfoAsync(httpContext);
             if (info == null)
             {
-                return null;
+                return default(TUser);
             }
 
-            return await this.userManager.FindByIdAsync(info.UserId);
+            return await this.userManager.FindByIdAsync(info.UserId) as TUser;
         }
 
-        public async Task<SignInResult> SignInWith2faAsync(User user, string authenticationCode, bool rememberBrowser, HttpContext httpContext, string authenticationScheme, AuthenticationProperties authenticationProperties)
+        public async Task<SignInResult> SignInWith2faAsync<TUser>(TUser user, string authenticationCode, bool rememberBrowser, HttpContext httpContext, string authenticationScheme, AuthenticationProperties authenticationProperties) where TUser : class
         {
-            if (await this.userManager.IsLockedOutAsync(user))
+            var parsedUser = user as User;
+            if (await this.userManager.IsLockedOutAsync(parsedUser))
             {
                 return SignInResult.LockedOut;
             }
@@ -188,16 +197,16 @@ namespace Codific.Mvc567.Services.Infrastructure
             var claimsIdentity = new ClaimsIdentity(claims, authenticationScheme);
 
             SignInResult signInResult = SignInResult.Failed;
-            var isAuthenticationCodeCorrect = await this.userManager.VerifyTwoFactorTokenAsync(user, TwoFactorAuthenticationTokenProvider, authenticationCode);
+            var isAuthenticationCodeCorrect = await this.userManager.VerifyTwoFactorTokenAsync(parsedUser, TwoFactorAuthenticationTokenProvider, authenticationCode);
             if (isAuthenticationCodeCorrect)
             {
-                if (!user.IsLockedOut)
+                if (!parsedUser.IsLockedOut)
                 {
                     await httpContext.SignInAsync(authenticationScheme, new ClaimsPrincipal(claimsIdentity), authenticationProperties);
                     signInResult = SignInResult.Success;
                     if (rememberBrowser)
                     {
-                        await this.signInManager.RememberTwoFactorClientAsync(user);
+                        await this.signInManager.RememberTwoFactorClientAsync(parsedUser);
                     }
                 }
                 else
@@ -207,7 +216,7 @@ namespace Codific.Mvc567.Services.Infrastructure
             }
             else
             {
-                await this.userManager.AccessFailedAsync(user);
+                await this.userManager.AccessFailedAsync(parsedUser);
             }
 
             return signInResult;

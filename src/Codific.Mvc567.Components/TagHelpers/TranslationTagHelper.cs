@@ -14,12 +14,13 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+using Codific.Mvc567.Common.Extensions;
+using Codific.Mvc567.Dtos.Entities;
+using Codific.Mvc567.Services.Abstractions;
 using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
-using Codific.Mvc567.Common.Extensions;
-using Codific.Mvc567.Services.Infrastructure;
 
 namespace Codific.Mvc567.Components.TagHelpers
 {
@@ -60,7 +61,7 @@ namespace Codific.Mvc567.Components.TagHelpers
                 languageCode = ViewContext.HttpContext.GetLanguageCode();
                 if (string.IsNullOrEmpty(languageCode))
                 {
-                    languageCode = this.languageService.GetDefaultLanguage()?.Code?.ToLower();
+                    languageCode = this.languageService.GetDefaultLanguage<SimpleLanguageDto>()?.Code?.ToLower();
                 }
             }
 

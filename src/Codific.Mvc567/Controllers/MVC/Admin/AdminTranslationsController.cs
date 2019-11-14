@@ -16,23 +16,22 @@
 
 using System;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
 using Codific.Mvc567.Common.Attributes;
 using Codific.Mvc567.Controllers.Abstractions;
 using Codific.Mvc567.DataAccess.Identity;
 using Codific.Mvc567.Entities.Database;
-using Codific.Mvc567.Entities.DataTransferObjects.Entities;
-using Codific.Mvc567.Services.Infrastructure;
+using Codific.Mvc567.Services.Abstractions;
+using Codific.Mvc567.ViewModels;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Codific.Mvc567.Controllers.MVC.Admin
 {
     [Area("Admin")]
     [Route("admin/languages/translations/")]
-    [ValidateAdminCookie]
     [Authorize(Policy = ApplicationPermissions.AccessAdministrationPolicy)]
     [Authorize(Policy = ApplicationPermissions.LanguagesManagementPolicy)]
-    public class AdminTranslationsController : AbstractEntityController<TranslationValue, TranslationValueDto>
+    public class AdminTranslationsController : AbstractEntityController<TranslationValue, TranslationValueViewModel>
     {
         public AdminTranslationsController(IEntityManager entityManager) : base(entityManager)
         {
@@ -57,7 +56,7 @@ namespace Codific.Mvc567.Controllers.MVC.Admin
         [Breadcrumb("Languages", true, 0, "GetAll", "AdminLanguages")]
         [Breadcrumb(BreadcrumbEntityNamePluralPlaceholder, true, 1, nameof(GetAll))]
         [Breadcrumb("Create", false, 2)]
-        public override Task<IActionResult> Create(TranslationValueDto model)
+        public override Task<IActionResult> Create(TranslationValueViewModel model)
         {
             return base.Create(model);
         }
@@ -73,7 +72,7 @@ namespace Codific.Mvc567.Controllers.MVC.Admin
         [Breadcrumb("Languages", true, 0, "GetAll", "AdminLanguages")]
         [Breadcrumb(BreadcrumbEntityNamePluralPlaceholder, true, 1, nameof(GetAll))]
         [Breadcrumb("Edit", false, 2)]
-        public override Task<IActionResult> Edit(Guid id, TranslationValueDto model)
+        public override Task<IActionResult> Edit(Guid id, TranslationValueViewModel model)
         {
             return base.Edit(id, model);
         }

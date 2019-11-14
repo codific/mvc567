@@ -14,33 +14,32 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Threading.Tasks;
+using Codific.Mvc567.Common;
+using Codific.Mvc567.Common.Attributes;
+using Codific.Mvc567.Controllers.Abstractions;
+using Codific.Mvc567.DataAccess.Identity;
+using Codific.Mvc567.Dtos.EmailModels;
+using Codific.Mvc567.Dtos.ViewModels.Abstractions;
+using Codific.Mvc567.Dtos.ViewModels.Abstractions.Table;
+using Codific.Mvc567.Dtos.ViewModels.AdminViewModels;
+using Codific.Mvc567.Entities.Database;
+using Codific.Mvc567.Entities.ViewModels.Mapping;
+using Codific.Mvc567.Services.Abstractions;
+using Codific.Mvc567.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Codific.Mvc567.Common;
-using Codific.Mvc567.Services.Infrastructure;
-using Codific.Mvc567.Common.Attributes;
-using Codific.Mvc567.DataAccess.Identity;
-using Codific.Mvc567.Entities.Database;
-using Codific.Mvc567.Entities.ViewModels.Abstractions.Table;
-using Codific.Mvc567.Entities.DataTransferObjects.Entities;
-using Codific.Mvc567.Entities.ViewModels.Mapping;
-using Codific.Mvc567.Controllers.Abstractions;
-using System;
-using Codific.Mvc567.Entities.DataTransferObjects.ViewModels.AdminViewModels;
-using Codific.Mvc567.Entities.DataTransferObjects.EmailModels;
-using Codific.Mvc567.Entities.ViewModels.Abstractions;
 
 namespace Codific.Mvc567.Controllers.MVC.Admin
 {
     [Area("Admin")]
     [Route("admin/users/")]
-    [ValidateAdminCookie]
     [Authorize(Policy = ApplicationPermissions.AccessAdministrationPolicy)]
     [Authorize(Policy = ApplicationPermissions.UsersManagementPolicy)]
-    public class AdminUsersController : AbstractEntityController<User, UserDto>
+    public class AdminUsersController : AbstractEntityController<User, UserViewModel>
     {
         private readonly IIdentityService identityService;
         private readonly IEmailService emailService;
@@ -67,7 +66,7 @@ namespace Codific.Mvc567.Controllers.MVC.Admin
         [Breadcrumb("Send Email", false, 1)]
         public async Task<IActionResult> SendEmailMessageToUser(Guid userId)
         {
-            var user = await this.identityService.GetUserByIdAsync(userId);
+            var user = await this.identityService.GetUserByIdAsync<User>(userId);
             if (user != null)
             {
                 AdminSendEmailMessageToUserViewModel model = new AdminSendEmailMessageToUserViewModel
@@ -108,7 +107,7 @@ namespace Codific.Mvc567.Controllers.MVC.Admin
         [Breadcrumb("Send Email", false, 1)]
         public async Task<IActionResult> SendEmailMessageToUser(Guid userId, AdminSendEmailMessageToUserViewModel model)
         {
-            var user = await this.identityService.GetUserByIdAsync(userId);
+            var user = await this.identityService.GetUserByIdAsync<User>(userId);
             if (user != null)
             {
                 model.Email = user.Email;

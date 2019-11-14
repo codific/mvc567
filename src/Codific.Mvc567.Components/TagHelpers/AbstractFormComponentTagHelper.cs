@@ -14,6 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+using Codific.Mvc567.Common.Utilities;
 using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.TagHelpers;
@@ -22,7 +23,6 @@ using Microsoft.AspNetCore.Razor.TagHelpers;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Codific.Mvc567.Common.Utilities;
 
 namespace Codific.Mvc567.Components.TagHelpers
 {

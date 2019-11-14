@@ -14,18 +14,17 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-using AutoMapper;
-using Microsoft.AspNetCore.Identity;
-using Codific.Mvc567.DataAccess.Abstraction;
-using Codific.Mvc567.DataAccess.Identity;
-using Codific.Mvc567.Entities.Database;
-using Codific.Mvc567.Entities.DataTransferObjects.Entities;
-using Codific.Mvc567.Services.Abstractions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using AutoMapper;
+using Codific.Mvc567.DataAccess.Abstraction;
+using Codific.Mvc567.DataAccess.Identity;
+using Codific.Mvc567.Entities.Database;
+using Microsoft.AspNetCore.Identity;
+using Codific.Mvc567.Services.Abstractions;
 
 namespace Codific.Mvc567.Services.Infrastructure
 {
@@ -46,8 +45,10 @@ namespace Codific.Mvc567.Services.Infrastructure
             this.roleManager = roleManager;
         }
 
-        public async Task<Tuple<bool, string[]>> CreateRoleAsync(Role role, IEnumerable<string> claims)
+        public async Task<Tuple<bool, string[]>> CreateRoleAsync<TRole>(TRole role, IEnumerable<string> claims)
         {
+            var entityRole = this.mapper.Map<Role>(role);
+
             if (claims == null)
                 claims = new string[] { };
 
@@ -55,17 +56,15 @@ namespace Codific.Mvc567.Services.Infrastructure
             if (invalidClaims.Any())
                 return Tuple.Create(false, new[] { "The following claim types are invalid: " + string.Join(", ", invalidClaims) });
 
-
-            var result = await this.roleManager.CreateAsync(role);
+            var result = await this.roleManager.CreateAsync(entityRole);
             if (!result.Succeeded)
                 return Tuple.Create(false, result.Errors.Select(e => e.Description).ToArray());
 
-
-            role = await this.roleManager.FindByNameAsync(role.Name);
+            entityRole = await this.roleManager.FindByNameAsync(entityRole.Name);
 
             foreach (string claim in claims.Distinct())
             {
-                result = await this.roleManager.AddClaimAsync(role, new Claim(CustomClaimTypes.Permission, ApplicationPermissions.GetPermissionByValue(claim)));
+                result = await this.roleManager.AddClaimAsync(entityRole, new Claim(CustomClaimTypes.Permission, ApplicationPermissions.GetPermissionByValue(claim)));
 
                 if (!result.Succeeded)
                 {
@@ -87,34 +86,36 @@ namespace Codific.Mvc567.Services.Infrastructure
             return Tuple.Create(true, new string[] { });
         }
 
-        public async Task<Tuple<bool, string[]>> DeleteRoleAsync(Role role)
+        public async Task<Tuple<bool, string[]>> DeleteRoleAsync<TRole>(TRole role)
         {
-            var result = await this.roleManager.DeleteAsync(role);
+            var entityRole = this.mapper.Map<Role>(role);
+
+            var result = await this.roleManager.DeleteAsync(entityRole);
             return Tuple.Create(result.Succeeded, result.Errors.Select(e => e.Description).ToArray());
         }
 
-        public async Task<UserDto> GetUserByEmailAsync(string email)
+        public async Task<TUserModel> GetUserByEmailAsync<TUserModel>(string email)
         {
             try
             {
                 User user = await this.userManager.FindByEmailAsync(email);
-                UserDto resultUser = this.mapper.Map<UserDto>(user);
+                TUserModel resultUser = this.mapper.Map<TUserModel>(user);
 
                 return resultUser;
             }
             catch (Exception ex)
             {
                 await LogErrorAsync(ex, nameof(GetUserByEmailAsync));
-                return null;
+                return default(TUserModel);
             }
         }
 
-        public async Task<IEnumerable<UserDto>> GetAllUsersAsync()
+        public async Task<IEnumerable<TUserModel>> GetAllUsersAsync<TUserModel>()
         {
             try
             {
                 var users = await this.uow.GetStandardRepository().GetAllAsync<User>();
-                var usersResult = this.mapper.Map<IEnumerable<UserDto>>(users);
+                var usersResult = this.mapper.Map<IEnumerable<TUserModel>>(users);
 
                 return usersResult;
             }
@@ -125,19 +126,20 @@ namespace Codific.Mvc567.Services.Infrastructure
             }
         }
 
-        public async Task<UserDto> GetUserByIdAsync(Guid userId)
+        public async Task<TUserModel> GetUserByIdAsync<TUserModel>(Guid userId)
         {
             try
             {
                 User user = await this.standardRepository.GetAsync<User>(userId);
-                UserDto resultUser = this.mapper.Map<UserDto>(user);
+                TUserModel resultUser = this.mapper.Map<TUserModel>(user);
 
                 return resultUser;
             }
             catch (Exception ex)
             {
                 await LogErrorAsync(ex, nameof(GetUserByIdAsync));
-                return null;
+
+                return default(TUserModel);
             }
         }
     }

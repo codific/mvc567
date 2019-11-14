@@ -14,21 +14,20 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-using AutoMapper;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.EntityFrameworkCore;
-using Codific.Mvc567.Common;
-using Codific.Mvc567.Common.Extensions;
-using Codific.Mvc567.DataAccess.Abstraction;
-using Codific.Mvc567.Entities.Database;
-using Codific.Mvc567.Entities.DataTransferObjects.Entities;
-using Codific.Mvc567.Services.Abstractions;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
+using Codific.Mvc567.Common;
+using Codific.Mvc567.Common.Extensions;
+using Codific.Mvc567.DataAccess.Abstraction;
+using Codific.Mvc567.Entities.Database;
+using Codific.Mvc567.Services.Abstractions;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 
 namespace Codific.Mvc567.Services.Infrastructure
 {
@@ -73,35 +72,35 @@ namespace Codific.Mvc567.Services.Infrastructure
             }
         }
 
-        public LanguageDto GetDefaultLanguage()
+        public TLanguageModel GetDefaultLanguage<TLanguageModel>()
         {
             try
             {
                 var languageEntity = this.standardRepository.Query<Language>(x => x.IsDefault).FirstOrDefault();
-                var mappedLanguage = this.mapper.Map<LanguageDto>(languageEntity);
+                var mappedLanguage = this.mapper.Map<TLanguageModel>(languageEntity);
 
                 return mappedLanguage;
             }
             catch (Exception ex)
             {
                 LogError(ex, nameof(GetAllLanguageCodesAsync));
-                return null;
+                return default(TLanguageModel);
             }
         }
 
-        public async Task<LanguageDto> GetDefaultLanguageAsync()
+        public async Task<TLanguageModel> GetDefaultLanguageAsync<TLanguageModel>()
         {
             try
             {
                 var languageEntity = (await this.standardRepository.QueryAsync<Language>(x => x.IsDefault)).FirstOrDefault();
-                var mappedLanguage = this.mapper.Map<LanguageDto>(languageEntity);
+                var mappedLanguage = this.mapper.Map<TLanguageModel>(languageEntity);
 
                 return mappedLanguage;
             }
             catch (Exception ex)
             {
                 await LogErrorAsync(ex, nameof(GetAllLanguageCodesAsync));
-                return null;
+                return default(TLanguageModel);
             }
         }
 

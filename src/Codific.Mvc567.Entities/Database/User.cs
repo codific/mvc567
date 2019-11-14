@@ -16,7 +16,7 @@
 
 using Microsoft.AspNetCore.Identity;
 using Codific.Mvc567.Common.Attributes;
-using Codific.Mvc567.DataAccess.Abstraction.Entities;
+using Codific.Mvc567.DataAccess.Abstractions.Entities;
 using System;
 
 namespace Codific.Mvc567.Entities.Database

@@ -14,16 +14,16 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Codific.Mvc567.DataAccess.Abstraction.Entities;
-using Codific.Mvc567.Entities.DataTransferObjects.Api;
-using Codific.Mvc567.Entities.DataTransferObjects.ServiceResults;
-using Codific.Mvc567.Services.Infrastructure;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Codific.Mvc567.DataAccess.Abstractions.Entities;
+using Codific.Mvc567.Dtos.Api;
+using Codific.Mvc567.Dtos.ServiceResults;
+using Codific.Mvc567.Services.Abstractions;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Codific.Mvc567.Controllers.Abstractions
 {

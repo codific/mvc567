@@ -14,36 +14,36 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 using System;
-using Microsoft.IdentityModel.Tokens;
 using System.Text;
-using Swashbuckle.AspNetCore.Swagger;
 using AutoMapper;
+using Codific.Mvc567.Common;
+using Codific.Mvc567.Common.Attributes;
+using Codific.Mvc567.Common.Options;
+using Codific.Mvc567.DataAccess;
+using Codific.Mvc567.DataAccess.Abstractions.Repositories;
+using Codific.Mvc567.DataAccess.Core;
+using Codific.Mvc567.DataAccess.Identity;
+using Codific.Mvc567.Entities.Database;
+using Codific.Mvc567.Profiles;
+using Codific.Mvc567.Seed;
+using Codific.Mvc567.Services.Extensions;
+using Codific.Mvc567.UI;
+using Codific.Mvc567.UI.Extensions;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Mvc.ViewComponents;
-using Codific.Mvc567.Common.Options;
-using Codific.Mvc567.DataAccess.Abstraction;
-using Codific.Mvc567.Services.Extensions;
-using Codific.Mvc567.UI.Extensions;
-using Codific.Mvc567.UI;
-using Codific.Mvc567.DataAccess.Abstraction.Repositories;
 using Microsoft.AspNetCore.Authorization;
-using Codific.Mvc567.Common;
-using Codific.Mvc567.Entities.Database;
-using Codific.Mvc567.DataAccess.Identity;
-using Codific.Mvc567.Common.Attributes;
-using Codific.Mvc567.Middlewares;
-using Codific.Mvc567.Seed;
-using Codific.Mvc567.DataAccess;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
+using Microsoft.AspNetCore.Mvc.ViewComponents;
 using Microsoft.AspNetCore.Routing;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Tokens;
 
 namespace Codific.Mvc567
 {
@@ -53,7 +53,7 @@ namespace Codific.Mvc567
     {
         protected string applicationAssembly = string.Empty;
 
-        public ApplicationStartup(IConfiguration configuration, IHostingEnvironment hostingEnvironment)
+        public ApplicationStartup(IConfiguration configuration, IWebHostEnvironment hostingEnvironment)
         {
             Configuration = configuration;
             HostingEnvironment = hostingEnvironment;
@@ -61,7 +61,7 @@ namespace Codific.Mvc567
 
         public IConfiguration Configuration { get; }
 
-        public IHostingEnvironment HostingEnvironment { get; }
+        public IWebHostEnvironment HostingEnvironment { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -83,9 +83,11 @@ namespace Codific.Mvc567
             services.AddSingleton<IMapper>(new Mapper(new MapperConfiguration(configuration =>
             {
                 configuration.AddMaps("Codific.Mvc567.Entities");
+                configuration.AddMaps("Codific.Mvc567.ViewModels");
                 configuration.AllowNullCollections = true;
                 configuration.AllowNullDestinationValues = true;
                 configuration.AddMaps(this.applicationAssembly);
+                configuration.AddProfile<BaseMappingProfile>();
                 RegisterMappingProfiles(ref configuration);
             })));
 
@@ -103,7 +105,7 @@ namespace Codific.Mvc567
             })
             .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, options =>
             {
-                options.LoginPath = "/login";
+                options.LoginPath = "/admin/login";
                 options.LogoutPath = "/";
                 options.ExpireTimeSpan = TimeSpan.FromDays(7);
             })
@@ -143,14 +145,9 @@ namespace Codific.Mvc567
 
             services.Configure<SmtpConfig>(Configuration.GetSection("SmtpConfig"));
 
-            services.AddSwaggerGen(c =>
-            {
-                c.SwaggerDoc("v1", new Info { Title = "Mvc567 API", Version = "v1" });
-            });
-
             RegisterServices(ref services);
 
-            services.AddMvc()
+            services.AddMvc(option => option.EnableEndpointRouting = false)
                 .ConfigureApplicationPartManager(p =>
                 {
                     p.ApplicationParts.Add(ApplicationAssemblyPart.AssemblyPart);
@@ -164,10 +161,14 @@ namespace Codific.Mvc567
 
         protected virtual void RegisterDbContext(ref IServiceCollection services)
         {
-            services.AddDbContext<TDatabaseContext>(options =>
-            {
-                options.UseSqlServer(Configuration.GetConnectionString("DatabaseConnection"), b => b.MigrationsAssembly(this.applicationAssembly));
-            });
+            var connectionString = Configuration.GetConnectionString("DatabaseConnection");
+
+            services.AddEntityFrameworkNpgsql()
+                .AddDbContext<TDatabaseContext>(options =>
+                {
+                    options.UseNpgsql(connectionString, b => b.MigrationsAssembly(this.applicationAssembly));
+                })
+                .BuildServiceProvider();
 
             services.AddIdentity<User, Role>()
                 .AddEntityFrameworkStores<TDatabaseContext>()
@@ -235,16 +236,6 @@ namespace Codific.Mvc567
             routes.MapRoute(
                 name: "default-languages",
                 template: Constants.LanguageControllerPageRoute + "/{controller=Home}/{action=Index}/{id?}");
-
-            routes.MapRoute(
-                name: "static-pages",
-                template: Constants.ControllerStaticPageRoute,
-                defaults: new { controller = "StaticPage", action = "PageAction" });
-
-            routes.MapRoute(
-                name: "static-pages-languages",
-                template: Constants.LanguageControllerStaticPageRoute,
-                defaults: new { controller = "StaticPage", action = "PageAction" });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -268,14 +259,6 @@ namespace Codific.Mvc567
             app.UseHealthChecks("/system/health");
             app.UseStaticFiles();
             app.UseAuthentication();
-            app.UseAdminRedirection();
-            app.UseSwaggerAdminValidation();
-            app.UseSwagger();
-
-            app.UseSwaggerUI(c =>
-            {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "API V1");
-            });
 
             ConfigureMiddlewareAfterAuthentication(ref app);
 

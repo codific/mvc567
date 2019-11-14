@@ -14,28 +14,39 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-using Microsoft.AspNetCore.Razor.TagHelpers;
+using System.Threading.Tasks;
 using Codific.Mvc567.DataAccess.Abstraction;
-using Codific.Mvc567.Entities.Database;
-using Codific.Mvc567.Services.Infrastructure;
+using Codific.Mvc567.Dtos.Entities;
+using Codific.Mvc567.Services.Abstractions;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
+using Microsoft.AspNetCore.Razor.TagHelpers;
 
 namespace Codific.Mvc567.Components.TagHelpers
 {
     [HtmlTargetElement("user-full-name", TagStructure = TagStructure.WithoutEndTag)]
     public class UserFullNameTagHelper : TagHelper
     {
-        private readonly IUnitOfWork uow;
+        private readonly IIdentityService identityService;
 
-        public UserFullNameTagHelper(IUnitOfWork uow)
+        public UserFullNameTagHelper(IIdentityService identityService)
         {
-            this.uow = uow;
+            this.identityService = identityService;
         }
 
-        public override void Process(TagHelperContext context, TagHelperOutput output)
+        [HtmlAttributeNotBound]
+        [ViewContext]
+        public ViewContext ViewContext { get; set; }
+
+        public async override Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
         {
             output.TagName = "span";
             output.TagMode = TagMode.StartTagAndEndTag;
-            var user = this.uow.GetStandardRepository().Get<User>(this.uow.CurrentUserId.Value);
+
+            var userEmail = this.ViewContext.HttpContext.User.Identity.Name;
+
+            var user = await this.identityService.GetUserByEmailAsync<SimpleUserDto>(userEmail);
+
             string firstName = string.Empty;
             string lastName = string.Empty;
             if (user != null)

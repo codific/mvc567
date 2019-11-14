@@ -15,7 +15,7 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 using Microsoft.AspNetCore.Identity;
-using Codific.Mvc567.DataAccess.Abstraction.Entities;
+using Codific.Mvc567.DataAccess.Abstractions.Entities;
 using System;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -36,7 +36,7 @@ namespace Codific.Mvc567.Entities.Database
             Description = description;
         }
 
-        [Column(TypeName = "ntext")]
+        [Column(TypeName = "text")]
         public string Description { get; set; }
     }
 }

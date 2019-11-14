@@ -14,26 +14,25 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-using AutoMapper;
-using Codific.Mvc567.DataAccess.Abstraction;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Codific.Mvc567.DataAccess.Abstraction.Entities;
-using Codific.Mvc567.Services.Abstractions;
-using Codific.Mvc567.Entities.DataTransferObjects.ServiceResults;
-using Codific.Mvc567.Entities.Database;
-using Codific.Mvc567.Common.Extensions;
 using System.ComponentModel.DataAnnotations.Schema;
-using Microsoft.AspNetCore.Hosting;
-using Codific.Mvc567.Common.Enums;
-using System.Reflection;
-using Microsoft.EntityFrameworkCore;
-using Codific.Mvc567.Entities.DataTransferObjects.Api;
+using System.Linq;
 using System.Linq.Expressions;
+using System.Threading.Tasks;
+using AutoMapper;
+using Codific.Mvc567.Common.Enums;
+using Codific.Mvc567.Common.Extensions;
 using Codific.Mvc567.Common.Utilities;
-using Codific.Mvc567.Entities.DataTransferObjects.Api.ExpressionFactories;
+using Codific.Mvc567.DataAccess.Abstraction;
+using Codific.Mvc567.DataAccess.Abstractions.Entities;
+using Codific.Mvc567.Dtos.Api;
+using Codific.Mvc567.Dtos.Api.ExpressionFactories;
+using Codific.Mvc567.Dtos.ServiceResults;
+using Codific.Mvc567.Entities.Database;
+using Codific.Mvc567.Services.Abstractions;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 
 namespace Codific.Mvc567.Services.Infrastructure
 {

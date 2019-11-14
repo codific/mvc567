@@ -14,27 +14,25 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using Codific.Mvc567.Services.Infrastructure;
-using Codific.Mvc567.Common;
 using System.Net.Http;
 using System.Threading.Tasks;
-using Codific.Mvc567.Common.Attributes;
-using Codific.Mvc567.DataAccess.Identity;
-using Codific.Mvc567.Entities.ViewModels.Abstractions;
-using Codific.Mvc567.Entities.Database;
-using Codific.Mvc567.Entities.DataTransferObjects.Entities;
+using Codific.Mvc567.Common;
 using Codific.Mvc567.Controllers.Abstractions;
+using Codific.Mvc567.DataAccess.Identity;
+using Codific.Mvc567.Dtos.ViewModels.Abstractions;
+using Codific.Mvc567.Entities.Database;
+using Codific.Mvc567.Services.Abstractions;
+using Codific.Mvc567.ViewModels;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Codific.Mvc567.Controllers.MVC.Admin
 {
     [Area("Admin")]
     [Route("admin/system/logs/")]
-    [ValidateAdminCookie]
     [Authorize(Policy = ApplicationPermissions.AccessAdministrationPolicy)]
     [Authorize(Policy = ApplicationPermissions.AccessErrorLogsPolicy)]
-    public class AdminLogsController : AbstractEntityController<Log, LogDto>
+    public class AdminLogsController : AbstractEntityController<Log, LogViewModel>
     {
         private readonly ILogService logService;
 
