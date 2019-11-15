@@ -30,15 +30,15 @@ namespace Codific.Mvc567.DataAccess.Core.Repositories
         public StandardRepository(TContext context) : base(context)
         { }
 
-        public virtual IEnumerable<TEntity> GetAll<TEntity>(Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null, Func<IQueryable<TEntity>, IQueryable<TEntity>> includes = null) where TEntity : class, IEntityBase, new()
+        public virtual IEnumerable<TEntity> GetAll<TEntity>(Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null, Func<IQueryable<TEntity>, IQueryable<TEntity>> includes = null, bool showDeleted = false) where TEntity : class, IEntityBase, new()
         {
-            var result = QueryDb(null, orderBy, includes);
+            var result = QueryDb(x => x.Deleted == showDeleted, orderBy, includes);
             return result.ToList();
         }
 
-        public virtual async Task<IEnumerable<TEntity>> GetAllAsync<TEntity>(Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null, Func<IQueryable<TEntity>, IQueryable<TEntity>> includes = null) where TEntity : class, IEntityBase, new()
+        public virtual async Task<IEnumerable<TEntity>> GetAllAsync<TEntity>(Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null, Func<IQueryable<TEntity>, IQueryable<TEntity>> includes = null, bool showDeleted = false) where TEntity : class, IEntityBase, new()
         {
-            var result = QueryDb(null, orderBy, includes);
+            var result = QueryDb(x => x.Deleted == showDeleted, orderBy, includes);
             return await result.ToListAsync();
         }
 
