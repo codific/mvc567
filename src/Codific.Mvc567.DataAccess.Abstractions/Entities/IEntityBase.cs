@@ -21,5 +21,11 @@ namespace Codific.Mvc567.DataAccess.Abstractions.Entities
     public interface IEntityBase
     {
         Guid Id { get; set; }
+
+        bool Deleted { get; set; }
+
+        DateTime? DeletedOn { get; set; }
+
+        string DeletedBy { get; set; }
     }
 }

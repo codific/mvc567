@@ -30,6 +30,13 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
         string statusMessage = entityDeletedStatus ? $"{Model.SingleEntityName} has been deleted successfully." : $"{Model.SingleEntityName} deletion failed.";
         <div class="alert @statusClass" role="alert"> @statusMessage </div>
     }
+    @if (TempData["EntityRestoredStatus"] != null)
+    {
+        bool entityRestoredStatus = Convert.ToBoolean(TempData["EntityRestoredStatus"]);
+        string statusClass = entityRestoredStatus ? "alert-success" : "alert-danger";
+        string statusMessage = entityRestoredStatus ? $"{Model.SingleEntityName} has been restored successfully." : $"{Model.SingleEntityName} restoring failed.";
+        <div class="alert @statusClass" role="alert"> @statusMessage </div>
+    }
     @if (TempData["SuccessStatusMessage"] != null)
     {
         <div class="alert alert-success" role="alert"> @TempData["SuccessStatusMessage"] </div>

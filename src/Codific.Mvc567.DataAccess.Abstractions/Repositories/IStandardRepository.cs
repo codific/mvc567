@@ -29,8 +29,8 @@ namespace Codific.Mvc567.DataAccess.Abstractions.Repositories
         Task<IEnumerable<TEntity>> GetAllAsync<TEntity>(Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null, Func<IQueryable<TEntity>, IQueryable<TEntity>> includes = null) where TEntity : class, IEntityBase, new();
         void Load<TEntity>(Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null, Func<IQueryable<TEntity>, IQueryable<TEntity>> includes = null) where TEntity : class, IEntityBase, new();
         Task LoadAsync<TEntity>(Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null, Func<IQueryable<TEntity>, IQueryable<TEntity>> includes = null) where TEntity : class, IEntityBase, new();
-        IEnumerable<TEntity> GetPage<TEntity>(int startRow, int pageLength, Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null, Func<IQueryable<TEntity>, IQueryable<TEntity>> includes = null) where TEntity : class, IEntityBase, new();
-        Task<IEnumerable<TEntity>> GetPageAsync<TEntity>(int startRow, int pageLength, Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null, Func<IQueryable<TEntity>, IQueryable<TEntity>> includes = null) where TEntity : class, IEntityBase, new();
+        IEnumerable<TEntity> GetPage<TEntity>(int startRow, int pageLength, Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null, Func<IQueryable<TEntity>, IQueryable<TEntity>> includes = null, bool showDeleted = false) where TEntity : class, IEntityBase, new();
+        Task<IEnumerable<TEntity>> GetPageAsync<TEntity>(int startRow, int pageLength, Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null, Func<IQueryable<TEntity>, IQueryable<TEntity>> includes = null, bool showDeleted = false) where TEntity : class, IEntityBase, new();
         TEntity Get<TEntity>(Guid id, Func<IQueryable<TEntity>, IQueryable<TEntity>> includes = null) where TEntity : class, IEntityBase, new();
         Task<TEntity> GetAsync<TEntity>(Guid id, Func<IQueryable<TEntity>, IQueryable<TEntity>> includes = null) where TEntity : class, IEntityBase, new();
         IEnumerable<TEntity> Query<TEntity>(Expression<Func<TEntity, bool>> filter, Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null, Func<IQueryable<TEntity>, IQueryable<TEntity>> includes = null) where TEntity : class, IEntityBase, new();
@@ -44,6 +44,10 @@ namespace Codific.Mvc567.DataAccess.Abstractions.Repositories
         TEntity Update<TEntity>(TEntity entity) where TEntity : class, IEntityBase, new();
         void Remove<TEntity>(TEntity entity) where TEntity : class, IEntityBase, new();
         void Remove<TEntity>(Guid id) where TEntity : class, IEntityBase, new();
+        void SoftDelete<TEntity>(TEntity entity) where TEntity : class, IEntityBase, new();
+        void SoftDelete<TEntity>(Guid id) where TEntity : class, IEntityBase, new();
+        void Restore<TEntity>(TEntity entity) where TEntity : class, IEntityBase, new();
+        void Restore<TEntity>(Guid id) where TEntity : class, IEntityBase, new();
         Task<int> CountAsync<TEntity>(Expression<Func<TEntity, bool>> filter) where TEntity : class, IEntityBase, new();
 
         IEnumerable<IEntityBase> GetAllByEntityTableName(string entityTableName);
