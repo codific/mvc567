@@ -65,7 +65,7 @@ namespace Codific.Mvc567.Services.Infrastructure
             return resultList;
         }
 
-        public async Task<PaginatedEntitiesResult<TEntityDto>> GetAllEntitiesPaginatedAsync<TEntity, TEntityDto>(int page, string searchQuery = null) where TEntity : class, IEntityBase, new()
+        public async Task<PaginatedEntitiesResult<TEntityDto>> GetAllEntitiesPaginatedAsync<TEntity, TEntityDto>(int page, string searchQuery = null, bool showDeleted = false) where TEntity : class, IEntityBase, new()
         {
             PaginatedEntitiesResult<TEntityDto> result = new PaginatedEntitiesResult<TEntityDto>();
             try
@@ -78,11 +78,12 @@ namespace Codific.Mvc567.Services.Infrastructure
                 var standardRepository = this.uow.GetStandardRepository();
                 if (string.IsNullOrWhiteSpace(searchQuery))
                 {
-                    result.Count = (await standardRepository.GetAllAsync<TEntity>()).Count();
+                    result.Count = await standardRepository.CountAsync<TEntity>(x => x.Deleted == showDeleted);
                 }
                 else
                 {
-                    result.Count = (await standardRepository.QueryAsync<TEntity>(GetEntitySearchQueryExpression<TEntity>(searchQuery))).Count();
+                    var searchQueryExpression = GetEntitySearchQueryExpression<TEntity>(searchQuery, showDeleted);
+                    result.Count = await standardRepository.CountAsync<TEntity>(searchQueryExpression);
                 }
                 result.CurrentPage = page;
                 result.PageSize = PaginationPageSize;
@@ -91,11 +92,11 @@ namespace Codific.Mvc567.Services.Infrastructure
                 var firstLevelIncludeQuery = GetFirstLevelIncludeQuery<TEntity>();
                 if (string.IsNullOrWhiteSpace(searchQuery))
                 {
-                    entities = await standardRepository.GetPageAsync<TEntity>(result.StartRow, PaginationPageSize, null, firstLevelIncludeQuery);
+                    entities = await standardRepository.GetPageAsync<TEntity>(result.StartRow, PaginationPageSize, null, firstLevelIncludeQuery, showDeleted);
                 }
                 else
                 {
-                    entities = await standardRepository.QueryPageAsync<TEntity>(result.StartRow, PaginationPageSize, GetEntitySearchQueryExpression<TEntity>(searchQuery), null, firstLevelIncludeQuery);
+                    entities = await standardRepository.QueryPageAsync<TEntity>(result.StartRow, PaginationPageSize, GetEntitySearchQueryExpression<TEntity>(searchQuery, showDeleted), null, firstLevelIncludeQuery);
                 }
                 var dtoEntities = this.mapper.Map<IEnumerable<TEntityDto>>(entities);
                 result.Entities = dtoEntities;
@@ -174,13 +175,20 @@ namespace Codific.Mvc567.Services.Infrastructure
             }
         }
 
-        public async Task<bool> DeleteEntityAsync<TEntity>(Guid id) where TEntity : class, IEntityBase, new()
+        public async Task<bool> DeleteEntityAsync<TEntity>(Guid id, bool softDelete = true) where TEntity : class, IEntityBase, new()
         {
             try
             {
                 var standardRepository = this.uow.GetStandardRepository();
                 var entity = await standardRepository.GetAsync<TEntity>(id);
-                standardRepository.Remove<TEntity>(entity);
+                if (softDelete)
+                {
+                    standardRepository.SoftDelete<TEntity>(entity);
+                }
+                else
+                {
+                    standardRepository.Remove<TEntity>(entity);
+                }
                 await this.uow.SaveChangesAsync();
 
                 return true;
@@ -188,6 +196,24 @@ namespace Codific.Mvc567.Services.Infrastructure
             catch (Exception ex)
             {
                 await LogErrorAsync(ex, nameof(DeleteEntityAsync));
+                return false;
+            }
+        }
+
+        public async Task<bool> RestoreEntityAsync<TEntity>(Guid id) where TEntity : class, IEntityBase, new()
+        {
+            try
+            {
+                var standardRepository = this.uow.GetStandardRepository();
+                var entity = await standardRepository.GetAsync<TEntity>(id);
+                standardRepository.Restore<TEntity>(entity);
+                await this.uow.SaveChangesAsync();
+
+                return false;
+            }
+            catch (Exception ex)
+            {
+                await LogErrorAsync(ex, nameof(RestoreEntityAsync));
                 return false;
             }
         }

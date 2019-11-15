@@ -37,6 +37,9 @@ namespace Codific.Mvc567.Dtos.Api
         [FromQuery(Name = "query")]
         public string SearchQuery { get; set; }
 
+        [FromQuery(Name = "deleted")]
+        public bool ShowDeleted { get; set; }
+
         public bool EmptyQuery
         {
             get
@@ -45,7 +48,8 @@ namespace Codific.Mvc567.Dtos.Api
                     (OrderBy is null) &&
                     (PageSize is null) &&
                     (Page is null) &&
-                    (SearchQuery is null);
+                    (SearchQuery is null) &&
+                    (ShowDeleted is false);
             }
         }
 
