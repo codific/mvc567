@@ -16,7 +16,7 @@
 
 using System;
 using System.Threading.Tasks;
-using Codific.Mvc567.Common.Attributes;
+using Codific.Mvc567.CommonCore;
 using Codific.Mvc567.Controllers.Abstractions;
 using Codific.Mvc567.DataAccess.Identity;
 using Codific.Mvc567.Dtos.ViewModels.AdminViewModels;
