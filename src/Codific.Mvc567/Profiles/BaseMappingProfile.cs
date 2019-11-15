@@ -9,11 +9,11 @@ namespace Codific.Mvc567.Profiles
     {
         public BaseMappingProfile()
         {
-            CreateMap<File, SimpleFileDto>().ReverseMap();
+            this.CreateMap<File, SimpleFileDto>().ReverseMap();
 
-            CreateMap<Language, SimpleLanguageDto>().ReverseMap();
+            this.CreateMap<Language, SimpleLanguageDto>().ReverseMap();
 
-            CreateMap<User, SimpleUserDto>().ReverseMap();
+            this.CreateMap<User, SimpleUserDto>().ReverseMap();
         }
     }
 }

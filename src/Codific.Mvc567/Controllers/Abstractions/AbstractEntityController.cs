@@ -1,16 +1,16 @@
 // This file is part of the mvc567 distribution (https://github.com/intellisoft567/mvc567).
 // Copyright (C) 2019 Codific Ltd.
-// 
+//
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
-// 
+//
 // This program is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
-// 
+//
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
@@ -38,18 +38,31 @@ namespace Codific.Mvc567.Controllers.Abstractions
         where TEntity : class, IEntityBase, new()
         where TEntityDto : class, new()
     {
-        protected readonly IEntityManager entityManager;
-        protected readonly string controllerRoute = string.Empty;
-        protected readonly string controllerName = string.Empty;
-
         protected const string BreadcrumbPageTitlePlaceholder = "[PageTitle]";
         protected const string BreadcrumbEntityNamePluralPlaceholder = "[EntityNamePlural]";
+
+        private readonly IEntityManager entityManager;
+
+        private string controllerRoute = string.Empty;
+        private string controllerName = string.Empty;
 
         public AbstractEntityController(IEntityManager entityManager)
         {
             this.entityManager = entityManager;
-            this.controllerRoute = ((RouteAttribute)this.GetType().GetCustomAttributes(typeof(RouteAttribute), false).FirstOrDefault()).Template;
+            this.controllerRoute = ((RouteAttribute)this.GetType().GetCustomAttributes(typeof(RouteAttribute), false).FirstOrDefault())?.Template;
             this.controllerName = this.GetType().Name.Replace("Controller", string.Empty);
+        }
+
+        public string ControllerRoute
+        {
+            get => this.controllerRoute;
+            private set => this.controllerRoute = value;
+        }
+
+        public string ControllerName
+        {
+            get => this.controllerName;
+            private set => this.controllerName = value;
         }
 
         protected bool HasGenericCreate { get; set; } = true;
@@ -59,7 +72,7 @@ namespace Codific.Mvc567.Controllers.Abstractions
         protected bool HasEdit { get; set; } = true;
 
         protected bool HasDelete { get; set; } = true;
-        
+
         protected bool HasRestore { get; set; } = true;
 
         [HttpGet]
@@ -71,44 +84,28 @@ namespace Codific.Mvc567.Controllers.Abstractions
             AllEntitiesViewModel model = new AllEntitiesViewModel();
             model.SingleEntityName = StringFunctions.SplitWordsByCapitalLetters(typeof(TEntity).Name);
             model.Title = typeof(TEntity).Name.ToLower().EndsWith("s") ? $"{model.SingleEntityName}es" : $"{model.SingleEntityName}s";
-            ViewData[BreadcrumbPageTitlePlaceholder] = model.Title;
+            this.ViewData[BreadcrumbPageTitlePlaceholder] = model.Title;
 
             List<TableRowActionViewModel> actions = new List<TableRowActionViewModel>();
             if (showDeleted)
             {
-                HasDelete = false;
+                this.HasDelete = false;
             }
+
             if (!showDeleted)
             {
-                HasRestore = false;
+                this.HasRestore = false;
             }
-            TableViewActionsInit(ref actions);
+
+            this.TableViewActionsInit(ref actions);
 
             model.Table = TableMapper.DtoMapper<TEntityDto>(entitiesResult, actions.ToArray());
-            model.Table.SetPaginationRedirection("Admin", this.GetType().Name.Replace("Controller", string.Empty), nameof(GetAll));
-            ViewData.Add("searchQuery", query);
+            model.Table.SetPaginationRedirection("Admin", this.GetType().Name.Replace("Controller", string.Empty), nameof(this.GetAll));
+            this.ViewData.Add("searchQuery", query);
 
-            InitNavigationActionsIntoListPage(ref model);
+            this.InitNavigationActionsIntoListPage(ref model);
 
-            return View("AbstractViews/GetAll", model);
-        }
-
-        protected virtual void InitNavigationActionsIntoListPage(ref AllEntitiesViewModel model)
-        {
-            model.NavigationActions.Add(new NavigationActionViewModel
-            {
-                Name = $"Create {model.SingleEntityName}",
-                ActionUrl = $"/{GetControllerRoute()}create",
-                Icon = MaterialDesignIcons.Plus,
-                Method = HttpMethod.Get
-            });
-        }
-
-        protected string GetControllerRoute()
-        {
-            var routeAttribute = (RouteAttribute)this.GetType().GetCustomAttributes(typeof(RouteAttribute), true).FirstOrDefault();
-
-            return routeAttribute.Template;
+            return this.View("AbstractViews/GetAll", model);
         }
 
         [HttpGet]
@@ -117,19 +114,19 @@ namespace Codific.Mvc567.Controllers.Abstractions
         [Breadcrumb("Create", false, 1)]
         public virtual async Task<IActionResult> Create()
         {
-            if (!HasGenericCreate)
+            if (!this.HasGenericCreate)
             {
-                return NotFound();
+                return this.NotFound();
             }
 
             ICreateEditEntityDto model = (ICreateEditEntityDto)new TEntityDto();
             model.Area = "Admin";
-            model.Controller = this.GetType().Name.Replace("Controller", string.Empty);
+            model.Controller = await Task.FromResult(this.GetType().Name.Replace("Controller", string.Empty));
             model.Action = "Create";
             model.EntityName = StringFunctions.SplitWordsByCapitalLetters(typeof(TEntity).Name);
-            ViewData[BreadcrumbEntityNamePluralPlaceholder] = model.EntityName.ToPluralString();
+            this.ViewData[BreadcrumbEntityNamePluralPlaceholder] = model.EntityName.ToPluralString();
 
-            return View("AbstractViews/Create", model);
+            return this.View("AbstractViews/Create", model);
         }
 
         [HttpPost]
@@ -139,9 +136,9 @@ namespace Codific.Mvc567.Controllers.Abstractions
         [Breadcrumb("Create", false, 1)]
         public virtual async Task<IActionResult> Create(TEntityDto model)
         {
-            if (!HasGenericCreate)
+            if (!this.HasGenericCreate)
             {
-                return NotFound();
+                return this.NotFound();
             }
 
             ICreateEditEntityDto castedModel = (ICreateEditEntityDto)model;
@@ -149,22 +146,22 @@ namespace Codific.Mvc567.Controllers.Abstractions
             castedModel.Controller = this.GetType().Name.Replace("Controller", string.Empty);
             castedModel.Action = "Create";
             castedModel.EntityName = StringFunctions.SplitWordsByCapitalLetters(typeof(TEntity).Name);
-            ViewData[BreadcrumbEntityNamePluralPlaceholder] = castedModel.EntityName.ToPluralString();
-            ModelState.Remove("Area");
-            ModelState.Remove("Controller");
-            ModelState.Remove("Action");
-            ModelState.Remove("EntityName");
+            this.ViewData[BreadcrumbEntityNamePluralPlaceholder] = castedModel.EntityName.ToPluralString();
+            this.ModelState.Remove("Area");
+            this.ModelState.Remove("Controller");
+            this.ModelState.Remove("Action");
+            this.ModelState.Remove("EntityName");
 
-            if (ModelState.IsValid)
+            if (this.ModelState.IsValid)
             {
                 var createdEntityId = await this.entityManager.CreateEntityAsync<TEntity, TEntityDto>(model);
                 if (createdEntityId.HasValue)
                 {
-                    return RedirectToAction("Details", this.controllerName, new { id = createdEntityId });
+                    return this.RedirectToAction("Details", this.ControllerName, new { id = createdEntityId });
                 }
             }
 
-            return View("AbstractViews/Create", castedModel);
+            return this.View("AbstractViews/Create", castedModel);
         }
 
         [HttpGet]
@@ -173,19 +170,19 @@ namespace Codific.Mvc567.Controllers.Abstractions
         [Breadcrumb("Edit", false, 1)]
         public virtual async Task<IActionResult> Edit(Guid id)
         {
-            if (!HasEdit)
+            if (!this.HasEdit)
             {
-                return NotFound();
+                return this.NotFound();
             }
 
-            ICreateEditEntityDto model = (ICreateEditEntityDto)(await this.entityManager.GetEntityAsync<TEntity, TEntityDto>(id)); 
+            ICreateEditEntityDto model = (ICreateEditEntityDto)(await this.entityManager.GetEntityAsync<TEntity, TEntityDto>(id));
             model.Area = "Admin";
             model.Controller = this.GetType().Name.Replace("Controller", string.Empty);
             model.Action = "Edit";
             model.EntityName = StringFunctions.SplitWordsByCapitalLetters(typeof(TEntity).Name);
-            ViewData[BreadcrumbEntityNamePluralPlaceholder] = model.EntityName.ToPluralString();
+            this.ViewData[BreadcrumbEntityNamePluralPlaceholder] = model.EntityName.ToPluralString();
 
-            return View("AbstractViews/Edit", model);
+            return this.View("AbstractViews/Edit", model);
         }
 
         [HttpPost]
@@ -195,9 +192,9 @@ namespace Codific.Mvc567.Controllers.Abstractions
         [Breadcrumb("Edit", false, 1)]
         public virtual async Task<IActionResult> Edit(Guid id, TEntityDto model)
         {
-            if (!HasGenericCreate)
+            if (!this.HasGenericCreate)
             {
-                return NotFound();
+                return this.NotFound();
             }
 
             ICreateEditEntityDto castedModel = (ICreateEditEntityDto)model;
@@ -205,22 +202,22 @@ namespace Codific.Mvc567.Controllers.Abstractions
             castedModel.Controller = this.GetType().Name.Replace("Controller", string.Empty);
             castedModel.Action = "Edit";
             castedModel.EntityName = StringFunctions.SplitWordsByCapitalLetters(typeof(TEntity).Name);
-            ViewData[BreadcrumbEntityNamePluralPlaceholder] = castedModel.EntityName.ToPluralString();
-            ModelState.Remove("Area");
-            ModelState.Remove("Controller");
-            ModelState.Remove("Action");
-            ModelState.Remove("EntityName");
+            this.ViewData[BreadcrumbEntityNamePluralPlaceholder] = castedModel.EntityName.ToPluralString();
+            this.ModelState.Remove("Area");
+            this.ModelState.Remove("Controller");
+            this.ModelState.Remove("Action");
+            this.ModelState.Remove("EntityName");
 
-            if (ModelState.IsValid)
+            if (this.ModelState.IsValid)
             {
                 var modifiedEntityId = await this.entityManager.ModifyEntityAsync<TEntity, TEntityDto>(id, model);
                 if (modifiedEntityId.HasValue)
                 {
-                    return RedirectToAction("Details", this.controllerName, new { id = modifiedEntityId });
+                    return this.RedirectToAction("Details", this.ControllerName, new { id = modifiedEntityId });
                 }
             }
 
-            return View("AbstractViews/Edit", castedModel);
+            return this.View("AbstractViews/Edit", castedModel);
         }
 
         [HttpGet]
@@ -229,9 +226,9 @@ namespace Codific.Mvc567.Controllers.Abstractions
         [Breadcrumb("Details", false, 1)]
         public virtual async Task<IActionResult> Details(Guid id)
         {
-            if (!HasDetails)
+            if (!this.HasDetails)
             {
-                return NotFound();
+                return this.NotFound();
             }
 
             TEntityDto entity = await this.entityManager.GetEntityAsync<TEntity, TEntityDto>(id);
@@ -241,9 +238,9 @@ namespace Codific.Mvc567.Controllers.Abstractions
 
             model.Title = $"{StringFunctions.SplitWordsByCapitalLetters(typeof(TEntity).Name)} Details";
             string singleEntityName = StringFunctions.SplitWordsByCapitalLetters(typeof(TEntity).Name);
-            ViewData[BreadcrumbEntityNamePluralPlaceholder] = singleEntityName.ToPluralString();
+            this.ViewData[BreadcrumbEntityNamePluralPlaceholder] = singleEntityName.ToPluralString();
 
-            return View("AbstractViews/Details", model);
+            return this.View("AbstractViews/Details", model);
         }
 
         [HttpPost]
@@ -251,15 +248,15 @@ namespace Codific.Mvc567.Controllers.Abstractions
         [Route("{id}/delete")]
         public virtual async Task<IActionResult> Delete(Guid id)
         {
-            if (!HasDelete)
+            if (!this.HasDelete)
             {
-                return NotFound();
+                return this.NotFound();
             }
 
             bool isEntityDeleted = await this.entityManager.DeleteEntityAsync<TEntity>(id);
-            TempData["EntityDeletedStatus"] = isEntityDeleted;
+            this.TempData["EntityDeletedStatus"] = isEntityDeleted;
 
-            return RedirectToAction("GetAll");
+            return this.RedirectToAction("GetAll");
         }
 
         [HttpPost]
@@ -267,34 +264,60 @@ namespace Codific.Mvc567.Controllers.Abstractions
         [Route("{id}/restore")]
         public virtual async Task<IActionResult> Restore(Guid id)
         {
-            if (!HasRestore)
+            if (!this.HasRestore)
             {
-                return NotFound();
+                return this.NotFound();
             }
 
             bool isEntityDeleted = await this.entityManager.RestoreEntityAsync<TEntity>(id);
-            TempData["EntityRestoredStatus"] = !isEntityDeleted;
+            this.TempData["EntityRestoredStatus"] = !isEntityDeleted;
 
-            return RedirectToAction("GetAll");
+            return this.RedirectToAction("GetAll");
+        }
+
+        protected virtual void InitNavigationActionsIntoListPage(ref AllEntitiesViewModel model)
+        {
+            model.NavigationActions.Add(new NavigationActionViewModel
+            {
+                Name = $"Create {model.SingleEntityName}",
+                ActionUrl = $"/{this.GetControllerRoute()}create",
+                Icon = MaterialDesignIcons.Plus,
+                Method = HttpMethod.Get,
+            });
+        }
+
+        protected string GetControllerRoute()
+        {
+            var routeAttribute = (RouteAttribute)this.GetType().GetCustomAttributes(typeof(RouteAttribute), true).FirstOrDefault();
+
+            if (routeAttribute != null)
+            {
+                return routeAttribute.Template;
+            }
+
+            return string.Empty;
         }
 
         protected virtual void TableViewActionsInit(ref List<TableRowActionViewModel> actions)
         {
-            if (HasDetails)
+            if (this.HasDetails)
             {
-                actions.Add(TableMapper.DetailsAction($"/{this.controllerRoute}{{0}}", "[Id]"));
+                actions.Add(TableMapper.DetailsAction($"/{this.ControllerRoute}{{0}}", "[Id]"));
             }
-            if (HasEdit)
+
+            if (this.HasEdit)
             {
-                actions.Add(TableMapper.EditAction($"/{this.controllerRoute}{{0}}/edit", "[Id]"));
+                actions.Add(TableMapper.EditAction($"/{this.ControllerRoute}{{0}}/edit", "[Id]"));
             }
-            if (HasDelete)
+
+            if (this.HasDelete)
             {
-                actions.Add(TableMapper.DeleteAction($"/{this.controllerRoute}{{0}}/delete", "[Id]"));
+                actions.Add(TableMapper.DeleteAction($"/{this.ControllerRoute}{{0}}/delete", "[Id]"));
             }
-            if (HasRestore)
+
+            if (this.HasRestore)
             {
-                actions.Add(TableMapper.RestoreAction($"/{this.controllerRoute}{{0}}/restore", "[Id]"));
+                actions.Add(TableMapper.RestoreAction($"/{this.ControllerRoute}{{0}}/restore", "[Id]"));
             }
         }
     }
