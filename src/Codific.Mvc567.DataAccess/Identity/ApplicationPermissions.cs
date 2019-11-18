@@ -22,23 +22,18 @@ namespace Codific.Mvc567.DataAccess.Identity
 {
     public static class ApplicationPermissions
     {
-        public static ReadOnlyCollection<ApplicationPermission> AllPermissions;
-
-        //Policies
+        // Policies
         public const string AccessAdministrationPolicy = "Access Administration";
         public const string AccessErrorLogsPolicy = "Access Error Logs";
-
         public const string UsersManagementPolicy = "Users Management";
-
         public const string LanguagesManagementPolicy = "Languages Management";
+        public static readonly ReadOnlyCollection<ApplicationPermission> AllPermissions;
 
-        //Permissions
-        public static ApplicationPermission AccessAdministration = new ApplicationPermission(AccessAdministrationPolicy);
-        public static ApplicationPermission AccessErrorLogs = new ApplicationPermission(AccessErrorLogsPolicy);
-
-        public static ApplicationPermission UsersManagement = new ApplicationPermission(UsersManagementPolicy);
-
-        public static ApplicationPermission LanguagesManagement = new ApplicationPermission(LanguagesManagementPolicy);
+        // Permissions
+        public static readonly ApplicationPermission AccessAdministration = new ApplicationPermission(AccessAdministrationPolicy);
+        private static readonly ApplicationPermission AccessErrorLogs = new ApplicationPermission(AccessErrorLogsPolicy);
+        private static readonly ApplicationPermission UsersManagement = new ApplicationPermission(UsersManagementPolicy);
+        private static readonly ApplicationPermission LanguagesManagement = new ApplicationPermission(LanguagesManagementPolicy);
 
         static ApplicationPermissions()
         {
@@ -46,10 +41,8 @@ namespace Codific.Mvc567.DataAccess.Identity
             {
                 AccessAdministration,
                 AccessErrorLogs,
-
                 UsersManagement,
-
-                LanguagesManagement
+                LanguagesManagement,
             };
 
             AllPermissions = allPermissions.AsReadOnly();
@@ -57,12 +50,12 @@ namespace Codific.Mvc567.DataAccess.Identity
 
         public static ApplicationPermission GetPermissionByName(string permissionName)
         {
-            return AllPermissions.Where(p => p.Name == permissionName).FirstOrDefault();
+            return AllPermissions.FirstOrDefault(p => p.Name == permissionName);
         }
 
         public static ApplicationPermission GetPermissionByValue(string permissionValue)
         {
-            return AllPermissions.Where(p => p.Value == permissionValue).FirstOrDefault();
+            return AllPermissions.FirstOrDefault(p => p.Value == permissionValue);
         }
 
         public static string[] GetAllPermissionValues()

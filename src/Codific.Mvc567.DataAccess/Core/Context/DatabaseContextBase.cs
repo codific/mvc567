@@ -14,17 +14,17 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using Codific.Mvc567.DataAccess.Abstractions.Context;
 using Codific.Mvc567.Entities.Database;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Codific.Mvc567.DataAccess.Core.Context
 {
@@ -33,8 +33,8 @@ namespace Codific.Mvc567.DataAccess.Core.Context
         where TUser : IdentityUser<Guid>
         where TRole : IdentityRole<Guid>
     {
-
-        public DatabaseContextBase(DbContextOptions<TContext> options) : base(options)
+        public DatabaseContextBase(DbContextOptions<TContext> options)
+            : base(options)
         {
         }
 
@@ -42,35 +42,35 @@ namespace Codific.Mvc567.DataAccess.Core.Context
 
         public override int SaveChanges()
         {
-            MapEntitiesToUser();
-            UpdateAuditableEntities();
+            this.MapEntitiesToUser();
+            this.UpdateAuditableEntities();
             return base.SaveChanges();
         }
 
         public override int SaveChanges(bool acceptAllChangesOnSuccess)
         {
-            MapEntitiesToUser();
-            UpdateAuditableEntities();
+            this.MapEntitiesToUser();
+            this.UpdateAuditableEntities();
             return base.SaveChanges(acceptAllChangesOnSuccess);
         }
 
         public override Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess, CancellationToken cancellationToken = default(CancellationToken))
         {
-            MapEntitiesToUser();
-            UpdateAuditableEntities();
+            this.MapEntitiesToUser();
+            this.UpdateAuditableEntities();
             return base.SaveChangesAsync(acceptAllChangesOnSuccess, cancellationToken);
         }
 
         public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default(CancellationToken))
         {
-            MapEntitiesToUser();
-            UpdateAuditableEntities();
+            this.MapEntitiesToUser();
+            this.UpdateAuditableEntities();
             return base.SaveChangesAsync(cancellationToken);
         }
 
         protected virtual void UpdateAuditableEntities()
         {
-            IEnumerable<EntityEntry> modifiedEntityEntries = ChangeTracker
+            IEnumerable<EntityEntry> modifiedEntityEntries = this.ChangeTracker
                 .Entries()
                 .Where(x => x.Entity is AuditableEntityBase && (x.State == EntityState.Added || x.State == EntityState.Modified));
 
@@ -82,28 +82,28 @@ namespace Codific.Mvc567.DataAccess.Core.Context
                 if (entry.State == EntityState.Added)
                 {
                     entity.CreatedOn = now;
-                    entity.CreatedBy = CurrentUserId?.ToString();
+                    entity.CreatedBy = this.CurrentUserId?.ToString();
                 }
                 else
                 {
-                    base.Entry(entity).Property(x => x.CreatedOn).IsModified = false;
-                    base.Entry(entity).Property(x => x.CreatedBy).IsModified = false;
+                    this.Entry(entity).Property(x => x.CreatedOn).IsModified = false;
+                    this.Entry(entity).Property(x => x.CreatedBy).IsModified = false;
                 }
 
                 entity.UpdatedOn = now;
-                entity.UpdatedBy = CurrentUserId?.ToString();
+                entity.UpdatedBy = this.CurrentUserId?.ToString();
             }
 
-            IEnumerable<EntityEntry> softDeletedEntityEntries = ChangeTracker
+            IEnumerable<EntityEntry> softDeletedEntityEntries = this.ChangeTracker
                 .Entries()
                 .Where(x => x.Entity is EntityBase && (x.State == EntityState.Modified));
-            
+
             foreach (EntityEntry entry in softDeletedEntityEntries)
-            {                
+            {
                 var entity = (EntityBase)entry.Entity;
                 if (entry.State == EntityState.Modified && entity.Deleted && entity.DeletedBy is null)
                 {
-                    entity.DeletedBy = CurrentUserId?.ToString();
+                    entity.DeletedBy = this.CurrentUserId?.ToString();
                 }
                 else if (entry.State == EntityState.Modified && !entity.Deleted && entity.DeletedBy != null)
                 {
@@ -114,19 +114,19 @@ namespace Codific.Mvc567.DataAccess.Core.Context
 
         protected virtual void MapEntitiesToUser()
         {
-            if (CurrentUserId == null)
+            if (this.CurrentUserId == null)
             {
                 return;
             }
 
-            IEnumerable<EntityEntry> modifiedEntityEntries = ChangeTracker
-            .Entries()
-            .Where(x => x.Entity is AuditableByUserEntityBase<TUser> && (x.State == EntityState.Added));
+            IEnumerable<EntityEntry> modifiedEntityEntries = this.ChangeTracker
+                .Entries()
+                .Where(x => x.Entity is AuditableByUserEntityBase<TUser> && (x.State == EntityState.Added));
 
             foreach (EntityEntry entry in modifiedEntityEntries)
             {
                 var entity = (AuditableByUserEntityBase<TUser>)entry.Entity;
-                entity.UserId = CurrentUserId.Value;
+                entity.UserId = this.CurrentUserId.Value;
             }
         }
     }

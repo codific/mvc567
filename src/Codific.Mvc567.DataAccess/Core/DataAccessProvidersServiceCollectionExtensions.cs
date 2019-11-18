@@ -15,14 +15,14 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 using System;
-using Microsoft.Extensions.DependencyInjection;
-using Codific.Mvc567.DataAccess.Core.Context;
-using Microsoft.AspNetCore.Identity;
-using Codific.Mvc567.DataAccess.Core.Repositories;
+using Codific.Mvc567.DataAccess.Abstraction;
 using Codific.Mvc567.DataAccess.Abstractions;
 using Codific.Mvc567.DataAccess.Abstractions.Context;
 using Codific.Mvc567.DataAccess.Abstractions.Repositories;
-using Codific.Mvc567.DataAccess.Abstraction;
+using Codific.Mvc567.DataAccess.Core.Context;
+using Codific.Mvc567.DataAccess.Core.Repositories;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Codific.Mvc567.DataAccess.Core
 {

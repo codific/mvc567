@@ -19,7 +19,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Codific.Mvc567.DataAccess.Core.Repositories
 {
-    public abstract class RepositoryBase<TContext> : IRepositoryInjection<TContext> where TContext : DbContext
+    public abstract class RepositoryBase<TContext> : IRepositoryInjection<TContext>
+        where TContext : DbContext
     {
         private DbContext context;
 

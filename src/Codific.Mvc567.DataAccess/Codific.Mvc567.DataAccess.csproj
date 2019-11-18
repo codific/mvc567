@@ -16,6 +16,8 @@
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <AssemblyName>Codific.Mvc567.DataAccess</AssemblyName>
     <RootNamespace>Codific.Mvc567.DataAccess</RootNamespace>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <CodeAnalysisRuleSet>../../Codific.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
     <FrameworkReference Include="Microsoft.AspNetCore.App" />

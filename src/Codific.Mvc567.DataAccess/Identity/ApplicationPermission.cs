@@ -19,25 +19,27 @@ namespace Codific.Mvc567.DataAccess.Identity
     public class ApplicationPermission
     {
         public ApplicationPermission()
-        { }
+        {
+        }
 
         public ApplicationPermission(string name)
         {
-            Name = name;
-            Value = name.Replace(' ', '.').ToLower();
+            this.Name = name;
+            this.Value = name.Replace(' ', '.').ToLower();
         }
 
         public string Name { get; set; }
-        public string Value { get; set; }
 
-        public override string ToString()
-        {
-            return Value;
-        }
+        public string Value { get; set; }
 
         public static implicit operator string(ApplicationPermission permission)
         {
             return permission.Value;
+        }
+
+        public override string ToString()
+        {
+            return this.Value;
         }
     }
 }
