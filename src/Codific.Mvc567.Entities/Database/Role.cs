@@ -21,7 +21,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Codific.Mvc567.Entities.Database
 {
-    public class Role : IdentityRole<Guid>, IEntityBase
+    public class Role : IdentityRole<Guid>, IAuditableEntityBase
     {
         public Role()
         {
@@ -38,5 +38,19 @@ namespace Codific.Mvc567.Entities.Database
 
         [Column(TypeName = "text")]
         public string Description { get; set; }
+
+        public bool Deleted { get; set; }
+        
+        public DateTime? DeletedOn { get; set; }
+        
+        public string DeletedBy { get; set; }
+        
+        public DateTime CreatedOn { get; set; }
+        
+        public string CreatedBy { get; set; }
+        
+        public DateTime UpdatedOn { get; set; }
+        
+        public string UpdatedBy { get; set; }
     }
 }

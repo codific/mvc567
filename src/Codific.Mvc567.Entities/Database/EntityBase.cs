@@ -26,5 +26,11 @@ namespace Codific.Mvc567.Entities.Database
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
+
+        public bool Deleted { get; set; }
+
+        public DateTime? DeletedOn { get; set; }
+
+        public string DeletedBy { get; set; }
     }
 }

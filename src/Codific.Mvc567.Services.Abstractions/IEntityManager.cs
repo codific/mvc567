@@ -29,13 +29,15 @@ namespace Codific.Mvc567.Services.Abstractions
 
         Task<TEntityDto> GetEntityAsync<TEntity, TEntityDto>(Guid id) where TEntity : class, IEntityBase, new();
 
-        Task<PaginatedEntitiesResult<TEntityDto>> GetAllEntitiesPaginatedAsync<TEntity, TEntityDto>(int page, string searchQuery = null) where TEntity : class, IEntityBase, new();
+        Task<PaginatedEntitiesResult<TEntityDto>> GetAllEntitiesPaginatedAsync<TEntity, TEntityDto>(int page, string searchQuery = null, bool showDeleted = false) where TEntity : class, IEntityBase, new();
 
         Task<Guid?> CreateEntityAsync<TEntity, TEntityDto>(TEntityDto entity) where TEntity : class, IEntityBase, new();
 
         Task<Guid?> ModifyEntityAsync<TEntity, TEntityDto>(Guid id, TEntityDto modifiedEntity) where TEntity : class, IEntityBase, new();
 
-        Task<bool> DeleteEntityAsync<TEntity>(Guid id) where TEntity : class, IEntityBase, new();
+        Task<bool> DeleteEntityAsync<TEntity>(Guid id, bool softDelete = true) where TEntity : class, IEntityBase, new();
+        
+        Task<bool> RestoreEntityAsync<TEntity>(Guid id) where TEntity : class, IEntityBase, new();
 
         Task MoveTempFileAsync<TEntity>(TEntity entity);
 

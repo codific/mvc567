@@ -16,21 +16,17 @@
 
 using System;
 using System.Threading.Tasks;
-using Codific.Mvc567.Common.Attributes;
-using Codific.Mvc567.Common.Utilities;
-using Codific.Mvc567.Controllers.Abstractions;
+using Codific.Mvc567.CommonCore;
 using Codific.Mvc567.DataAccess.Identity;
 using Codific.Mvc567.Dtos.ViewModels.AdminViewModels;
 using Codific.Mvc567.Entities.Database;
-using Codific.Mvc567.Services.Abstractions;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
 
 namespace Codific.Mvc567.Controllers.MVC.Admin
 {
@@ -40,12 +36,12 @@ namespace Codific.Mvc567.Controllers.MVC.Admin
     {
         private readonly UserManager<User> userManager;
         private readonly Codific.Mvc567.Services.Abstractions.IAuthenticationService authenticationService;
-        private readonly IHostingEnvironment hostingEnvironment;
+        private readonly IWebHostEnvironment hostingEnvironment;
 
         public AdminAccountController(
             UserManager<User> userManager,
             Services.Abstractions.IAuthenticationService authenticationService,
-            IHostingEnvironment hostingEnvironment)
+            IWebHostEnvironment hostingEnvironment)
         {
             this.userManager = userManager;
             this.authenticationService = authenticationService;
