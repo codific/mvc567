@@ -97,7 +97,7 @@ namespace Codific.Mvc567.DataAccess.Core.Repositories
                 query = includes(query);
             }
 
-            return await query.SingleOrDefaultAsync(x => x.Id == id);
+            return await query.AsNoTracking().SingleOrDefaultAsync(x => x.Id == id);
         }
 
         public virtual IEnumerable<TEntity> Query<TEntity>(Expression<Func<TEntity, bool>> filter, Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null, Func<IQueryable<TEntity>, IQueryable<TEntity>> includes = null) where TEntity : class, IEntityBase, new()
@@ -109,7 +109,7 @@ namespace Codific.Mvc567.DataAccess.Core.Repositories
         public virtual async Task<IEnumerable<TEntity>> QueryAsync<TEntity>(Expression<Func<TEntity, bool>> filter, Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null, Func<IQueryable<TEntity>, IQueryable<TEntity>> includes = null) where TEntity : class, IEntityBase, new()
         {
             var result = QueryDb(filter, orderBy, includes);
-            return await result.ToListAsync();
+            return await result.AsNoTracking().ToListAsync();
         }
 
         public virtual void Load<TEntity>(Expression<Func<TEntity, bool>> filter, Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null, Func<IQueryable<TEntity>, IQueryable<TEntity>> includes = null) where TEntity : class, IEntityBase, new()
