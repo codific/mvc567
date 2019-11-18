@@ -93,6 +93,23 @@ namespace Codific.Mvc567.DataAccess.Core.Context
                 entity.UpdatedOn = now;
                 entity.UpdatedBy = CurrentUserId?.ToString();
             }
+
+            IEnumerable<EntityEntry> softDeletedEntityEntries = ChangeTracker
+                .Entries()
+                .Where(x => x.Entity is EntityBase && (x.State == EntityState.Modified));
+            
+            foreach (EntityEntry entry in softDeletedEntityEntries)
+            {                
+                var entity = (EntityBase)entry.Entity;
+                if (entry.State == EntityState.Modified && entity.Deleted && entity.DeletedBy is null)
+                {
+                    entity.DeletedBy = CurrentUserId?.ToString();
+                }
+                else if (entry.State == EntityState.Modified && !entity.Deleted && entity.DeletedBy != null)
+                {
+                    entity.DeletedBy = null;
+                }
+            }
         }
 
         protected virtual void MapEntitiesToUser()

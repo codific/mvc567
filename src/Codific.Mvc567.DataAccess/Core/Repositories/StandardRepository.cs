@@ -30,15 +30,15 @@ namespace Codific.Mvc567.DataAccess.Core.Repositories
         public StandardRepository(TContext context) : base(context)
         { }
 
-        public virtual IEnumerable<TEntity> GetAll<TEntity>(Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null, Func<IQueryable<TEntity>, IQueryable<TEntity>> includes = null) where TEntity : class, IEntityBase, new()
+        public virtual IEnumerable<TEntity> GetAll<TEntity>(Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null, Func<IQueryable<TEntity>, IQueryable<TEntity>> includes = null, bool showDeleted = false) where TEntity : class, IEntityBase, new()
         {
-            var result = QueryDb(null, orderBy, includes);
+            var result = QueryDb(x => x.Deleted == showDeleted, orderBy, includes);
             return result.ToList();
         }
 
-        public virtual async Task<IEnumerable<TEntity>> GetAllAsync<TEntity>(Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null, Func<IQueryable<TEntity>, IQueryable<TEntity>> includes = null) where TEntity : class, IEntityBase, new()
+        public virtual async Task<IEnumerable<TEntity>> GetAllAsync<TEntity>(Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null, Func<IQueryable<TEntity>, IQueryable<TEntity>> includes = null, bool showDeleted = false) where TEntity : class, IEntityBase, new()
         {
-            var result = QueryDb(null, orderBy, includes);
+            var result = QueryDb(x => x.Deleted == showDeleted, orderBy, includes);
             return await result.ToListAsync();
         }
 
@@ -54,25 +54,25 @@ namespace Codific.Mvc567.DataAccess.Core.Repositories
             await result.LoadAsync();
         }
 
-        public virtual IEnumerable<TEntity> GetPage<TEntity>(int startRow, int pageLength, Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null, Func<IQueryable<TEntity>, IQueryable<TEntity>> includes = null) where TEntity : class, IEntityBase, new()
+        public virtual IEnumerable<TEntity> GetPage<TEntity>(int startRow, int pageLength, Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null, Func<IQueryable<TEntity>, IQueryable<TEntity>> includes = null, bool showDeleted = false) where TEntity : class, IEntityBase, new()
         {
             if (orderBy == null) orderBy = new Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>>(x =>
             {
                 return x.AsQueryable().OrderByDescending(y => y.Id);
             });
 
-            var result = QueryDb(null, orderBy, includes, startRow, pageLength);
+            var result = QueryDb(x => x.Deleted == showDeleted, orderBy, includes, startRow, pageLength);
             return result.ToList();
         }
 
-        public virtual async Task<IEnumerable<TEntity>> GetPageAsync<TEntity>(int startRow, int pageLength, Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null, Func<IQueryable<TEntity>, IQueryable<TEntity>> includes = null) where TEntity : class, IEntityBase, new()
+        public virtual async Task<IEnumerable<TEntity>> GetPageAsync<TEntity>(int startRow, int pageLength, Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null, Func<IQueryable<TEntity>, IQueryable<TEntity>> includes = null, bool showDeleted = false) where TEntity : class, IEntityBase, new()
         {
             if (orderBy == null) orderBy = new Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>>(x =>
             {
                 return x.AsQueryable().OrderByDescending(y => y.Id);
             });
 
-            var result = QueryDb(null, orderBy, includes, startRow, pageLength);
+            var result = QueryDb(x => x.Deleted == showDeleted, orderBy, includes, startRow, pageLength);
             return await result.ToListAsync();
         }
 
@@ -155,11 +155,6 @@ namespace Codific.Mvc567.DataAccess.Core.Repositories
                 query = query.Where(filter);
             }
 
-            if (includes != null)
-            {
-                query = includes(query);
-            }
-
             if (orderBy != null)
             {
                 query = orderBy(query);
@@ -168,6 +163,11 @@ namespace Codific.Mvc567.DataAccess.Core.Repositories
             if (take != null && skip != null)
             {
                 query = query.Skip(skip.Value).Take(take.Value);
+            }
+
+            if (includes != null)
+            {
+                query = includes(query);
             }
 
             return query;
@@ -200,6 +200,32 @@ namespace Codific.Mvc567.DataAccess.Core.Repositories
         {
             var entity = new TEntity() { Id = id };
             this.Remove(entity);
+        }
+
+        public virtual void SoftDelete<TEntity>(TEntity entity) where TEntity : class, IEntityBase, new()
+        {
+            entity.Deleted = true;
+            entity.DeletedOn = DateTime.Now;
+        }
+
+        public virtual void SoftDelete<TEntity>(Guid id) where TEntity : class, IEntityBase, new()
+        {
+            var entity = new TEntity() { Id = id };
+            entity.Deleted = true;
+            entity.DeletedOn = DateTime.Now;
+        }
+
+        public virtual void Restore<TEntity>(TEntity entity) where TEntity : class, IEntityBase, new()
+        {
+            entity.Deleted = false;
+            entity.DeletedOn = null;
+        }
+
+        public virtual void Restore<TEntity>(Guid id) where TEntity : class, IEntityBase, new()
+        {
+            var entity = new TEntity() { Id = id };
+            entity.Deleted = false;
+            entity.DeletedOn = null;
         }
 
         public IEnumerable<IEntityBase> GetAllByEntityTableName(string entityTableName)

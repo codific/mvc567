@@ -124,5 +124,13 @@ namespace Codific.Mvc567.Entities.ViewModels.Mapping
 
             return action;
         }
+
+        public static TableRowActionViewModel RestoreAction(string urlStringFormat, params object[] parameters)
+        {
+            var action = CreateAction("Restore", MaterialDesignIcons.Restore, Color.LimeGreen, TableRowActionMethod.Post, urlStringFormat, parameters);
+            action.SetConfirmation("Restore Entity", "Are you sure you want to restore this deleted entity?");
+
+            return action;
+        }
     }
 }

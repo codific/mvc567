@@ -1,7 +1,7 @@
 ﻿using System;
 namespace Codific.Mvc567.DataAccess.Abstractions.Entities
 {
-    public interface IAuditableEntityBase
+    public interface IAuditableEntityBase : IEntityBase
     {
         DateTime CreatedOn { get; set; }
 
