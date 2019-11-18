@@ -1,27 +1,27 @@
 // This file is part of the mvc567 distribution (https://github.com/intellisoft567/mvc567).
 // Copyright (C) 2019 Codific Ltd.
-// 
+//
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
-// 
+//
 // This program is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
-// 
+//
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+using System;
+using System.Collections.Generic;
+using System.Text;
+using Codific.Mvc567.Common.Utilities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.Routing;
-using Codific.Mvc567.Common.Utilities;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Codific.Mvc567.Common.Attributes
 {
@@ -66,61 +66,11 @@ namespace Codific.Mvc567.Common.Attributes
                 ParameterName = this.parameterName,
                 ParameterValue = this.parameterValue,
                 Order = this.order,
-                Active = this.active
+                Active = this.active,
             };
 
-            
-
-            ((List<BreadcrumbItem>)(((Controller)context.Controller).ViewData["breadcrumbs"])).Add(currentBreadcrumb);
+            ((List<BreadcrumbItem>)((Controller)context.Controller).ViewData["breadcrumbs"]).Add(currentBreadcrumb);
             base.OnActionExecuting(context);
         }
-    }
-
-    public class BreadcrumbItem
-    {
-        private readonly IUrlHelper urlHelper;
-
-        public BreadcrumbItem(ActionExecutingContext context)
-        {
-            this.urlHelper = new UrlHelper(context);
-        }
-
-        public string Title { get; set; }
-
-        public string Controller { get; set; }
-
-        public string Action { get; set; }
-
-        public string ParameterName { get; set; }
-
-        public string ParameterValue { get; set; }
-
-        public string ActionLink
-        {
-            get
-            {
-                if (!string.IsNullOrEmpty(Controller) && !string.IsNullOrEmpty(Action))
-                {
-                    if (!string.IsNullOrEmpty(ParameterName) && !string.IsNullOrEmpty(ParameterValue))
-                    {
-                        RouteValueDictionary parametersObject = new RouteValueDictionary
-                        {
-                            { ParameterName, ParameterValue }
-                        };
-                        return this.urlHelper.Action(Action, Controller, parametersObject);
-                    }
-                    else
-                    {
-                        return this.urlHelper.Action(Action, Controller);
-                    }
-                }
-                return string.Empty;
-
-            }
-        }
-
-        public int Order { get; set; }
-
-        public bool Active { get; set; }
     }
 }

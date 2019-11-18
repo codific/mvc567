@@ -1,16 +1,16 @@
 // This file is part of the mvc567 distribution (https://github.com/intellisoft567/mvc567).
 // Copyright (C) 2019 Codific Ltd.
-// 
+//
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
-// 
+//
 // This program is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
-// 
+//
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
@@ -51,12 +51,12 @@ namespace Codific.Mvc567
         where TDatabaseContext : AbstractDatabaseContext<TDatabaseContext>
         where TStandardRepository : class, IStandardRepository
     {
-        protected string applicationAssembly = string.Empty;
+        private string applicationAssembly = string.Empty;
 
         public ApplicationStartup(IConfiguration configuration, IWebHostEnvironment hostingEnvironment)
         {
-            Configuration = configuration;
-            HostingEnvironment = hostingEnvironment;
+            this.Configuration = configuration;
+            this.HostingEnvironment = hostingEnvironment;
         }
 
         public IConfiguration Configuration { get; }
@@ -66,7 +66,7 @@ namespace Codific.Mvc567
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            RegisterDbContext(ref services);
+            this.RegisterDbContext(ref services);
 
             services.AddHealthChecks();
 
@@ -79,7 +79,6 @@ namespace Codific.Mvc567
 
             services.ConfigureRazorViews();
 
-
             services.AddSingleton<IMapper>(new Mapper(new MapperConfiguration(configuration =>
             {
                 configuration.AddMaps("Codific.Mvc567.Entities");
@@ -88,40 +87,37 @@ namespace Codific.Mvc567
                 configuration.AllowNullDestinationValues = true;
                 configuration.AddMaps(this.applicationAssembly);
                 configuration.AddProfile<BaseMappingProfile>();
-                RegisterMappingProfiles(ref configuration);
+                this.RegisterMappingProfiles(ref configuration);
             })));
 
-            services.Configure<IdentityOptions>(options =>
-            {
-                ConfigureIdentityOptions(ref options);
-            });
+            services.Configure<IdentityOptions>(options => { this.ConfigureIdentityOptions(ref options); });
 
             services.AddAuthentication(options =>
-            {
-                options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-                options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-                options.DefaultChallengeScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-                options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-            })
-            .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, options =>
-            {
-                options.LoginPath = "/admin/login";
-                options.LogoutPath = "/";
-                options.ExpireTimeSpan = TimeSpan.FromDays(7);
-            })
-            .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
-            {
-                options.TokenValidationParameters = new TokenValidationParameters
                 {
-                    ValidateIssuer = true,
-                    ValidateAudience = true,
-                    ValidateLifetime = true,
-                    ValidateIssuerSigningKey = true,
-                    ValidIssuer = Configuration["Jwt:Issuer"],
-                    ValidAudience = Configuration["Jwt:Issuer"],
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Jwt:Key"]))
-                };
-            });
+                    options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                    options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                    options.DefaultChallengeScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                    options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                })
+                .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, options =>
+                {
+                    options.LoginPath = "/admin/login";
+                    options.LogoutPath = "/";
+                    options.ExpireTimeSpan = TimeSpan.FromDays(7);
+                })
+                .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
+                {
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuer = true,
+                        ValidateAudience = true,
+                        ValidateLifetime = true,
+                        ValidateIssuerSigningKey = true,
+                        ValidIssuer = this.Configuration["Jwt:Issuer"],
+                        ValidAudience = this.Configuration["Jwt:Issuer"],
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(this.Configuration["Jwt:Key"])),
+                    };
+                });
 
             services.AddAuthorization(options =>
             {
@@ -135,17 +131,17 @@ namespace Codific.Mvc567
                     });
                 }
 
-                AddAuthorizationOptions(ref options);
+                this.AddAuthorizationOptions(ref options);
             });
 
-            services.Configure<GoogleRecaptchaKeys>(Configuration.GetSection("GoogleRecaptchaKeys"));
+            services.Configure<GoogleRecaptchaKeys>(this.Configuration.GetSection("GoogleRecaptchaKeys"));
 
             services.AddScoped<InvisibleReCaptchaValidateAttribute>();
             services.AddScoped<VisibleReCaptchaValidateAttribute>();
 
-            services.Configure<SmtpConfig>(Configuration.GetSection("SmtpConfig"));
+            services.Configure<SmtpConfig>(this.Configuration.GetSection("SmtpConfig"));
 
-            RegisterServices(ref services);
+            this.RegisterServices(ref services);
 
             services.AddMvc(option => option.EnableEndpointRouting = false)
                 .ConfigureApplicationPartManager(p =>
@@ -153,21 +149,45 @@ namespace Codific.Mvc567
                     p.ApplicationParts.Add(ApplicationAssemblyPart.AssemblyPart);
                     p.ApplicationParts.Add(UIAssemblyPart.AssemblyPart);
                     p.FeatureProviders.Add(new ViewComponentFeatureProvider());
-                    RegisterFeatureProviders(ref p);
+                    this.RegisterFeatureProviders(ref p);
                 });
 
             services.AddHttpContextAccessor();
         }
 
+        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        public void Configure(IApplicationBuilder app)
+        {
+            if (this.HostingEnvironment.IsDevelopment())
+            {
+                app.UseBrowserLink();
+                app.UseDeveloperExceptionPage();
+                app.UseDatabaseErrorPage();
+            }
+            else
+            {
+                app.UseExceptionHandler("/error/400");
+            }
+
+            app.UseStatusCodePagesWithReExecute("/error/{0}");
+
+            this.ConfigureMiddlewareBeforeAuthentication(ref app);
+
+            app.UseHealthChecks("/system/health");
+            app.UseStaticFiles();
+            app.UseAuthentication();
+
+            this.ConfigureMiddlewareAfterAuthentication(ref app);
+
+            app.UseMvc(routes => { this.RegisterRoutes(ref routes); });
+        }
+
         protected virtual void RegisterDbContext(ref IServiceCollection services)
         {
-            var connectionString = Configuration.GetConnectionString("DatabaseConnection");
+            var connectionString = this.Configuration.GetConnectionString("DatabaseConnection");
 
             services.AddEntityFrameworkNpgsql()
-                .AddDbContext<TDatabaseContext>(options =>
-                {
-                    options.UseNpgsql(connectionString, b => b.MigrationsAssembly(this.applicationAssembly));
-                })
+                .AddDbContext<TDatabaseContext>(options => { options.UseNpgsql(connectionString, b => b.MigrationsAssembly(this.applicationAssembly)); })
                 .BuildServiceProvider();
 
             services.AddIdentity<User, Role>()
@@ -177,7 +197,6 @@ namespace Codific.Mvc567
 
         protected virtual void RegisterServices(ref IServiceCollection services)
         {
-
         }
 
         protected virtual void AddAuthorizationOptions(ref AuthorizationOptions options)
@@ -191,22 +210,18 @@ namespace Codific.Mvc567
 
         protected virtual void ConfigureMiddlewareBeforeAuthentication(ref IApplicationBuilder app)
         {
-
         }
 
         protected virtual void ConfigureMiddlewareAfterAuthentication(ref IApplicationBuilder app)
         {
-
         }
 
         protected virtual void RegisterMappingProfiles(ref IMapperConfigurationExpression configuration)
         {
-
         }
 
         protected virtual void RegisterFeatureProviders(ref ApplicationPartManager applicationPartManager)
         {
-
         }
 
         protected virtual void ConfigureIdentityOptions(ref IdentityOptions options)
@@ -236,36 +251,6 @@ namespace Codific.Mvc567
             routes.MapRoute(
                 name: "default-languages",
                 template: Constants.LanguageControllerPageRoute + "/{controller=Home}/{action=Index}/{id?}");
-        }
-
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app)
-        {
-            if (HostingEnvironment.IsDevelopment())
-            {
-                app.UseBrowserLink();
-                app.UseDeveloperExceptionPage();
-                app.UseDatabaseErrorPage();
-            }
-            else
-            {
-                app.UseExceptionHandler("/error/400");
-            }
-
-            app.UseStatusCodePagesWithReExecute("/error/{0}");
-
-            ConfigureMiddlewareBeforeAuthentication(ref app);
-
-            app.UseHealthChecks("/system/health");
-            app.UseStaticFiles();
-            app.UseAuthentication();
-
-            ConfigureMiddlewareAfterAuthentication(ref app);
-
-            app.UseMvc(routes =>
-            {
-                RegisterRoutes(ref routes);
-            });
         }
     }
 }

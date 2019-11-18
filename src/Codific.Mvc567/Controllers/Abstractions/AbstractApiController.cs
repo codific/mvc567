@@ -1,16 +1,16 @@
 ﻿// This file is part of the mvc567 distribution (https://github.com/intellisoft567/mvc567).
 // Copyright (C) 2019 Codific Ltd.
-// 
+//
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
-// 
+//
 // This program is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
-// 
+//
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
@@ -32,7 +32,7 @@ namespace Codific.Mvc567.Controllers.Abstractions
         where TEntityDto : class, new()
         where TCreateEditEntityDto : class, new()
     {
-        protected readonly IEntityManager entityManager;
+        private readonly IEntityManager entityManager;
 
         public AbstractApiController(IEntityManager entityManager)
         {
@@ -55,14 +55,14 @@ namespace Codific.Mvc567.Controllers.Abstractions
         [ProducesResponseType(StatusCodes.Status200OK)]
         public virtual async Task<ActionResult<IEnumerable<TEntityDto>>> GetAll()
         {
-            if (!HasGetAll)
+            if (!this.HasGetAll)
             {
-                return NotFound();
+                return this.NotFound();
             }
 
             var entities = await this.entityManager.GetAllEntitiesAsync<TEntity, TEntityDto>();
 
-            return Ok(entities);
+            return this.Ok(entities);
         }
 
         [HttpGet]
@@ -70,19 +70,19 @@ namespace Codific.Mvc567.Controllers.Abstractions
         [ProducesResponseType(StatusCodes.Status200OK)]
         public virtual async Task<ActionResult<PaginatedEntitiesResult<TEntityDto>>> Filter(FilterQueryRequest filterQueryRequest)
         {
-            if (!HasFilter)
+            if (!this.HasFilter)
             {
-                return NotFound();
+                return this.NotFound();
             }
 
             if (filterQueryRequest == null || filterQueryRequest.EmptyQuery)
             {
-                return RedirectToAction(nameof(GetAll));
+                return this.RedirectToAction(nameof(this.GetAll));
             }
 
             var result = await this.entityManager.FilterEntitiesAsync<TEntity, TEntityDto>(filterQueryRequest);
 
-            return Ok(result);
+            return this.Ok(result);
         }
 
         [HttpGet]
@@ -91,18 +91,18 @@ namespace Codific.Mvc567.Controllers.Abstractions
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public virtual async Task<ActionResult<TEntityDto>> Get(Guid entityId)
         {
-            if (!HasGet)
+            if (!this.HasGet)
             {
-                return NotFound();
+                return this.NotFound();
             }
 
             var entity = await this.entityManager.GetEntityAsync<TEntity, TEntityDto>(entityId);
             if (entity != null)
             {
-                return Ok(entity);
+                return this.Ok(entity);
             }
 
-            return NotFound();
+            return this.NotFound();
         }
 
         [HttpPost]
@@ -110,21 +110,21 @@ namespace Codific.Mvc567.Controllers.Abstractions
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public virtual async Task<IActionResult> Create([FromBody]TCreateEditEntityDto entity)
         {
-            if (!HasCreate)
+            if (!this.HasCreate)
             {
-                return NotFound();
+                return this.NotFound();
             }
 
-            if (ModelState.IsValid)
+            if (this.ModelState.IsValid)
             {
                 var createdEntityId = await this.entityManager.CreateEntityAsync<TEntity, TCreateEditEntityDto>(entity);
                 if (createdEntityId.HasValue)
                 {
-                    return CreatedAtAction(nameof(Get), new { entityId = createdEntityId }, new { success = true, entityId = createdEntityId });
+                    return this.CreatedAtAction(nameof(this.Get), new { entityId = createdEntityId }, new { success = true, entityId = createdEntityId });
                 }
             }
 
-            return BadRequest(ModelState.Select(x => x.Value.Errors).ToArray());
+            return this.BadRequest(this.ModelState.Select(x => x.Value.Errors).ToArray());
         }
 
         [HttpPut]
@@ -133,21 +133,21 @@ namespace Codific.Mvc567.Controllers.Abstractions
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public virtual async Task<IActionResult> Modify(Guid entityId, [FromBody]TCreateEditEntityDto entity)
         {
-            if (!HasModify)
+            if (!this.HasModify)
             {
-                return NotFound();
+                return this.NotFound();
             }
 
-            if (ModelState.IsValid)
+            if (this.ModelState.IsValid)
             {
                 var modifiedEntityId = await this.entityManager.ModifyEntityAsync<TEntity, TCreateEditEntityDto>(entityId, entity);
                 if (modifiedEntityId.HasValue)
                 {
-                    return NoContent();
+                    return this.NoContent();
                 }
             }
 
-            return BadRequest(ModelState.Select(x => x.Value.Errors).ToArray());
+            return this.BadRequest(this.ModelState.Select(x => x.Value.Errors).ToArray());
         }
 
         [HttpDelete]
@@ -156,18 +156,18 @@ namespace Codific.Mvc567.Controllers.Abstractions
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public virtual async Task<IActionResult> Delete(Guid entityId)
         {
-            if (!HasDelete)
+            if (!this.HasDelete)
             {
-                return NotFound();
+                return this.NotFound();
             }
 
             bool isEntityDeleted = await this.entityManager.DeleteEntityAsync<TEntity>(entityId);
             if (isEntityDeleted)
             {
-                return Ok();
+                return this.Ok();
             }
 
-            return NotFound();
+            return this.NotFound();
         }
     }
 }

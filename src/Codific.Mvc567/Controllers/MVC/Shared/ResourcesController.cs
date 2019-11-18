@@ -1,22 +1,22 @@
 // This file is part of the mvc567 distribution (https://github.com/intellisoft567/mvc567).
 // Copyright (C) 2019 Codific Ltd.
-// 
+//
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
-// 
+//
 // This program is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
-// 
+//
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 using System.IO;
-using Microsoft.AspNetCore.Mvc;
 using Codific.Mvc567.Common;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Codific.Mvc567.Controllers.MVC.Shared
 {
@@ -34,17 +34,15 @@ namespace Codific.Mvc567.Controllers.MVC.Shared
                 {
                     byte[] fileBytes = (byte[])Resources.ResourceManager.GetObject(resourceName);
                     Stream stream = new MemoryStream(fileBytes);
-                    if (stream == null)
-                    {
-                        return NotFound();
-                    }
-
-                    return File(stream, memeType);
+                    return this.File(stream, memeType);
                 }
             }
-            catch (System.Exception) { }
+            catch (System.Exception)
+            {
+                // ignored
+            }
 
-            return NotFound();
+            return this.NotFound();
         }
 
         [HttpGet]
@@ -56,19 +54,18 @@ namespace Codific.Mvc567.Controllers.MVC.Shared
                 string memeType = MimeTypes.Font.GetContentType(contentFormatType);
                 if (!string.IsNullOrEmpty(memeType))
                 {
-                    byte[] fileBytes = (byte[])Resources.ResourceManager.GetObject(resourceName.Replace('.','_').Replace('-', '_') + $"_{contentFormatType}");
+                    byte[] fileBytes = (byte[])Resources.ResourceManager.GetObject(resourceName.Replace('.', '_').Replace('-', '_') + $"_{contentFormatType}");
                     Stream stream = new MemoryStream(fileBytes);
-                    if (stream == null)
-                    {
-                        return NotFound();
-                    }
 
-                    return File(stream, memeType);
+                    return this.File(stream, memeType);
                 }
             }
-            catch (System.Exception) { }
+            catch (System.Exception)
+            {
+                // ignored
+            }
 
-            return NotFound();
+            return this.NotFound();
         }
 
         [HttpGet]
@@ -83,17 +80,16 @@ namespace Codific.Mvc567.Controllers.MVC.Shared
                     string convertedResourceName = resourceName.Replace('.', '_').Replace('-', '_') + "_css";
                     byte[] fileBytes = (byte[])Resources.ResourceManager.GetObject(convertedResourceName);
                     Stream stream = new MemoryStream(fileBytes);
-                    if (stream == null)
-                    {
-                        return NotFound();
-                    }
 
-                    return File(stream, memeType);
+                    return this.File(stream, memeType);
                 }
             }
-            catch (System.Exception) { }
+            catch (System.Exception)
+            {
+                // ignored
+            }
 
-            return NotFound();
+            return this.NotFound();
         }
     }
 }

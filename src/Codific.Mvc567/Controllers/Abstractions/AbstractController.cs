@@ -1,16 +1,16 @@
 // This file is part of the mvc567 distribution (https://github.com/intellisoft567/mvc567).
 // Copyright (C) 2019 Codific Ltd.
-// 
+//
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
-// 
+//
 // This program is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
-// 
+//
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
@@ -29,15 +29,22 @@ namespace Codific.Mvc567.Controllers.Abstractions
 {
     public abstract class AbstractController : Controller
     {
-        protected readonly IConfiguration configuration;
-        protected readonly IEmailService emailService;
-        protected readonly ILanguageService languageService;
+        private readonly IConfiguration configuration;
+        private readonly IEmailService emailService;
+        private readonly ILanguageService languageService;
 
         public AbstractController(IConfiguration configuration, IEmailService emailService, ILanguageService languageService)
         {
             this.configuration = configuration;
             this.emailService = emailService;
             this.languageService = languageService;
+        }
+
+        public override void OnActionExecuting(ActionExecutingContext context)
+        {
+            this.PreventInvalidLanguage(ref context);
+            this.ManageLanguageCookie();
+            base.OnActionExecuting(context);
         }
 
         protected void ManageLanguageCookie()
@@ -48,6 +55,7 @@ namespace Codific.Mvc567.Controllers.Abstractions
             {
                 return;
             }
+
             if (string.IsNullOrEmpty(languageCode))
             {
                 languageCode = defaultLanguage.Code.ToLower();
@@ -58,13 +66,14 @@ namespace Codific.Mvc567.Controllers.Abstractions
             CookieOptions options = new CookieOptions
             {
                 Expires = DateTime.Now.AddYears(1),
-                IsEssential = true
+                IsEssential = true,
             };
 
             if (cookieExist)
             {
                 this.Response.Cookies.Delete(Constants.LanguageCookieName);
             }
+
             this.Response.Cookies.Append(Constants.LanguageCookieName, languageCode, options);
         }
 
@@ -78,18 +87,11 @@ namespace Codific.Mvc567.Controllers.Abstractions
             {
                 filteredAllowedLanguages = allowedLanguages.Where(x => x != defaultLanguage.Code.ToLower()).ToArray();
             }
+
             if (!string.IsNullOrEmpty(languageCode) && !filteredAllowedLanguages.Contains(languageCode))
             {
-                context.Result = NotFound();
+                context.Result = this.NotFound();
             }
-        }
-
-
-        public override void OnActionExecuting(ActionExecutingContext context)
-        {
-            PreventInvalidLanguage(ref context);
-            ManageLanguageCookie();
-            base.OnActionExecuting(context);
         }
     }
 }
