@@ -51,6 +51,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
                                     @{
                                         switch (cell.Type)
                                         {
+                                            
                                             case TableCellType.Text:
                                             case TableCellType.Number:
                                                 @if (cell.Editable)
@@ -59,7 +60,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
                                                         <div class="d-flex">
                                                             <a href="#"
                                                                data-type="text"
-                                                               data-url="/admin/something/data-cell"
+                                                               data-url="@Url.Action("XEdit", Model.Controller, new { Area = Model.Area })"
                                                                data-pk="@row.Identifier"
                                                                data-name="@cell?.RelatedProperty"
                                                                class="application-editable-form-input-text m-auto text-black">@cell?.Content</a>

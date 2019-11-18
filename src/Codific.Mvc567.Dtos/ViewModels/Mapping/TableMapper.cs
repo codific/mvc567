@@ -55,6 +55,10 @@ namespace Codific.Mvc567.Entities.ViewModels.Mapping
                     TableRowViewModel tableRow = new TableRowViewModel();
                     foreach (var property in properties)
                     {
+                        if (property.GetCustomAttributes(typeof(EntityIdentifierAttribute), false).Length > 0)
+                        {
+                            tableRow.Identifier = property.GetValue(entity)?.ToString();
+                        }
                         if (property.GetCustomAttributes(typeof(TableCellAttribute), false).Length > 0)
                         {
                             TableCellAttribute propertyAttribute = (TableCellAttribute)property.GetCustomAttributes(typeof(TableCellAttribute), false).FirstOrDefault();

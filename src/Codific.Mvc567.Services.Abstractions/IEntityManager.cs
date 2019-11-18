@@ -40,5 +40,7 @@ namespace Codific.Mvc567.Services.Abstractions
         Task MoveTempFileAsync<TEntity>(TEntity entity);
 
         Task<PaginatedEntitiesResult<TEntityDto>> FilterEntitiesAsync<TEntity, TEntityDto>(FilterQueryRequest filterQuery) where TEntity : class, IEntityBase, new();
+
+        Task<bool> ModifyEntityPropertyAsync<TEntity, TEntityDto>(Guid entityId, string property, string value) where TEntity : class, IEntityBase, new();
     }
 }

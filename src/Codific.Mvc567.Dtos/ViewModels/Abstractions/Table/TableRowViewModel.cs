@@ -43,7 +43,7 @@ namespace Codific.Mvc567.Dtos.ViewModels.Abstractions.Table
             }
         }
 
-        public string Identifier { get; set; } = Guid.NewGuid().ToString();
+        public string Identifier { get; set; }
 
         public void AddCell(int order, object content, TableCellType type, bool editable, string relatedProperty)
         {
