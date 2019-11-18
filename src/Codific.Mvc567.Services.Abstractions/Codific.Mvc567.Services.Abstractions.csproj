@@ -17,9 +17,6 @@
     <AssemblyName>Codific.Mvc567.Services.Abstractions</AssemblyName>
     <RootNamespace>Codific.Mvc567.Services.Abstractions</RootNamespace>
   </PropertyGroup>
-  <ItemGroup>
-    <FrameworkReference Include="Microsoft.AspNetCore.App" />
-  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
