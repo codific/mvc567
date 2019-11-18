@@ -14,17 +14,19 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-using Codific.Mvc567.DataAccess.Abstractions.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using Codific.Mvc567.DataAccess.Abstractions.Repositories;
 
 namespace Codific.Mvc567.DataAccess.Abstraction
 {
     public interface IUnitOfWork : IDisposable
     {
         Guid? CurrentUserId { get; }
+
+        Dictionary<string, Type> DatabaseTables { get; }
 
         IStandardRepository GetStandardRepository();
 
@@ -39,7 +41,5 @@ namespace Codific.Mvc567.DataAccess.Abstraction
         IRepository<TEntity> GetRepository<TEntity>();
 
         TRepository GetCustomRepository<TRepository>();
-
-        Dictionary<string, Type> DatabaseTables { get; }
     }
 }
