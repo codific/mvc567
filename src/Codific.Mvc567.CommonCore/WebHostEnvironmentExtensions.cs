@@ -8,8 +8,9 @@ namespace Codific.Mvc567.CommonCore
 {
     public static class WebHostEnvironmentExtensions
     {
-        
-        public static string GetPrivateRootUserUploadDirectory(this IWebHostEnvironment hostingEnvironment, Guid? userId = null)
+        public static string GetPrivateRootUserUploadDirectory(
+            this IWebHostEnvironment hostingEnvironment,
+            Guid? userId = null)
         {
             string userFolder = CryptoFunctions.MD5Hash(userId.ToString()).ToLower();
             return Path.Combine(hostingEnvironment.GetPrivateRoot(), Constants.UploadFolderName, Constants.UsersFolderName, userFolder);
