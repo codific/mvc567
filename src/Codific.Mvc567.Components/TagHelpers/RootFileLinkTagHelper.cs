@@ -40,30 +40,30 @@ namespace Codific.Mvc567.Components.TagHelpers
         public override void Process(TagHelperContext context, TagHelperOutput output)
         {
             output.TagName = "a";
-            RenderTag(ref output);
+            this.RenderTag(ref output);
         }
 
         public override Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
         {
             output.TagName = "a";
-            RenderTag(ref output);
+            this.RenderTag(ref output);
             return base.ProcessAsync(context, output);
         }
 
         public void RenderTag(ref TagHelperOutput output)
         {
             Guid parsedFildId = Guid.Empty;
-            if (!string.IsNullOrEmpty(FileId) && Guid.TryParse(FileId, out parsedFildId))
+            if (!string.IsNullOrEmpty(this.FileId) && Guid.TryParse(this.FileId, out parsedFildId))
             {
-                var fileEntity = fileSystemService.GetFileById<SimpleFileDto>(parsedFildId);
+                var fileEntity = this.fileSystemService.GetFileById<SimpleFileDto>(parsedFildId);
                 string rootHref = "/admin/roots/";
                 if (fileEntity != null && fileEntity.Path.Contains(Constants.PrivateRootFolderName))
                 {
-                    rootHref += ("private/file/" + fileEntity.Path.Replace("\\", "/").Replace(Constants.PrivateRootFolderName, string.Empty));
+                    rootHref += "private/file/" + fileEntity.Path.Replace("\\", "/").Replace(Constants.PrivateRootFolderName, string.Empty);
                 }
                 else if (fileEntity != null)
                 {
-                    rootHref += ("public/file/" + fileEntity.Path.Replace("\\", "/"));
+                    rootHref += "public/file/" + fileEntity.Path.Replace("\\", "/");
                 }
 
                 output.Attributes.Add(new TagHelperAttribute("href", rootHref));

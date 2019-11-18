@@ -15,20 +15,21 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 using System;
-using Codific.Mvc567.Common.Options;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Options;
+using System.Text;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
-namespace Codific.Mvc567.CommonCore
+namespace Codific.Mvc567.Components.TagHelpers
 {
-    public class InvisibleReCaptchaValidateAttribute : ReCaptchaValidateAttribute
+    public static class BodyTagHelperExtensions
     {
-        public InvisibleReCaptchaValidateAttribute(
-            IOptions<GoogleRecaptchaKeys> googleRecaptchaKeysConfiguration,
-            IWebHostEnvironment hostingEnvironment)
-            : base(googleRecaptchaKeysConfiguration, hostingEnvironment)
+        public static void AppendIntoTheBody(ViewContext viewContext, string headLine)
         {
-            this.ReCaptchaSecret = new Lazy<string>(() => this.GoogleRecaptchaKeys.InvisibleRecaptcha.SecretKey);
+            if (viewContext.ViewData[typeof(BodyTagHelper).FullName ?? throw new InvalidOperationException()] == null)
+            {
+                viewContext.ViewData[typeof(BodyTagHelper).FullName ?? throw new InvalidOperationException()] = new StringBuilder();
+            }
+
+            ((StringBuilder)viewContext.ViewData[typeof(BodyTagHelper).FullName ?? throw new InvalidOperationException()]).AppendLine(headLine);
         }
     }
 }

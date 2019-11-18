@@ -14,13 +14,13 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+using System.Text;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 using Microsoft.Extensions.Configuration;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Codific.Mvc567.Components.TagHelpers
 {
@@ -28,6 +28,7 @@ namespace Codific.Mvc567.Components.TagHelpers
     public class FormVisibleRecaptchaTagHelper : TagHelper
     {
         private readonly IConfiguration configuration;
+
         public FormVisibleRecaptchaTagHelper(IConfiguration configuration)
         {
             this.configuration = configuration;
@@ -46,9 +47,9 @@ namespace Codific.Mvc567.Components.TagHelpers
             StringBuilder outputStringBuilder = new StringBuilder();
 
             outputStringBuilder.Append($"<div class=\"g-recaptcha\" data-sitekey=\"{this.configuration["GoogleRecaptchaKeys:VisibleRecaptcha:SiteKey"]}\"></div>");
-            if (ViewContext.ModelState.ContainsKey("ReCaptcha") && ViewContext.ModelState["ReCaptcha"].Errors != null && ViewContext.ModelState["ReCaptcha"].Errors.Count > 0)
+            if (this.ViewContext.ModelState.ContainsKey("ReCaptcha") && this.ViewContext.ModelState["ReCaptcha"].Errors != null && this.ViewContext.ModelState["ReCaptcha"].Errors.Count > 0)
             {
-                foreach (var error in ViewContext.ModelState["ReCaptcha"].Errors)
+                foreach (var error in this.ViewContext.ModelState["ReCaptcha"].Errors)
                 {
                     outputStringBuilder.Append($"<span class=\"text-danger text-small\">{error.ErrorMessage}</span>");
                 }
@@ -56,10 +57,9 @@ namespace Codific.Mvc567.Components.TagHelpers
 
             output.Content.SetHtmlContent(new HtmlString(outputStringBuilder.ToString()));
 
-            ViewContext.AppendIntoTheHead("<script src=\"https://www.google.com/recaptcha/api.js\" async defer></script>");
+            this.ViewContext.AppendIntoTheHead("<script src=\"https://www.google.com/recaptcha/api.js\" async defer></script>");
 
             return base.ProcessAsync(context, output);
         }
-
     }
 }

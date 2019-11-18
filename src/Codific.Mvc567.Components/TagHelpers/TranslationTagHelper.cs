@@ -28,6 +28,7 @@ namespace Codific.Mvc567.Components.TagHelpers
     public class TranslationTagHelper : TagHelper
     {
         private readonly ILanguageService languageService;
+
         public TranslationTagHelper(ILanguageService languageService)
         {
             this.languageService = languageService;
@@ -45,20 +46,20 @@ namespace Codific.Mvc567.Components.TagHelpers
 
         public override void Process(TagHelperContext context, TagHelperOutput output)
         {
-            ProcessOutput(ref output);
+            this.ProcessOutput(ref output);
 
             base.Process(context, output);
         }
 
         private void ProcessOutput(ref TagHelperOutput output)
         {
-            output.TagName = string.IsNullOrEmpty(Element) ? "span" : Element;
+            output.TagName = string.IsNullOrEmpty(this.Element) ? "span" : this.Element;
             output.TagMode = TagMode.StartTagAndEndTag;
 
-            string languageCode = Language;
-            if (string.IsNullOrEmpty(Language))
+            string languageCode = this.Language;
+            if (string.IsNullOrEmpty(this.Language))
             {
-                languageCode = ViewContext.HttpContext.GetLanguageCode();
+                languageCode = this.ViewContext.HttpContext.GetLanguageCode();
                 if (string.IsNullOrEmpty(languageCode))
                 {
                     languageCode = this.languageService.GetDefaultLanguage<SimpleLanguageDto>()?.Code?.ToLower();

@@ -14,51 +14,54 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-using Microsoft.AspNetCore.Html;
-using Microsoft.AspNetCore.Razor.TagHelpers;
-using Codific.Mvc567.Common.Utilities;
 using System;
 using System.Text;
 using System.Threading.Tasks;
+using Codific.Mvc567.Common.Utilities;
+using Microsoft.AspNetCore.Html;
+using Microsoft.AspNetCore.Razor.TagHelpers;
 
 namespace Codific.Mvc567.Components.TagHelpers
 {
     [HtmlTargetElement("enum-select", TagStructure = TagStructure.NormalOrSelfClosing)]
     public class EnumSelectTagHelper : TagHelper
     {
-        public override void Process(TagHelperContext context, TagHelperOutput output)
-        {
-            output.TagName = "select";
-            string selectTag = RenderSelectTag();
-            output.Content.SetHtmlContent(new HtmlString(selectTag));
-        }
-        public override Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
-        {
-            output.TagName = "select";
-            string selectTag = RenderSelectTag();
-            output.Content.SetHtmlContent(new HtmlString(selectTag));
-            return base.ProcessAsync(context, output);
-        }
-
         [HtmlAttributeName("enum")]
         public Type Enum { get; set; }
 
         [HtmlAttributeName("selected-value")]
         public int SelectedValue { get; set; }
 
+        public override void Process(TagHelperContext context, TagHelperOutput output)
+        {
+            output.TagName = "select";
+            string selectTag = this.RenderSelectTag();
+            output.Content.SetHtmlContent(new HtmlString(selectTag));
+        }
+
+        public override Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
+        {
+            output.TagName = "select";
+            string selectTag = this.RenderSelectTag();
+            output.Content.SetHtmlContent(new HtmlString(selectTag));
+            return base.ProcessAsync(context, output);
+        }
+
         private string RenderSelectTag()
         {
             StringBuilder optionsStringBuilder = new StringBuilder();
-            var enumDictionary = EnumFunctions.GetEnumList(Enum);
+            var enumDictionary = EnumFunctions.GetEnumList(this.Enum);
             foreach (var enumItem in enumDictionary)
             {
                 string selectedAttribute = string.Empty;
-                if (enumItem.Key == SelectedValue)
+                if (enumItem.Key == this.SelectedValue)
                 {
                     selectedAttribute = "selected ";
                 }
+
                 optionsStringBuilder.Append($"<option value=\"{enumItem.Key}\" {selectedAttribute}>{enumItem.Value}</option>");
             }
+
             return optionsStringBuilder.ToString();
         }
     }

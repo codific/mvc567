@@ -14,11 +14,11 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+using System.Text;
 using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
-using System.Text;
 
 namespace Codific.Mvc567.Components.TagHelpers
 {
@@ -40,14 +40,13 @@ namespace Codific.Mvc567.Components.TagHelpers
         [HtmlAttributeName("single")]
         public bool Single { get; set; }
 
-
         [ViewContext]
         [HtmlAttributeNotBound]
         public ViewContext ViewContext { get; set; }
 
         public override void Process(TagHelperContext context, TagHelperOutput output)
         {
-            ProcessOutput(ref output);
+            this.ProcessOutput(ref output);
 
             base.Process(context, output);
         }
@@ -56,34 +55,33 @@ namespace Codific.Mvc567.Components.TagHelpers
         {
             output.TagName = "li";
             output.TagMode = TagMode.StartTagAndEndTag;
-            bool collapsed = ViewContext.RouteData.Values["controller"].ToString().ToLower() != Controller.ToLower();
+            bool collapsed = this.ViewContext.RouteData.Values["controller"].ToString().ToLower() != this.Controller.ToLower();
             string activeClass = (!collapsed) ? "active" : string.Empty;
             output.Attributes.Add(new TagHelperAttribute("class", $"nav-item main-nav-item {activeClass}", HtmlAttributeValueStyle.DoubleQuotes));
 
-
-
             StringBuilder preContent = new StringBuilder();
-            if (Single)
+            if (this.Single)
             {
-                preContent.Append($"<a class=\"nav-link\" title=\"{Title}\" href=\"{Href}\">");
+                preContent.Append($"<a class=\"nav-link\" title=\"{this.Title}\" href=\"{this.Href}\">");
             }
             else
             {
                 string collapsedClass = collapsed ? "collapsed" : string.Empty;
-                preContent.Append($"<a class=\"nav-link {collapsedClass}\" title=\"{Title}\" data-toggle=\"collapse\" href=\"#{Controller.ToLower()}\" aria-controls=\"{Controller.ToLower()}\" aria-expanded=\"{(!collapsed).ToString().ToLower()}\">");
+                preContent.Append($"<a class=\"nav-link {collapsedClass}\" title=\"{this.Title}\" data-toggle=\"collapse\" href=\"#{this.Controller.ToLower()}\" aria-controls=\"{this.Controller.ToLower()}\" aria-expanded=\"{(!collapsed).ToString().ToLower()}\">");
             }
 
-            preContent.Append($"<i class=\"menu-icon {Icon}\"></i>");
-            preContent.Append($"<span class=\"menu-title\">{Title}</span>");
-            if (!Single)
+            preContent.Append($"<i class=\"menu-icon {this.Icon}\"></i>");
+            preContent.Append($"<span class=\"menu-title\">{this.Title}</span>");
+            if (!this.Single)
             {
                 preContent.Append($"<i class=\"menu-arrow\"></i>");
             }
+
             preContent.Append($"</a>");
-            if (!Single)
+            if (!this.Single)
             {
                 string showedClass = !collapsed ? "show" : string.Empty;
-                preContent.Append($"<div class=\"collapse {showedClass}\" id=\"{Controller.ToLower()}\">");
+                preContent.Append($"<div class=\"collapse {showedClass}\" id=\"{this.Controller.ToLower()}\">");
                 preContent.Append($"<ul class=\"nav flex-column sub-menu\">");
 
                 output.PostContent.AppendHtml(new HtmlString($"</ul>"));

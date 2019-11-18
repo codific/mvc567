@@ -32,31 +32,32 @@ namespace Codific.Mvc567.Components.TagHelpers
             this.uow = uow;
         }
 
-        public override void Process(TagHelperContext context, TagHelperOutput output)
-        {
-            output.TagName = "select";
-            string selectTag = RenderSelectTag();
-            output.Content.SetHtmlContent(new HtmlString(selectTag));
-        }
-        public override Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
-        {
-            output.TagName = "select";
-            string selectTag = RenderSelectTag();
-            output.Content.SetHtmlContent(new HtmlString(selectTag));
-            return base.ProcessAsync(context, output);
-        }
-
         [HtmlAttributeName("selected-value")]
         public string SelectedValue { get; set; }
 
         [HtmlAttributeName("has-empty")]
         public bool HasEmpty { get; set; }
 
+        public override void Process(TagHelperContext context, TagHelperOutput output)
+        {
+            output.TagName = "select";
+            string selectTag = this.RenderSelectTag();
+            output.Content.SetHtmlContent(new HtmlString(selectTag));
+        }
+
+        public override Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
+        {
+            output.TagName = "select";
+            string selectTag = this.RenderSelectTag();
+            output.Content.SetHtmlContent(new HtmlString(selectTag));
+            return base.ProcessAsync(context, output);
+        }
+
         private string RenderSelectTag()
         {
             StringBuilder optionsStringBuilder = new StringBuilder();
             var databaseTables = this.uow.DatabaseTables;
-            if (HasEmpty)
+            if (this.HasEmpty)
             {
                 optionsStringBuilder.Append($"<option value=\"\"> - </option>");
             }
@@ -64,12 +65,14 @@ namespace Codific.Mvc567.Components.TagHelpers
             foreach (var table in databaseTables)
             {
                 string selectedAttribute = string.Empty;
-                if (table.Key == SelectedValue)
+                if (table.Key == this.SelectedValue)
                 {
                     selectedAttribute = "selected ";
                 }
+
                 optionsStringBuilder.Append($"<option value=\"{table.Key}\" {selectedAttribute}>{table.Key}</option>");
             }
+
             return optionsStringBuilder.ToString();
         }
     }

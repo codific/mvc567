@@ -54,6 +54,7 @@ namespace Codific.Mvc567.Components.TagHelpers
                 firstName = user.FirstName;
                 lastName = user.LastName;
             }
+
             output.Content.SetContent($"{firstName} {lastName}");
         }
     }

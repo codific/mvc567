@@ -14,14 +14,14 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-using Microsoft.AspNetCore.Html;
-using Microsoft.AspNetCore.Razor.TagHelpers;
-using Codific.Mvc567.Components.TagHelpers.Utilities;
-using Codific.Mvc567.DataAccess.Abstractions.Repositories;
 using System;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Codific.Mvc567.Components.TagHelpers.Utilities;
+using Codific.Mvc567.DataAccess.Abstractions.Repositories;
+using Microsoft.AspNetCore.Html;
+using Microsoft.AspNetCore.Razor.TagHelpers;
 
 namespace Codific.Mvc567.Components.TagHelpers
 {
@@ -33,22 +33,6 @@ namespace Codific.Mvc567.Components.TagHelpers
         public DatabaseCheckboxTagHelper(IStandardRepository standardRepository)
         {
             this.standardRepository = standardRepository;
-        }
-
-        public override void Process(TagHelperContext context, TagHelperOutput output)
-        {
-            output.TagName = "div";
-            output.Attributes.Add("class", "row m-0");
-            string tagContent = RenderTag();
-            output.Content.SetHtmlContent(new HtmlString(tagContent));
-        }
-        public override Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
-        {
-            output.TagName = "div";
-            output.Attributes.Add("class", "row m-0");
-            string tagContent = RenderTag();
-            output.Content.SetHtmlContent(new HtmlString(tagContent));
-            return base.ProcessAsync(context, output);
         }
 
         [HtmlAttributeName("entity-type")]
@@ -63,16 +47,34 @@ namespace Codific.Mvc567.Components.TagHelpers
         [HtmlAttributeName("model-name")]
         public string ModelName { get; set; }
 
+        public override void Process(TagHelperContext context, TagHelperOutput output)
+        {
+            output.TagName = "div";
+            output.Attributes.Add("class", "row m-0");
+            string tagContent = this.RenderTag();
+            output.Content.SetHtmlContent(new HtmlString(tagContent));
+        }
+
+        public override Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
+        {
+            output.TagName = "div";
+            output.Attributes.Add("class", "row m-0");
+            string tagContent = this.RenderTag();
+            output.Content.SetHtmlContent(new HtmlString(tagContent));
+            return base.ProcessAsync(context, output);
+        }
+
         private string RenderTag()
         {
             StringBuilder contentStringBuilder = new StringBuilder();
-            var databaseEntities = this.standardRepository.GetAllByType(DatabaseEntityType);
-            var databaseEntitiesDictionary = Functions.GetDatabaseEntityDictionary(databaseEntities, VisibleProperty);
+            var databaseEntities = this.standardRepository.GetAllByType(this.DatabaseEntityType);
+            var databaseEntitiesDictionary = Functions.GetDatabaseEntityDictionary(databaseEntities, this.VisibleProperty);
 
             foreach (var entityItem in databaseEntitiesDictionary)
             {
-                contentStringBuilder.Append(GetRadioItemHtml(entityItem.Value, entityItem.Key, SelectedValues?.Contains(entityItem.Key)));
+                contentStringBuilder.Append(this.GetRadioItemHtml(entityItem.Value, entityItem.Key, this.SelectedValues?.Contains(entityItem.Key)));
             }
+
             return contentStringBuilder.ToString();
         }
 
@@ -81,7 +83,7 @@ namespace Codific.Mvc567.Components.TagHelpers
             StringBuilder contentStringBuilder = new StringBuilder();
             contentStringBuilder.Append("<div class=\"form-check mr-3 mt-1 mb-2 form-check-flat\">");
             contentStringBuilder.Append("<label class=\"form-check-label\">");
-            contentStringBuilder.Append($"<input type=\"checkbox\" class=\"form-check-input\" name=\"{ModelName}[]\" id=\"flatCheckbox-{Guid.NewGuid().ToString()}\" {(selected.HasValue && selected.Value ? "checked=\"checked\"" : string.Empty)} value=\"{value}\"> {name} <i class=\"input-helper\"></i>");
+            contentStringBuilder.Append($"<input type=\"checkbox\" class=\"form-check-input\" name=\"{this.ModelName}[]\" id=\"flatCheckbox-{Guid.NewGuid().ToString()}\" {(selected.HasValue && selected.Value ? "checked=\"checked\"" : string.Empty)} value=\"{value}\"> {name} <i class=\"input-helper\"></i>");
             contentStringBuilder.Append("</label>");
             contentStringBuilder.Append("</div>");
 

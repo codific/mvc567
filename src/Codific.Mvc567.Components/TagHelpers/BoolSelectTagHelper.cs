@@ -14,11 +14,10 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-using Microsoft.AspNetCore.Html;
-using Microsoft.AspNetCore.Razor.TagHelpers;
-using System;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Html;
+using Microsoft.AspNetCore.Razor.TagHelpers;
 
 namespace Codific.Mvc567.Components.TagHelpers
 {
@@ -31,13 +30,14 @@ namespace Codific.Mvc567.Components.TagHelpers
         public override void Process(TagHelperContext context, TagHelperOutput output)
         {
             output.TagName = "select";
-            string tagContent = RenderTag();
+            string tagContent = this.RenderTag();
             output.Content.SetHtmlContent(new HtmlString(tagContent));
         }
+
         public override Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
         {
             output.TagName = "select";
-            string tagContent = RenderTag();
+            string tagContent = this.RenderTag();
             output.Content.SetHtmlContent(new HtmlString(tagContent));
             return base.ProcessAsync(context, output);
         }
@@ -46,7 +46,7 @@ namespace Codific.Mvc567.Components.TagHelpers
         {
             StringBuilder contentStringBuilder = new StringBuilder();
 
-            if (Value)
+            if (this.Value)
             {
                 contentStringBuilder.Append("<option selected=\"selected\" value=\"True\">Yes</option>");
                 contentStringBuilder.Append("<option value=\"False\">No</option>");

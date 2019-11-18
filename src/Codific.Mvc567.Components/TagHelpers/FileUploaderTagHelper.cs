@@ -14,11 +14,11 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-using Microsoft.AspNetCore.Html;
-using Microsoft.AspNetCore.Razor.TagHelpers;
 using System;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Html;
+using Microsoft.AspNetCore.Razor.TagHelpers;
 
 namespace Codific.Mvc567.Components.TagHelpers
 {
@@ -34,13 +34,14 @@ namespace Codific.Mvc567.Components.TagHelpers
         public override void Process(TagHelperContext context, TagHelperOutput output)
         {
             output.TagName = "div";
-            string tagContent = RenderTag();
+            string tagContent = this.RenderTag();
             output.Content.SetHtmlContent(new HtmlString(tagContent));
         }
+
         public override Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
         {
             output.TagName = "div";
-            string tagContent = RenderTag();
+            string tagContent = this.RenderTag();
             output.Content.SetHtmlContent(new HtmlString(tagContent));
             return base.ProcessAsync(context, output);
         }
@@ -50,12 +51,13 @@ namespace Codific.Mvc567.Components.TagHelpers
             StringBuilder contentStringBuilder = new StringBuilder();
             Guid itemId = Guid.NewGuid();
             string valueAttribute = string.Empty;
-            if (Value.HasValue && Value.Value != Guid.Empty)
+            if (this.Value.HasValue && this.Value.Value != Guid.Empty)
             {
-                valueAttribute = $" value=\"{Value.Value}\"";
+                valueAttribute = $" value=\"{this.Value.Value}\"";
             }
+
             contentStringBuilder.Append($"<input type=\"file\" id=\"{itemId}\" class=\"upload-file-input\"/>");
-            contentStringBuilder.Append($"<input type=\"hidden\"{valueAttribute} id=\"target-{itemId}\" name=\"{ModelName}\"/>");
+            contentStringBuilder.Append($"<input type=\"hidden\"{valueAttribute} id=\"target-{itemId}\" name=\"{this.ModelName}\"/>");
 
             return contentStringBuilder.ToString();
         }

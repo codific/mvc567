@@ -14,12 +14,10 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-using Microsoft.AspNetCore.Html;
-using Microsoft.AspNetCore.Razor.TagHelpers;
-using System;
-using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Html;
+using Microsoft.AspNetCore.Razor.TagHelpers;
 
 namespace Codific.Mvc567.Components.TagHelpers
 {
@@ -35,13 +33,14 @@ namespace Codific.Mvc567.Components.TagHelpers
         public override void Process(TagHelperContext context, TagHelperOutput output)
         {
             output.TagName = "div";
-            string tagContent = RenderTag();
+            string tagContent = this.RenderTag();
             output.Content.SetHtmlContent(new HtmlString(tagContent));
         }
+
         public override Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
         {
             output.TagName = "div";
-            string tagContent = RenderTag();
+            string tagContent = this.RenderTag();
             output.Content.SetHtmlContent(new HtmlString(tagContent));
             return base.ProcessAsync(context, output);
         }
@@ -51,18 +50,18 @@ namespace Codific.Mvc567.Components.TagHelpers
             StringBuilder contentStringBuilder = new StringBuilder();
 
             string checkedString = "checked=\"checked\" ";
-            string trueCheckedString = Value ? checkedString : string.Empty;
-            string falseCheckedString = !Value ? checkedString : string.Empty;
+            string trueCheckedString = this.Value ? checkedString : string.Empty;
+            string falseCheckedString = !this.Value ? checkedString : string.Empty;
 
             contentStringBuilder.Append("<div class=\"row m-0\">");
             contentStringBuilder.Append("<div class=\"form-radio mr-3 my-0 form-radio-flat\">");
             contentStringBuilder.Append("<label class=\"form-check-label\">");
-            contentStringBuilder.Append($"<input type=\"radio\" class=\"form-check-input\" name=\"{ModelName}\" id=\"flatRadios-{ModelName}-yes\" {trueCheckedString}value=\"True\"> Yes <i class=\"input-helper\"></i>");
+            contentStringBuilder.Append($"<input type=\"radio\" class=\"form-check-input\" name=\"{this.ModelName}\" id=\"flatRadios-{this.ModelName}-yes\" {trueCheckedString}value=\"True\"> Yes <i class=\"input-helper\"></i>");
             contentStringBuilder.Append("</label>");
             contentStringBuilder.Append("</div>");
             contentStringBuilder.Append("<div class=\"form-radio mr-3 my-0 form-radio-flat\">");
             contentStringBuilder.Append("<label class=\"form-check-label\">");
-            contentStringBuilder.Append($"<input type=\"radio\" class=\"form-check-input\" name=\"{ModelName}\" id=\"flatRadios-{ModelName}-no\" {falseCheckedString}value=\"False\"> No <i class=\"input-helper\"></i>");
+            contentStringBuilder.Append($"<input type=\"radio\" class=\"form-check-input\" name=\"{this.ModelName}\" id=\"flatRadios-{this.ModelName}-no\" {falseCheckedString}value=\"False\"> No <i class=\"input-helper\"></i>");
             contentStringBuilder.Append("</label>");
             contentStringBuilder.Append("</div>");
             contentStringBuilder.Append("</div>");

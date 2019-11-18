@@ -15,20 +15,22 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 using System;
-using Codific.Mvc567.Common.Options;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Options;
+using System.Text;
+using Codific.Mvc567.Components.TagHelpers;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
-namespace Codific.Mvc567.CommonCore
+namespace Codific.Mvc567.Components
 {
-    public class InvisibleReCaptchaValidateAttribute : ReCaptchaValidateAttribute
+    public static class HeadTagHelperExtensions
     {
-        public InvisibleReCaptchaValidateAttribute(
-            IOptions<GoogleRecaptchaKeys> googleRecaptchaKeysConfiguration,
-            IWebHostEnvironment hostingEnvironment)
-            : base(googleRecaptchaKeysConfiguration, hostingEnvironment)
+        public static void AppendIntoTheHead(this ViewContext viewContext, string headLine)
         {
-            this.ReCaptchaSecret = new Lazy<string>(() => this.GoogleRecaptchaKeys.InvisibleRecaptcha.SecretKey);
+            if (viewContext.ViewData[typeof(HeadTagHelper).FullName ?? throw new InvalidOperationException()] == null)
+            {
+                viewContext.ViewData[typeof(HeadTagHelper).FullName ?? throw new InvalidOperationException()] = new StringBuilder();
+            }
+
+            ((StringBuilder)viewContext.ViewData[typeof(HeadTagHelper).FullName ?? throw new InvalidOperationException()]).AppendLine(headLine);
         }
     }
 }

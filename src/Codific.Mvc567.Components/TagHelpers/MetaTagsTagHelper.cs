@@ -14,14 +14,14 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+using System;
+using System.Threading.Tasks;
+using Codific.Mvc567.Common.Options;
 using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 using Microsoft.Extensions.Configuration;
-using Codific.Mvc567.Common.Options;
-using System;
-using System.Threading.Tasks;
 
 namespace Codific.Mvc567.Components.TagHelpers
 {
@@ -30,10 +30,11 @@ namespace Codific.Mvc567.Components.TagHelpers
     {
         private readonly IConfiguration configuration;
 
-        public MetaTagsTagHelper(IHtmlHelper htmlHelper, IConfiguration configuration) : base(htmlHelper)
+        public MetaTagsTagHelper(IHtmlHelper htmlHelper, IConfiguration configuration)
+            : base(htmlHelper)
         {
             this.configuration = configuration;
-            this.partialPath = "_MetaTagsComponent";
+            this.PartialPath = "_MetaTagsComponent";
         }
 
         [HtmlAttributeName("title")]
@@ -48,9 +49,9 @@ namespace Codific.Mvc567.Components.TagHelpers
         [HtmlAttributeName("keywords")]
         public string Keywords { get; set; }
 
-        protected override void ValidateTagHelperAttributesExistance()
+        protected override void ValidateTagHelperAttributesExistence()
         {
-            if (string.IsNullOrEmpty(this.partialPath))
+            if (string.IsNullOrEmpty(this.PartialPath))
             {
                 throw new NullReferenceException("Partial base tag helper does not have partial.");
             }
@@ -58,24 +59,25 @@ namespace Codific.Mvc567.Components.TagHelpers
 
         protected override void InnerProcess(ref TagHelperContext context, ref TagHelperOutput output)
         {
-            ValidateTagHelperAttributesExistance();
+            this.ValidateTagHelperAttributesExistence();
 
-            output.TagName = this.outputTagName;
+            output.TagName = this.OutputTagName;
             output.TagMode = TagMode.StartTagAndEndTag;
-            (this.htmlHelper as IViewContextAware).Contextualize(ViewContext);
+            (this.HtmlHelper as IViewContextAware)?.Contextualize(this.ViewContext);
 
-            string baseUrl = $"{ViewContext.HttpContext.Request.Scheme}://{ViewContext.HttpContext.Request.Host}";
-            string queryString = ViewContext.HttpContext.Request.QueryString.HasValue ? ViewContext.HttpContext.Request.QueryString.Value : string.Empty;
-            string currentUrl = $"{baseUrl}{ViewContext.HttpContext.Request.Path}{queryString}";
+            string baseUrl = $"{this.ViewContext.HttpContext.Request.Scheme}://{this.ViewContext.HttpContext.Request.Host}";
+            string queryString = this.ViewContext.HttpContext.Request.QueryString.HasValue ? this.ViewContext.HttpContext.Request.QueryString.Value : string.Empty;
+            string currentUrl = $"{baseUrl}{this.ViewContext.HttpContext.Request.Path}{queryString}";
 
             MetaTagsModel model = new MetaTagsModel();
-            model.SetTitle(Title);
-            model.SetDescription(Description);
-            if (!string.IsNullOrWhiteSpace(Image))
+            model.SetTitle(this.Title);
+            model.SetDescription(this.Description);
+            if (!string.IsNullOrWhiteSpace(this.Image))
             {
-                model.SetImage($"{baseUrl}/{Image}");
+                model.SetImage($"{baseUrl}/{this.Image}");
             }
-            model.Keywords = Keywords;
+
+            model.Keywords = this.Keywords;
             model.OpenGraphUrl = currentUrl;
             model.Canonical = currentUrl;
 
@@ -86,7 +88,7 @@ namespace Codific.Mvc567.Components.TagHelpers
             model.TwitterCreator = this.configuration?["MetaTags:TwitterCreator"];
             model.TwitterSite = this.configuration?["MetaTags:TwitterSite"];
 
-            Task<IHtmlContent> htmlContentTask = this.htmlHelper.PartialAsync(this.partialPath, model);
+            Task<IHtmlContent> htmlContentTask = this.HtmlHelper.PartialAsync(this.PartialPath, model);
             htmlContentTask.Wait();
             output.Content.SetHtmlContent(htmlContentTask.Result);
         }

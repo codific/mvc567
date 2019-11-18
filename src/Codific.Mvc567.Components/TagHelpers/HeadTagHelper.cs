@@ -14,12 +14,13 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+using System;
+using System.Text;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Codific.Mvc567.Components.TagHelpers
 {
@@ -31,7 +32,7 @@ namespace Codific.Mvc567.Components.TagHelpers
 
         public override Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
         {
-            StringBuilder headInjections = (StringBuilder)ViewContext.ViewData[typeof(HeadTagHelper).FullName];
+            StringBuilder headInjections = (StringBuilder)this.ViewContext.ViewData[typeof(HeadTagHelper).FullName ?? throw new InvalidOperationException()];
             if (headInjections == null)
             {
                 headInjections = new StringBuilder();
@@ -40,19 +41,6 @@ namespace Codific.Mvc567.Components.TagHelpers
             output.PostContent.AppendHtml(new HtmlString(headInjections.ToString()));
 
             return base.ProcessAsync(context, output);
-        }
-    }
-
-    public static class HeadTagHelperExtensions
-    {
-        public static void AppendIntoTheHead(this ViewContext viewContext, string headLine)
-        {
-            if (viewContext.ViewData[typeof(HeadTagHelper).FullName] == null)
-            {
-                viewContext.ViewData[typeof(HeadTagHelper).FullName] = new StringBuilder();
-            }
-
-            ((StringBuilder)viewContext.ViewData[typeof(HeadTagHelper).FullName]).AppendLine(headLine);
         }
     }
 }

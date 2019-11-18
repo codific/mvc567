@@ -14,21 +14,21 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+using System.Text;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc.TagHelpers;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Codific.Mvc567.Components.TagHelpers
 {
     [HtmlTargetElement("form-text-input", TagStructure = TagStructure.NormalOrSelfClosing)]
     public class FormInputTagHelper : AbstractFormComponentTagHelper
     {
-        public FormInputTagHelper(IHtmlGenerator htmlGenerator) : base(htmlGenerator)
+        public FormInputTagHelper(IHtmlGenerator htmlGenerator)
+            : base(htmlGenerator)
         {
-
         }
 
         [HtmlAttributeName("label")]
@@ -50,13 +50,13 @@ namespace Codific.Mvc567.Components.TagHelpers
         {
             output.TagName = "div";
             output.TagMode = TagMode.StartTagAndEndTag;
-            output.Attributes.Add(new TagHelperAttribute("class", $"{Class} form-group".Trim()));
+            output.Attributes.Add(new TagHelperAttribute("class", $"{this.Class} form-group".Trim()));
 
             StringBuilder outputStringBuilder = new StringBuilder();
 
-            outputStringBuilder.Append($"<label class\"{LabelsClass}\">{Label}:</label>");
-            outputStringBuilder.Append(await RenderTextInputAsync());
-            outputStringBuilder.Append(await RenderValidationTagHelperAsync());
+            outputStringBuilder.Append($"<label class\"{this.LabelsClass}\">{this.Label}:</label>");
+            outputStringBuilder.Append(await this.RenderTextInputAsync());
+            outputStringBuilder.Append(await this.RenderValidationTagHelperAsync());
             output.Content.SetHtmlContent(new HtmlString(outputStringBuilder.ToString()));
 
             await base.ProcessAsync(context, output);
@@ -64,20 +64,20 @@ namespace Codific.Mvc567.Components.TagHelpers
 
         private async Task<string> RenderTextInputAsync()
         {
-            var inputTagHelper = new InputTagHelper(this.htmlGenerator);
-            inputTagHelper.For = DataModel;
-            inputTagHelper.InputTypeName = Type;
+            var inputTagHelper = new InputTagHelper(this.HtmlGenerator);
+            inputTagHelper.For = this.DataModel;
+            inputTagHelper.InputTypeName = this.Type;
             inputTagHelper.Format = "{0}";
-            inputTagHelper.Value = DataModel.Model == null ? string.Empty : DataModel.Model.ToString();
-            inputTagHelper.ViewContext = ViewContext;
+            inputTagHelper.Value = this.DataModel.Model == null ? string.Empty : this.DataModel.Model.ToString();
+            inputTagHelper.ViewContext = this.ViewContext;
 
             TagHelperAttributeList attributes = new TagHelperAttributeList();
             attributes.Add(new TagHelperAttribute("class", new HtmlString("form-control")));
             attributes.Add(new TagHelperAttribute("type", new HtmlString(inputTagHelper.InputTypeName)));
             attributes.Add(new TagHelperAttribute("value", new HtmlString(inputTagHelper.Value)));
-            attributes.Add(new TagHelperAttribute("placeholder", new HtmlString(Placeholder)));
+            attributes.Add(new TagHelperAttribute("placeholder", new HtmlString(this.Placeholder)));
 
-            return await RenderTagHelperAsync("input", TagMode.SelfClosing, inputTagHelper, attributes);
+            return await this.RenderTagHelperAsync("input", TagMode.SelfClosing, inputTagHelper, attributes);
         }
     }
 }

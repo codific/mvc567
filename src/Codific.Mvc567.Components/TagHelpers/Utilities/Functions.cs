@@ -14,9 +14,9 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-using Codific.Mvc567.DataAccess.Abstractions.Entities;
 using System;
 using System.Collections.Generic;
+using Codific.Mvc567.DataAccess.Abstractions.Entities;
 
 namespace Codific.Mvc567.Components.TagHelpers.Utilities
 {
@@ -27,7 +27,7 @@ namespace Codific.Mvc567.Components.TagHelpers.Utilities
             var databaseEntitiesDictionary = new Dictionary<Guid, string>();
             foreach (var entity in databaseEntities)
             {
-                databaseEntitiesDictionary[entity.Id] = entity.GetType().GetProperty(visibleProperty).GetValue(entity)?.ToString();
+                databaseEntitiesDictionary[entity.Id] = entity.GetType().GetProperty(visibleProperty)?.GetValue(entity)?.ToString();
             }
 
             return databaseEntitiesDictionary;

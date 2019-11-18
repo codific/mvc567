@@ -14,26 +14,28 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using Codific.Mvc567.Common.Utilities;
 using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.TagHelpers;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace Codific.Mvc567.Components.TagHelpers
 {
     public abstract class AbstractFormComponentTagHelper : TagHelper
     {
-        protected readonly IHtmlGenerator htmlGenerator;
+        private readonly IHtmlGenerator htmlGenerator;
 
         public AbstractFormComponentTagHelper(IHtmlGenerator htmlGenerator)
         {
             this.htmlGenerator = htmlGenerator;
         }
+
+        public IHtmlGenerator HtmlGenerator => this.htmlGenerator;
 
         [HtmlAttributeName("asp-for")]
         public ModelExpression DataModel { get; set; }
@@ -49,12 +51,9 @@ namespace Codific.Mvc567.Components.TagHelpers
                 tagHelperAttributes = new TagHelperAttributeList();
             }
 
-            TagHelperOutput output = new TagHelperOutput(tagName, tagHelperAttributes, (useCachedResult, encoder) =>
+            TagHelperOutput output = new TagHelperOutput(tagName, tagHelperAttributes, (useCachedResult, encoder) => { return Task.Run<TagHelperContent>(() => new DefaultTagHelperContent()); })
             {
-                return Task.Run<TagHelperContent>(() => new DefaultTagHelperContent());
-            })
-            {
-                TagMode = tagMode
+                TagMode = tagMode,
             };
 
             TagHelperContext context = new TagHelperContext(tagHelperAttributes, new Dictionary<object, object>(), Guid.NewGuid().ToString());
@@ -68,15 +67,16 @@ namespace Codific.Mvc567.Components.TagHelpers
         {
             ValidationMessageTagHelper validationMessageTagHelper = new ValidationMessageTagHelper(this.htmlGenerator);
 
-            validationMessageTagHelper.For = DataModel;
-            validationMessageTagHelper.ViewContext = ViewContext;
+            validationMessageTagHelper.For = this.DataModel;
+            validationMessageTagHelper.ViewContext = this.ViewContext;
 
-            string tagString = await RenderTagHelperAsync("span",
+            string tagString = await this.RenderTagHelperAsync(
+                "span",
                 TagMode.StartTagAndEndTag,
                 validationMessageTagHelper,
                 new TagHelperAttributeList(new[]
                 {
-                    new TagHelperAttribute("class", new HtmlString("text-danger text-small"))
+                    new TagHelperAttribute("class", new HtmlString("text-danger text-small")),
                 }));
 
             return tagString;

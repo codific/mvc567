@@ -14,11 +14,11 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-using Microsoft.AspNetCore.Html;
-using Microsoft.AspNetCore.Razor.TagHelpers;
 using System;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Html;
+using Microsoft.AspNetCore.Razor.TagHelpers;
 
 namespace Codific.Mvc567.Components.TagHelpers
 {
@@ -34,13 +34,14 @@ namespace Codific.Mvc567.Components.TagHelpers
         public override void Process(TagHelperContext context, TagHelperOutput output)
         {
             output.TagName = "div";
-            string tagContent = RenderTag();
+            string tagContent = this.RenderTag();
             output.Content.SetHtmlContent(new HtmlString(tagContent));
         }
+
         public override Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
         {
             output.TagName = "div";
-            string tagContent = RenderTag();
+            string tagContent = this.RenderTag();
             output.Content.SetHtmlContent(new HtmlString(tagContent));
             return base.ProcessAsync(context, output);
         }
@@ -52,7 +53,7 @@ namespace Codific.Mvc567.Components.TagHelpers
 
             contentStringBuilder.Append($"<div class=\"input-group date timepicker-popup\" id=\"timepicker-{itemId}\" data-target-input=\"nearest\">");
             contentStringBuilder.Append($"<div class=\"input-group\" data-target=\"#timepicker-{itemId}\" data-toggle=\"datetimepicker\">");
-            contentStringBuilder.Append($"<input type=\"text\" name=\"{ModelName}\" class=\"form-control datetimepicker-input\" value=\"{Value}\" data-target=\"#timepicker-{itemId}\" />");
+            contentStringBuilder.Append($"<input type=\"text\" name=\"{this.ModelName}\" class=\"form-control datetimepicker-input\" value=\"{this.Value}\" data-target=\"#timepicker-{itemId}\" />");
             contentStringBuilder.Append("<div class=\"input-group-addon input-group-append\">");
             contentStringBuilder.Append("<i class=\"mdi mdi-clock input-group-text\"></i>");
             contentStringBuilder.Append("</div>");

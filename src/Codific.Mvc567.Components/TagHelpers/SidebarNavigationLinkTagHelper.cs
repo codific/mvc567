@@ -14,13 +14,13 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+using System.Linq;
 using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
-using System.Linq;
 
 namespace Codific.Mvc567.Components.TagHelpers
 {
@@ -52,7 +52,7 @@ namespace Codific.Mvc567.Components.TagHelpers
 
         public override void Process(TagHelperContext context, TagHelperOutput output)
         {
-            var urlHelper = urlHelperFactory.GetUrlHelper(ViewContext);
+            var urlHelper = this.urlHelperFactory.GetUrlHelper(this.ViewContext);
 
             output.TagName = "li";
             output.TagMode = TagMode.StartTagAndEndTag;
@@ -65,15 +65,17 @@ namespace Codific.Mvc567.Components.TagHelpers
                     urlHelper.ActionContext.RouteData.Values.Remove(routeKey);
                 }
             }
-            string href = urlHelper.Action(Action, Controller, new { Area = Area });
+
+            string href = urlHelper.Action(this.Action, this.Controller, new { Area = this.Area });
             string activeClass = string.Empty;
-            if ((ViewContext.RouteData.Values["controller"].ToString().ToLower() == Controller.ToLower() && 
-                ViewContext.RouteData.Values["action"].ToString().ToLower() == Action.ToLower() &&
-                ViewContext.RouteData.Values["area"].ToString().ToLower() == Area.ToLower()))
+            if (this.ViewContext.RouteData.Values["controller"].ToString().ToLower() == this.Controller.ToLower() &&
+                this.ViewContext.RouteData.Values["action"].ToString().ToLower() == this.Action.ToLower() &&
+                this.ViewContext.RouteData.Values["area"].ToString().ToLower() == this.Area.ToLower())
             {
                 activeClass = "active";
             }
-            output.Content.SetHtmlContent(new HtmlString($"<a class=\"nav-link {activeClass}\" title=\"{Title}\" href=\"{href}\">{Title}</a>"));
+
+            output.Content.SetHtmlContent(new HtmlString($"<a class=\"nav-link {activeClass}\" title=\"{this.Title}\" href=\"{href}\">{this.Title}</a>"));
         }
     }
 }
