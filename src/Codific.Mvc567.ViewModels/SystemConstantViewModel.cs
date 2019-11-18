@@ -31,13 +31,13 @@ namespace Codific.Mvc567.ViewModels
         [DetailsOrder(0)]
         public string Id { get; set; }
 
-        [TableCell(1, "Key", TableCellType.Text)]
+        [TableCell(1, "Key", TableCellType.Text, Editable = true)]
         [DetailsOrder(1)]
         [Required(ErrorMessage = "Key is required field.")]
         [CreateEditEntityInput("Key", CreateEntityInputType.Text)]
         public string Key { get; set; }
 
-        [TableCell(2, "Value", TableCellType.Text)]
+        [TableCell(2, "Value", TableCellType.Text, Editable = true)]
         [DetailsOrder(2)]
         [Required(ErrorMessage = "Value is required field.")]
         [CreateEditEntityInput("Value", CreateEntityInputType.Text)]

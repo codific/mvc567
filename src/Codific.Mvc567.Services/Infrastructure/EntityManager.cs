@@ -21,6 +21,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using AutoMapper;
+using Codific.Mvc567.Common.Attributes;
 using Codific.Mvc567.Common.Enums;
 using Codific.Mvc567.Common.Extensions;
 using Codific.Mvc567.Common.Utilities;
@@ -413,6 +414,32 @@ namespace Codific.Mvc567.Services.Infrastructure
             }
 
             return resultExpression;
+        }
+
+        public async Task<bool> ModifyEntityPropertyAsync<TEntity, TEntityDto>(Guid entityId, string property, string value) where TEntity : class, IEntityBase, new()
+        {
+            try
+            {
+                var entity = await GetEntityAsync<TEntity, TEntityDto>(entityId);
+                var propertyForEdit = typeof(TEntityDto).GetProperty(property);
+                var entityCanBeModified = propertyForEdit != null && propertyForEdit.HasAttribute<CreateEditEntityInputAttribute>();
+                if (entity != null && entityCanBeModified && !string.IsNullOrEmpty(value))
+                {
+                    propertyForEdit.SetValue(entity, value);
+                    var editedId = await ModifyEntityAsync<TEntity, TEntityDto>(entityId, entity);
+                    if (editedId.HasValue)
+                    {
+                        return true;
+                    }
+                }
+
+                return false;
+            }
+            catch (Exception ex)
+            {
+                await LogErrorAsync(ex, nameof(ModifyEntityPropertyAsync));
+                return false;
+            }
         }
     }
 }

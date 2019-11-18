@@ -78,7 +78,7 @@ namespace Codific.Mvc567.Controllers.Abstractions
         [HttpGet]
         [Route("all")]
         [Breadcrumb(BreadcrumbPageTitlePlaceholder, false, 0)]
-        public virtual async Task<IActionResult> GetAll([FromQuery(Name = "p")]int page = 1, [FromQuery(Name = "q")]string query = null, [FromQuery(Name = "d")]bool showDeleted = false)
+        public virtual async Task<IActionResult> GetAll([FromQuery(Name = "p")] int page = 1, [FromQuery(Name = "q")] string query = null, [FromQuery(Name = "d")] bool showDeleted = false)
         {
             PaginatedEntitiesResult<TEntityDto> entitiesResult = await this.entityManager.GetAllEntitiesPaginatedAsync<TEntity, TEntityDto>(page, query, showDeleted);
             AllEntitiesViewModel model = new AllEntitiesViewModel();
@@ -218,6 +218,19 @@ namespace Codific.Mvc567.Controllers.Abstractions
             }
 
             return this.View("AbstractViews/Edit", castedModel);
+        }
+
+        [HttpPost]
+        [Route("x-edit")]
+        public virtual async Task<IActionResult> XEdit([FromForm(Name = "pk")] Guid id, [FromForm(Name = "name")] string name, [FromForm(Name = "value")] string value)
+        {
+            var edited = await this.entityManager.ModifyEntityPropertyAsync<TEntity, TEntityDto>(id, name, value);
+            if (edited)
+            {
+                return this.Ok();
+            }
+
+            return this.BadRequest();
         }
 
         [HttpGet]

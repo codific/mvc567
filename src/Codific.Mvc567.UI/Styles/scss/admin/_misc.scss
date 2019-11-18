@@ -151,3 +151,15 @@ textarea {
         padding: 12px;
     }
 }
+
+.font-size-20 {
+    font-size: 20px !important;
+}
+
+.editable-container.editable-inline .editableform .control-group>div {
+    display: flex !important;
+}
+
+.editable-container.editable-inline {
+    margin: auto !important;
+}

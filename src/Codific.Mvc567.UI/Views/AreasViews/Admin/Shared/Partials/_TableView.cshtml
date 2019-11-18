@@ -47,15 +47,34 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
                             <tr>
                                 @foreach (TableCellViewModel cell in row.Cells)
                                 {
-                                <td class="px-2 py-0 @((cell.Type == TableCellType.Flag || cell.Type == TableCellType.File || cell.Type == TableCellType.TextArea) ? "text-center" : string.Empty)">
+                                <td class="px-2 py-0 text-center">
                                     @{
                                         switch (cell.Type)
                                         {
+                                            
                                             case TableCellType.Text:
+                                            case TableCellType.Number:
+                                                @if (cell.Editable)
+                                                {
+                                                    <form class="application-editable-form">
+                                                        <div class="d-flex">
+                                                            <a href="#"
+                                                               data-type="text"
+                                                               data-url="@Url.Action("XEdit", Model.Controller, new { Area = Model.Area })"
+                                                               data-pk="@row.Identifier"
+                                                               data-name="@cell?.RelatedProperty"
+                                                               class="application-editable-form-input-text m-auto text-black">@cell?.Content</a>
+                                                        </div>
+                                                    </form>
+                                                }
+                                                else
+                                                {
+                                                    <span>@cell?.Content</span>
+                                                }
+                                                break;
                                             case TableCellType.Date:
                                             case TableCellType.Time:
                                             case TableCellType.DateTime:
-                                            case TableCellType.Number:
                                                 <span>@cell?.Content</span>
                                                 break;
                                             case TableCellType.File:
