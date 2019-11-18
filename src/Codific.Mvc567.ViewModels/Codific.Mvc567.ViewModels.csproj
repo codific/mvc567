@@ -2,7 +2,24 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.0</TargetFramework>
+    <Company>Codific</Company>
+    <Product>mvc567</Product>
+    <PackageProjectUrl>https://github.com/intellisoft567/mvc567</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/intellisoft567/mvc567</RepositoryUrl>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    <Description>mvc567 is a high performance, open-source ASP.NET Core-based web application platform. It provides CMS functionality to its users.</Description>
+    <Authors>Georgi Karagogov</Authors>
+    <Copyright>Georgi Karagogov</Copyright>
+    <PackageTags>MVC, .NET Core, CMS, ASP.NET Core, Vue.js</PackageTags>
+    <PackageIconUrl>https://cdn.gsk567.com/external/mvc567/assets/images/icon128.png</PackageIconUrl>
+    <Version>1.1.0</Version>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <AssemblyName>Codific.Mvc567.ViewModels</AssemblyName>
+    <RootNamespace>Codific.Mvc567.ViewModels</RootNamespace>
   </PropertyGroup>
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="9.0.0" />
