@@ -1,16 +1,16 @@
 // This file is part of the mvc567 distribution (https://github.com/intellisoft567/mvc567).
 // Copyright (C) 2019 Codific Ltd.
-// 
+//
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
-// 
+//
 // This program is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
-// 
+//
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
@@ -40,30 +40,30 @@ namespace Codific.Mvc567.Components.TagHelpers
         public override void Process(TagHelperContext context, TagHelperOutput output)
         {
             output.TagName = "a";
-            RenderTag(ref output);
+            this.RenderTag(ref output);
         }
 
         public override Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
         {
             output.TagName = "a";
-            RenderTag(ref output);
+            this.RenderTag(ref output);
             return base.ProcessAsync(context, output);
         }
 
         public void RenderTag(ref TagHelperOutput output)
         {
             Guid parsedFildId = Guid.Empty;
-            if (!string.IsNullOrEmpty(FileId) && Guid.TryParse(FileId, out parsedFildId))
+            if (!string.IsNullOrEmpty(this.FileId) && Guid.TryParse(this.FileId, out parsedFildId))
             {
-                var fileEntity = fileSystemService.GetFileById<SimpleFileDto>(parsedFildId);
+                var fileEntity = this.fileSystemService.GetFileById<SimpleFileDto>(parsedFildId);
                 string rootHref = "/admin/roots/";
                 if (fileEntity != null && fileEntity.Path.Contains(Constants.PrivateRootFolderName))
                 {
-                    rootHref += ("private/file/" + fileEntity.Path.Replace("\\", "/").Replace(Constants.PrivateRootFolderName, string.Empty));
+                    rootHref += "private/file/" + fileEntity.Path.Replace("\\", "/").Replace(Constants.PrivateRootFolderName, string.Empty);
                 }
                 else if (fileEntity != null)
                 {
-                    rootHref += ("public/file/" + fileEntity.Path.Replace("\\", "/"));
+                    rootHref += "public/file/" + fileEntity.Path.Replace("\\", "/");
                 }
 
                 output.Attributes.Add(new TagHelperAttribute("href", rootHref));

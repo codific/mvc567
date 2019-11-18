@@ -1,16 +1,16 @@
 ﻿// This file is part of the mvc567 distribution (https://github.com/intellisoft567/mvc567).
 // Copyright (C) 2019 Codific Ltd.
-// 
+//
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
-// 
+//
 // This program is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
-// 
+//
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
@@ -43,23 +43,23 @@ namespace Codific.Mvc567.Controllers.API
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> RequestToken([FromBody]TokenRequest tokenRequest)
         {
-            if (ModelState.IsValid)
+            if (this.ModelState.IsValid)
             {
                 var result = await this.authenticationService.BuildTokenAsync(tokenRequest.Email, tokenRequest.Password);
                 if (result != null)
                 {
                     if (result.Success)
                     {
-                        return Ok(result);
+                        return this.Ok(result);
                     }
 
-                    return BadRequest(result);
+                    return this.BadRequest(result);
                 }
 
-                return BadRequest();
+                return this.BadRequest();
             }
 
-            return BadRequest(ModelState.Select(x => x.Value.Errors).ToArray());
+            return this.BadRequest(this.ModelState.Select(x => x.Value.Errors).ToArray());
         }
 
         [HttpPost]
@@ -69,23 +69,23 @@ namespace Codific.Mvc567.Controllers.API
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> RefreshToken([FromBody]RefreshTokenRequest refreshTokenRequest)
         {
-            if (ModelState.IsValid)
+            if (this.ModelState.IsValid)
             {
-                var result = await this.authenticationService.RefreshTokenAsync(HttpContext.GetJwtUserId(), refreshTokenRequest.RefreshToken);
+                var result = await this.authenticationService.RefreshTokenAsync(this.HttpContext.GetJwtUserId(), refreshTokenRequest.RefreshToken);
                 if (result != null)
                 {
                     if (result.Success)
                     {
-                        return Ok(result);
+                        return this.Ok(result);
                     }
 
-                    return BadRequest(result);
+                    return this.BadRequest(result);
                 }
 
-                return BadRequest();
+                return this.BadRequest();
             }
 
-            return BadRequest(ModelState.Select(x => x.Value.Errors).ToArray());
+            return this.BadRequest(this.ModelState.Select(x => x.Value.Errors).ToArray());
         }
 
         [HttpPost]
@@ -95,7 +95,7 @@ namespace Codific.Mvc567.Controllers.API
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public IActionResult ValidateToken()
         {
-            return Ok();
+            return this.Ok();
         }
     }
 }

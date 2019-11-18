@@ -1,16 +1,16 @@
 // This file is part of the mvc567 distribution (https://github.com/intellisoft567/mvc567).
 // Copyright (C) 2019 Codific Ltd.
-// 
+//
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
-// 
+//
 // This program is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
-// 
+//
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
@@ -33,10 +33,10 @@ namespace Codific.Mvc567.Controllers.MVC.Admin
     [Authorize(Policy = ApplicationPermissions.AccessAdministrationPolicy)]
     public class AdminManageController : Controller
     {
+        private const string AuthenticatorUriFormat = "otpauth://totp/{0}:{1}?secret={2}&issuer={0}&digits=6";
+
         private readonly UserManager<User> userManager;
         private readonly UrlEncoder urlEncoder;
-
-        private const string AuthenticatorUriFormat = "otpauth://totp/{0}:{1}?secret={2}&issuer={0}&digits=6";
 
         public AdminManageController(UserManager<User> userManager, UrlEncoder urlEncoder)
         {
@@ -48,40 +48,40 @@ namespace Codific.Mvc567.Controllers.MVC.Admin
         [Route("two-factor-authentication")]
         public async Task<IActionResult> TwoFactorAuthentication()
         {
-            var user = await this.userManager.GetUserAsync(User);
+            var user = await this.userManager.GetUserAsync(this.User);
             var model = new AdminTwoFactorAuthenticationViewModel
             {
                 HasAuthenticator = await this.userManager.GetAuthenticatorKeyAsync(user) != null,
-                Is2faEnabled = user.TwoFactorEnabled
+                Is2faEnabled = user.TwoFactorEnabled,
             };
 
-            await LoadSharedKeyAndQrCodeUriAsync(user, model);
+            await this.LoadSharedKeyAndQrCodeUriAsync(user, model);
 
-            return View(model);
+            return this.View(model);
         }
 
         [HttpPost]
         [Route("two-factor-authentication")]
         public async Task<IActionResult> TwoFactorAuthentication(AdminTwoFactorAuthenticationViewModel model)
         {
-            var user = await this.userManager.GetUserAsync(User);
+            var user = await this.userManager.GetUserAsync(this.User);
 
-            if (!ModelState.IsValid)
+            if (!this.ModelState.IsValid)
             {
-                await LoadSharedKeyAndQrCodeUriAsync(user, model);
-                return View(model);
+                await this.LoadSharedKeyAndQrCodeUriAsync(user, model);
+                return this.View(model);
             }
 
             var verificationCode = model.Code.Replace(" ", string.Empty).Replace("-", string.Empty);
 
-            var is2faTokenValid = await this.userManager.VerifyTwoFactorTokenAsync(
+            var is2FaTokenValid = await this.userManager.VerifyTwoFactorTokenAsync(
                 user, this.userManager.Options.Tokens.AuthenticatorTokenProvider, verificationCode);
 
-            if (!is2faTokenValid)
+            if (!is2FaTokenValid)
             {
-                ModelState.AddModelError("Code", "Verification code is invalid.");
-                await LoadSharedKeyAndQrCodeUriAsync(user, model);
-                return View(model);
+                this.ModelState.AddModelError("Code", "Verification code is invalid.");
+                await this.LoadSharedKeyAndQrCodeUriAsync(user, model);
+                return this.View(model);
             }
 
             await this.userManager.SetTwoFactorEnabledAsync(user, true);
@@ -89,12 +89,12 @@ namespace Codific.Mvc567.Controllers.MVC.Admin
             var responseModel = new AdminTwoFactorAuthenticationViewModel
             {
                 HasAuthenticator = await this.userManager.GetAuthenticatorKeyAsync(user) != null,
-                Is2faEnabled = user.TwoFactorEnabled
+                Is2faEnabled = user.TwoFactorEnabled,
             };
 
-            TempData["SuccessStatusMessage"] = "Two Factor Authenticator has been enabled successfully.";
+            this.TempData["SuccessStatusMessage"] = "Two Factor Authenticator has been enabled successfully.";
 
-            return View(responseModel);
+            return this.View(responseModel);
         }
 
         [HttpPost]
@@ -102,12 +102,12 @@ namespace Codific.Mvc567.Controllers.MVC.Admin
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ResetAuthenticator()
         {
-            var user = await this.userManager.GetUserAsync(User);
+            var user = await this.userManager.GetUserAsync(this.User);
 
             await this.userManager.SetTwoFactorEnabledAsync(user, false);
             await this.userManager.ResetAuthenticatorKeyAsync(user);
 
-            return RedirectToAction(nameof(TwoFactorAuthentication));
+            return this.RedirectToAction(nameof(this.TwoFactorAuthentication));
         }
 
         [HttpGet]
@@ -116,7 +116,7 @@ namespace Codific.Mvc567.Controllers.MVC.Admin
         {
             AdminChangePasswordViewModel model = new AdminChangePasswordViewModel();
 
-            return View(model);
+            return this.View(model);
         }
 
         [HttpPost]
@@ -124,28 +124,28 @@ namespace Codific.Mvc567.Controllers.MVC.Admin
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ChangePassword(AdminChangePasswordViewModel model)
         {
-            if (ModelState.IsValid)
+            if (this.ModelState.IsValid)
             {
-                var user = await this.userManager.GetUserAsync(User);
+                var user = await this.userManager.GetUserAsync(this.User);
                 var changePasswordResult = await this.userManager.ChangePasswordAsync(user, model.CurrentPassword, model.NewPassword);
                 if (!changePasswordResult.Succeeded)
                 {
-                    AddErrors(changePasswordResult);
+                    this.AddErrors(changePasswordResult);
                 }
                 else
                 {
-                    TempData["SuccessStatusMessage"] = "Password has been changed successfully.";
+                    this.TempData["SuccessStatusMessage"] = "Password has been changed successfully.";
                 }
             }
 
-            return View(model);
+            return this.View(model);
         }
 
         private void AddErrors(IdentityResult result)
         {
             foreach (var error in result.Errors)
             {
-                ModelState.AddModelError(string.Empty, error.Description);
+                this.ModelState.AddModelError(string.Empty, error.Description);
             }
         }
 
@@ -158,6 +158,7 @@ namespace Codific.Mvc567.Controllers.MVC.Admin
                 result.Append(unformattedKey.Substring(currentPosition, 4)).Append(" ");
                 currentPosition += 4;
             }
+
             if (currentPosition < unformattedKey.Length)
             {
                 result.Append(unformattedKey.Substring(currentPosition));
@@ -184,8 +185,8 @@ namespace Codific.Mvc567.Controllers.MVC.Admin
                 unformattedKey = await this.userManager.GetAuthenticatorKeyAsync(user);
             }
 
-            model.SharedKey = FormatKey(unformattedKey);
-            model.AuthenticatorUri = GenerateQrCodeUri(user.Email, unformattedKey);
+            model.SharedKey = this.FormatKey(unformattedKey);
+            model.AuthenticatorUri = this.GenerateQrCodeUri(user.Email, unformattedKey);
         }
     }
 }

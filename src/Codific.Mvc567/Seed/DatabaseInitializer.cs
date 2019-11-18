@@ -1,16 +1,16 @@
 // This file is part of the mvc567 distribution (https://github.com/intellisoft567/mvc567).
 // Copyright (C) 2019 Codific Ltd.
-// 
+//
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
-// 
+//
 // This program is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
-// 
+//
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
@@ -27,7 +27,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Codific.Mvc567.Seed
 {
-    public class DatabaseInitializer<TDatabaseContext> : IApplicationDatabaseInitializer where TDatabaseContext : AbstractDatabaseContext<TDatabaseContext>
+    public class DatabaseInitializer<TDatabaseContext> : IApplicationDatabaseInitializer
+        where TDatabaseContext : AbstractDatabaseContext<TDatabaseContext>
     {
         private readonly TDatabaseContext context;
         private readonly UserManager<User> userManager;
@@ -53,21 +54,21 @@ namespace Codific.Mvc567.Seed
 
             if (!await this.context.Roles.AnyAsync())
             {
-                await EnsureRoleAsync(UserRoles.Admin, UserRoles.Admin, ApplicationPermissions.GetAllPermissionValues());
-                await EnsureRoleAsync(UserRoles.User, UserRoles.User, new string[] { });
+                await this.EnsureRoleAsync(UserRoles.Admin, UserRoles.Admin, ApplicationPermissions.GetAllPermissionValues());
+                await this.EnsureRoleAsync(UserRoles.User, UserRoles.User, new string[] { });
                 if (this.additionalRoles != null && this.additionalRoles.Count > 0)
                 {
                     foreach (var role in this.additionalRoles)
                     {
-                        await EnsureRoleAsync(role.Key, role.Key, role.Value);
+                        await this.EnsureRoleAsync(role.Key, role.Key, role.Value);
                     }
                 }
             }
 
             if (!await this.context.Users.AnyAsync())
             {
-                await CreateUserAsync("admin@example.com", "Admin123!", "AdminFirst", "AdminLast", new string[] { UserRoles.Admin.ToString() });
-                await CreateUserAsync("user@example.com", "User123!", "UserFirst", "UserLast", new string[] { UserRoles.User.ToString() });
+                await this.CreateUserAsync("admin@example.com", "Admin123!", "AdminFirst", "AdminLast", new string[] { UserRoles.Admin.ToString() });
+                await this.CreateUserAsync("user@example.com", "User123!", "UserFirst", "UserLast", new string[] { UserRoles.User.ToString() });
             }
         }
 
@@ -89,7 +90,7 @@ namespace Codific.Mvc567.Seed
                 FirstName = firstName,
                 LastName = lastName,
                 EmailConfirmed = true,
-                RegistrationDate = DateTime.Now
+                RegistrationDate = DateTime.Now,
             };
 
             var result = await this.userManager.CreateAsync(user, password);
@@ -97,6 +98,7 @@ namespace Codific.Mvc567.Seed
             {
                 await this.userManager.AddToRolesAsync(user, roles);
             }
+
             return user;
         }
     }
