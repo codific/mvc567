@@ -66,7 +66,7 @@ namespace Codific.Mvc567.Entities.ViewModels.Mapping
                                 property.GetValue(entity),
                                 propertyAttribute.Type,
                                 propertyAttribute.Editable,
-                                propertyAttribute.RelatedProperty);
+                                property.Name);
                         }
                     }
 
