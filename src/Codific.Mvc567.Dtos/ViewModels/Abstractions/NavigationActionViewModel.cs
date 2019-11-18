@@ -36,7 +36,7 @@ namespace Codific.Mvc567.Dtos.ViewModels.Abstractions
         public Dictionary<string, string> Parameters { get; set; }
 
         public bool HasConfirmation { get; set; }
-        
+
         public string ConfirmationTitle { get; set; }
 
         public string ConfirmationMessage { get; set; }

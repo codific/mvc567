@@ -26,7 +26,7 @@ namespace Codific.Mvc567.Entities.ViewModels.Mapping
         {
             RootViewModel model = new RootViewModel
             {
-                FolderName = folderName
+                FolderName = folderName,
             };
 
             foreach (var item in fileSystemItems)

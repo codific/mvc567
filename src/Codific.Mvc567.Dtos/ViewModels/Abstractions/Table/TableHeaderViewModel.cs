@@ -32,7 +32,7 @@ namespace Codific.Mvc567.Dtos.ViewModels.Abstractions.Table
         {
             get
             {
-                return cells.OrderBy(x => x.Order).ToList();
+                return this.cells.OrderBy(x => x.Order).ToList();
             }
         }
 
@@ -41,7 +41,7 @@ namespace Codific.Mvc567.Dtos.ViewModels.Abstractions.Table
             this.cells.Add(new TableHeaderCellViewModel
             {
                 Order = this.currentCellIndex,
-                Name = name
+                Name = name,
             });
 
             this.currentCellIndex++;

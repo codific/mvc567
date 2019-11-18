@@ -22,20 +22,20 @@ namespace Codific.Mvc567.Dtos.ViewModels.Abstractions.Details
     {
         public DetailsViewModel()
         {
-            Properties = new List<DetailsPropertyViewModel>();
+            this.Properties = new List<DetailsPropertyViewModel>();
         }
 
         public List<DetailsPropertyViewModel> Properties { get; set; }
 
         public void AddProperty(DetailsPropertyViewModel property, int order)
         {
-            if (order == 0 || order > Properties.Count)
+            if (order == 0 || order > this.Properties.Count)
             {
-                Properties.Add(property);
+                this.Properties.Add(property);
             }
             else
             {
-                Properties.Insert(order, property);
+                this.Properties.Insert(order, property);
             }
         }
     }

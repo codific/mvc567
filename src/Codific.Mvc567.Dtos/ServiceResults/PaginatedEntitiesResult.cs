@@ -29,19 +29,20 @@ namespace Codific.Mvc567.Dtos.ServiceResults
         {
             get
             {
-                return (Entities != null) ? Entities.Count() : 0;
+                return this.Entities?.Count() ?? 0;
             }
         }
 
-        public int Pages {
+        public int Pages
+        {
             get
             {
-                if (PageSize == 0)
+                if (this.PageSize == 0)
                 {
                     return 1;
                 }
 
-                return (Count / PageSize) + (Count % PageSize == 0 ? 0 : 1);
+                return (this.Count / this.PageSize) + (this.Count % this.PageSize == 0 ? 0 : 1);
             }
         }
 
@@ -53,7 +54,7 @@ namespace Codific.Mvc567.Dtos.ServiceResults
         {
             get
             {
-                return ((CurrentPage - 1) * PageSize);
+                return (this.CurrentPage - 1) * this.PageSize;
             }
         }
     }

@@ -14,10 +14,10 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-using Codific.Mvc567.Common.Extensions;
 using System;
 using System.Linq.Expressions;
 using System.Reflection;
+using Codific.Mvc567.Common.Extensions;
 
 namespace Codific.Mvc567.Dtos.Api.ExpressionFactories
 {
@@ -30,15 +30,15 @@ namespace Codific.Mvc567.Dtos.Api.ExpressionFactories
 
             Expression<Func<TEntity, bool>> expression = null;
 
-            if (propertyInfo.PropertyType.IsNullableType() && queryStringItem.Value.ToLower() == "null")
+            if (propertyInfo != null && (propertyInfo.PropertyType.IsNullableType() && queryStringItem.Value.ToLower() == "null"))
             {
                 expression = x => propertyInfo.GetValue(x) == null;
             }
-            else if (propertyInfo.PropertyType.IsNumericType())
+            else if (propertyInfo != null && propertyInfo.PropertyType.IsNumericType())
             {
                 expression = x => propertyInfo.GetValue(x) != null && Convert.ToDecimal(propertyInfo.GetValue(x)) == Convert.ToDecimal(queryStringItem.Value);
             }
-            else if (propertyInfo.PropertyType == typeof(DateTime))
+            else if (propertyInfo != null && propertyInfo.PropertyType == typeof(DateTime))
             {
                 expression = x => propertyInfo.GetValue(x) != null && Convert.ToDateTime(propertyInfo.GetValue(x)) == Convert.ToDateTime(queryStringItem.Value);
             }

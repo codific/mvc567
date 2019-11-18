@@ -29,7 +29,7 @@ namespace Codific.Mvc567.Entities.ViewModels.AdminViewModels.RootsViewModels
         {
             get
             {
-                return RelativePath.Substring(1).Replace("\\", "/");
+                return this.RelativePath.Substring(1).Replace("\\", "/");
             }
         }
 
@@ -39,7 +39,7 @@ namespace Codific.Mvc567.Entities.ViewModels.AdminViewModels.RootsViewModels
         {
             get
             {
-                return FilesFunctions.SizeSuffix(Size, 2);
+                return FilesFunctions.SizeSuffix(this.Size, 2);
             }
         }
 

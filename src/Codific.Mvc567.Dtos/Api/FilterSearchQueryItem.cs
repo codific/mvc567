@@ -14,11 +14,8 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-using Codific.Mvc567.Common.Enums;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using Codific.Mvc567.Common.Enums;
 
 namespace Codific.Mvc567.Dtos.Api
 {
@@ -32,14 +29,14 @@ namespace Codific.Mvc567.Dtos.Api
             { "<", FilterSearchQueryEqualityType.LessThan },
             { ">=", FilterSearchQueryEqualityType.GreaterOrEqualsThan },
             { "<=", FilterSearchQueryEqualityType.LessOrEqualsThan },
-            { "!=", FilterSearchQueryEqualityType.NotEqual }
+            { "!=", FilterSearchQueryEqualityType.NotEqual },
         };
 
         public FilterSearchQueryItem(string propertyName, string equalitySymbol, string value)
         {
-            PropertyName = propertyName;
-            EqualityType = this.equalitySymbolsDictionary.ContainsKey(equalitySymbol) ? this.equalitySymbolsDictionary[equalitySymbol] : FilterSearchQueryEqualityType.Equals;
-            Value = value;
+            this.PropertyName = propertyName;
+            this.EqualityType = this.equalitySymbolsDictionary.ContainsKey(equalitySymbol) ? this.equalitySymbolsDictionary[equalitySymbol] : FilterSearchQueryEqualityType.Equals;
+            this.Value = value;
         }
 
         public string PropertyName { get; private set; }

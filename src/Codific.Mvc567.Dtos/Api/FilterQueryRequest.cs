@@ -14,9 +14,9 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Codific.Mvc567.Dtos.Api
 {
@@ -45,11 +45,11 @@ namespace Codific.Mvc567.Dtos.Api
             get
             {
                 return
-                    (OrderBy is null) &&
-                    (PageSize is null) &&
-                    (Page is null) &&
-                    (SearchQuery is null) &&
-                    (ShowDeleted is false);
+                    (this.OrderBy is null) &&
+                    (this.PageSize is null) &&
+                    (this.Page is null) &&
+                    (this.SearchQuery is null) &&
+                    (this.ShowDeleted is false);
             }
         }
 
@@ -57,10 +57,10 @@ namespace Codific.Mvc567.Dtos.Api
         {
             get
             {
-                if (this.filterQueryStringItems == null && !string.IsNullOrEmpty(SearchQuery))
+                if (this.filterQueryStringItems == null && !string.IsNullOrEmpty(this.SearchQuery))
                 {
                     Regex regex = new Regex(@"@(.*?)(=|~=|>=|<=|>|<|!=)(.*?);");
-                    MatchCollection matches = regex.Matches(SearchQuery);
+                    MatchCollection matches = regex.Matches(this.SearchQuery);
                     if (matches.Count > 0)
                     {
                         this.filterQueryStringItems = new List<FilterSearchQueryItem>();
@@ -80,10 +80,10 @@ namespace Codific.Mvc567.Dtos.Api
         {
             get
             {
-                if (this.filterQueryOrderItem == null && !string.IsNullOrEmpty(OrderBy))
+                if (this.filterQueryOrderItem == null && !string.IsNullOrEmpty(this.OrderBy))
                 {
                     Regex regex = new Regex(@"(.*?)(|:a|:d);");
-                    MatchCollection matches = regex.Matches(OrderBy);
+                    MatchCollection matches = regex.Matches(this.OrderBy);
                     if (matches.Count > 0)
                     {
                         this.filterQueryOrderItem = new List<FilterQueryOrderItem>();

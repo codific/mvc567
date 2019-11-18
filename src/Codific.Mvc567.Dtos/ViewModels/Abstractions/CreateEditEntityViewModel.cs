@@ -14,12 +14,12 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-using Codific.Mvc567.Common.Attributes;
-using Codific.Mvc567.Common.Extensions;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Codific.Mvc567.Common.Attributes;
+using Codific.Mvc567.Common.Extensions;
+using Newtonsoft.Json;
 
 namespace Codific.Mvc567.Dtos.ViewModels.Abstractions
 {
@@ -47,27 +47,30 @@ namespace Codific.Mvc567.Dtos.ViewModels.Abstractions
                 if (property.GetCustomAttributes(typeof(CreateEditEntityInputAttribute), false).Any())
                 {
                     CreateEditEntityInputAttribute propertyAttribute = (CreateEditEntityInputAttribute)property.GetCustomAttributes(typeof(CreateEditEntityInputAttribute), false).FirstOrDefault();
-                    var inputViewModel = new CreateEditInputViewModel
+                    if (propertyAttribute != null)
                     {
-                        Label = propertyAttribute.Name,
-                        Name = property.Name,
-                        Type = propertyAttribute.Type,
-                        EnumType = (property.PropertyType.IsEnum) ? property.PropertyType : null,
-                        Value = property.GetValue(this)
-                    };
+                        var inputViewModel = new CreateEditInputViewModel
+                        {
+                            Label = propertyAttribute.Name,
+                            Name = property.Name,
+                            Type = propertyAttribute.Type,
+                            EnumType = property.PropertyType.IsEnum ? property.PropertyType : null,
+                            Value = property.GetValue(this),
+                        };
 
-                    if (inputViewModel.EnumType == null && property.PropertyType.IsArray && property.PropertyType.GetElementType().IsEnum)
-                    {
-                        inputViewModel.EnumType = property.PropertyType.GetElementType();
-                    }
-                    else if (property.HasAttribute<DatabaseEnumAttribute>())
-                    {
-                        var databasePropertyAttribute = property.GetAttribute<DatabaseEnumAttribute>();
-                        inputViewModel.DatabaseEntityType = databasePropertyAttribute.EntityType;
-                        inputViewModel.DatabaseEntityVisibleProperty = databasePropertyAttribute.Property;
-                    }
+                        if (inputViewModel.EnumType == null && property.PropertyType.IsArray && property.PropertyType.GetElementType().IsEnum)
+                        {
+                            inputViewModel.EnumType = property.PropertyType.GetElementType();
+                        }
+                        else if (property.HasAttribute<DatabaseEnumAttribute>())
+                        {
+                            var databasePropertyAttribute = property.GetAttribute<DatabaseEnumAttribute>();
+                            inputViewModel.DatabaseEntityType = databasePropertyAttribute.EntityType;
+                            inputViewModel.DatabaseEntityVisibleProperty = databasePropertyAttribute.Property;
+                        }
 
-                    resultList.Add(inputViewModel);
+                        resultList.Add(inputViewModel);
+                    }
                 }
             }
 

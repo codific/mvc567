@@ -31,7 +31,7 @@ namespace Codific.Mvc567.Entities.ViewModels.AdminViewModels.RootsViewModels
         {
             get
             {
-                return RelativePath.Substring(1).Replace("\\", "/");
+                return this.RelativePath.Substring(1).Replace("\\", "/");
             }
         }
 

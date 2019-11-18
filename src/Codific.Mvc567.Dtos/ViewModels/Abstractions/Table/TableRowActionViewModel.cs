@@ -23,13 +23,12 @@ namespace Codific.Mvc567.Dtos.ViewModels.Abstractions.Table
     {
         public TableRowActionViewModel(string title, string icon, Color color, string urlStringFormat, List<string> rawParameters, TableRowActionMethod method = TableRowActionMethod.Get)
         {
-            Title = title;
-            Icon = icon;
-            Color = color;
-            UrlStringFormat = urlStringFormat;
-            RawParameters = rawParameters;
-            Method = method;
-
+            this.Title = title;
+            this.Icon = icon;
+            this.Color = color;
+            this.UrlStringFormat = urlStringFormat;
+            this.RawParameters = rawParameters;
+            this.Method = method;
         }
 
         public string Title { get; set; }
@@ -50,7 +49,7 @@ namespace Codific.Mvc567.Dtos.ViewModels.Abstractions.Table
         {
             get
             {
-                return string.Format(UrlStringFormat, Parameters.ToArray());
+                return string.Format(this.UrlStringFormat, this.Parameters.ToArray());
             }
         }
 
@@ -62,15 +61,9 @@ namespace Codific.Mvc567.Dtos.ViewModels.Abstractions.Table
 
         public void SetConfirmation(string confirmationTitle, string confirmationMessage)
         {
-            HasConfirmation = true;
-            ConfirmationTitle = confirmationTitle;
-            ConfirmationMessage = confirmationMessage;
+            this.HasConfirmation = true;
+            this.ConfirmationTitle = confirmationTitle;
+            this.ConfirmationMessage = confirmationMessage;
         }
-    }
-
-    public enum TableRowActionMethod
-    {
-        Get = 0,
-        Post = 1
     }
 }

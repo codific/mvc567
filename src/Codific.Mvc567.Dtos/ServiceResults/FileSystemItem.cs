@@ -36,10 +36,4 @@ namespace Codific.Mvc567.Dtos.ServiceResults
 
         public DateTime LastModifiedOn { get; set; }
     }
-
-    public enum FileSystemItemType
-    {
-        File = 1,
-        Folder = 2
-    }
 }

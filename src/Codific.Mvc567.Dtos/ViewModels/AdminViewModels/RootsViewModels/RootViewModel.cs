@@ -25,8 +25,8 @@ namespace Codific.Mvc567.Entities.ViewModels.AdminViewModels.RootsViewModels
     {
         public RootViewModel()
         {
-            Folders = new List<RootFolderViewModel>();
-            Files = new List<RootFileViewModel>();
+            this.Folders = new List<RootFolderViewModel>();
+            this.Files = new List<RootFileViewModel>();
         }
 
         public string Root { get; set; }
@@ -39,24 +39,24 @@ namespace Codific.Mvc567.Entities.ViewModels.AdminViewModels.RootsViewModels
 
         public void AddFile(string name, string relativePath, long fileSize, DateTime createdOn, DateTime lastModifiedOn)
         {
-            Files.Add(new RootFileViewModel
+            this.Files.Add(new RootFileViewModel
             {
                 Name = name,
                 RelativePath = relativePath,
                 Size = fileSize,
                 CreatedOn = createdOn,
-                LastModifiedOn = lastModifiedOn
+                LastModifiedOn = lastModifiedOn,
             });
         }
 
         public void AddFolder(string name, string relativePath, DateTime createdOn, DateTime lastModifiedOn)
         {
-            Folders.Add(new RootFolderViewModel
+            this.Folders.Add(new RootFolderViewModel
             {
                 Name = name,
                 RelativePath = relativePath,
                 CreatedOn = createdOn,
-                LastModifiedOn = lastModifiedOn
+                LastModifiedOn = lastModifiedOn,
             });
         }
     }

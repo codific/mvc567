@@ -15,9 +15,6 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 using Codific.Mvc567.Common.Enums;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Codific.Mvc567.Dtos.Api
 {
@@ -25,14 +22,14 @@ namespace Codific.Mvc567.Dtos.Api
     {
         public FilterQueryOrderItem(string propertyName, string orderSymbol)
         {
-            PropertyName = propertyName;
+            this.PropertyName = propertyName;
             if (string.IsNullOrEmpty(orderSymbol) || orderSymbol == "a")
             {
-                OrderType = FilterOrderType.Ascending;
+                this.OrderType = FilterOrderType.Ascending;
             }
             else if (orderSymbol == "d")
             {
-                OrderType = FilterOrderType.Descending;
+                this.OrderType = FilterOrderType.Descending;
             }
         }
 

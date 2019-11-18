@@ -20,25 +20,28 @@ namespace Codific.Mvc567.Dtos.ViewModels.Abstractions.Table
     {
         public TablePaginationViewModel(int currentPage, int pagesCount)
         {
-            CurrentPage = currentPage;
+            this.CurrentPage = currentPage;
 
-            if (CurrentPage != 1)
+            if (this.CurrentPage != 1)
             {
-                PreviousPage = CurrentPage - 1;
+                this.PreviousPage = this.CurrentPage - 1;
             }
-            if (CurrentPage != pagesCount)
+
+            if (this.CurrentPage != pagesCount)
             {
-                NextPage = pagesCount;
+                this.NextPage = pagesCount;
             }
+
             for (int i = 1; i <= 2; i++)
             {
-                if (CurrentPage - i >= 1)
+                if (this.CurrentPage - i >= 1)
                 {
-                    PreviousPagesCount++;
+                    this.PreviousPagesCount++;
                 }
-                if (CurrentPage + i <= pagesCount)
+
+                if (this.CurrentPage + i <= pagesCount)
                 {
-                    NextPagesCount++;
+                    this.NextPagesCount++;
                 }
             }
         }

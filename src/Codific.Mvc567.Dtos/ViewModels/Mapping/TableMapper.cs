@@ -18,10 +18,10 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using Codific.Mvc567.Common.Attributes;
 using Codific.Mvc567.Common;
-using Codific.Mvc567.Dtos.ViewModels.Abstractions.Table;
+using Codific.Mvc567.Common.Attributes;
 using Codific.Mvc567.Dtos.ServiceResults;
+using Codific.Mvc567.Dtos.ViewModels.Abstractions.Table;
 
 namespace Codific.Mvc567.Entities.ViewModels.Mapping
 {
@@ -39,14 +39,10 @@ namespace Codific.Mvc567.Entities.ViewModels.Mapping
                 {
                     dtoAttributes.Add((TableCellAttribute)property.GetCustomAttributes(typeof(TableCellAttribute), false).FirstOrDefault());
                 }
-                
             }
 
             List<string> tableHeaders = dtoAttributes.OrderBy(x => x.Order).Select(x => x.Name).Distinct().ToList();
-            tableHeaders.ForEach(x =>
-            {
-                tableViewModel.Header.AddCell(x);
-            });
+            tableHeaders.ForEach(x => { tableViewModel.Header.AddCell(x); });
 
             if (entitiesResult.EntitiesCount > 0)
             {
@@ -59,10 +55,12 @@ namespace Codific.Mvc567.Entities.ViewModels.Mapping
                         {
                             tableRow.Identifier = property.GetValue(entity)?.ToString();
                         }
+
                         if (property.GetCustomAttributes(typeof(TableCellAttribute), false).Length > 0)
                         {
                             TableCellAttribute propertyAttribute = (TableCellAttribute)property.GetCustomAttributes(typeof(TableCellAttribute), false).FirstOrDefault();
-                            tableRow.AddCell(propertyAttribute.Order,
+                            tableRow.AddCell(
+                                propertyAttribute.Order,
                                 property.GetValue(entity),
                                 propertyAttribute.Type,
                                 propertyAttribute.Editable,
@@ -78,7 +76,7 @@ namespace Codific.Mvc567.Entities.ViewModels.Mapping
                             if (parameter.StartsWith("[", StringComparison.OrdinalIgnoreCase) && parameter.EndsWith("]", StringComparison.OrdinalIgnoreCase))
                             {
                                 string propertyName = parameter.Substring(1, parameter.Length - 2);
-                                string propertyValue = entity.GetType().GetProperty(propertyName).GetValue(entity).ToString();
+                                string propertyValue = entity.GetType().GetProperty(propertyName)?.GetValue(entity).ToString();
                                 parsedParameters.Add(propertyValue);
                             }
                             else
@@ -95,12 +93,12 @@ namespace Codific.Mvc567.Entities.ViewModels.Mapping
             }
 
             tableViewModel.SetPagination(entitiesResult.CurrentPage, entitiesResult.Pages);
-            
+
             return tableViewModel;
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="icon">https://materialdesignicons.com/cdn/2.0.46/</param>
         /// <param name="color"></param>

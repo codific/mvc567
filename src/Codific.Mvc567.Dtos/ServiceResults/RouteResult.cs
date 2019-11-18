@@ -14,19 +14,25 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-using Codific.Mvc567.Common.Enums;
 using System;
+using Codific.Mvc567.Common.Enums;
 
 namespace Codific.Mvc567.Dtos.ServiceResults
 {
     public class RouteResult
     {
         public string Route { get; set; }
+
         public string Action { get; set; }
+
         public string Controller { get; set; }
+
         public DateTime? LastModification { get; set; }
+
         public SeoChangeFrequencyTypes? ChangeFrequency { get; set; }
+
         public float? Priority { get; set; }
+
         public bool IsStatic { get; set; }
     }
 }
