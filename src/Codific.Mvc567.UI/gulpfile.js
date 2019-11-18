@@ -60,6 +60,7 @@ gulp.task('styles:vendors', function () {
             './Styles/css/shared/editor/eclipse.css',
             './node_modules/jquery-tags-input/dist/jquery.tagsinput.min.css',
             './node_modules/sweetalert2/dist/sweetalert2.min.css',
+            './Styles/js/vendors/bootstrap-editable.css',
         ])
         .pipe(cssmin({ keepSpecialComments: 0 }))
         .pipe(concat('style.vendors.min.css'))
@@ -81,7 +82,8 @@ gulp.task('scripts', function () {
         "./Scripts/js/shared/editor/codemirror.js",
         "./Scripts/js/shared/editor/*.js",
         "./Scripts/js/shared/obfuscator.js",
-        "./Scripts/js/shared/static-page-form.js"
+        "./Scripts/js/shared/static-page-form.js",
+        "./Scripts/js/shared/x-editable.js"
     ])
         .pipe(uglify())
         .pipe(concat("scripts.min.js"))
@@ -97,6 +99,7 @@ gulp.task('scripts:vendors', function () {
         './node_modules/clipboard/dist/clipboard.min.js',
         './node_modules/jquery-tags-input/dist/jquery.tagsinput.min.js',
         './node_modules/sweetalert/dist/sweetalert.min.js',
+        './Scripts/js/vendors/bootstrap-editable.min.js',
     ])
         .pipe(uglify())
         .pipe(concat("scripts.vendors.min.js"))

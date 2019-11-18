@@ -25,7 +25,7 @@ namespace Codific.Mvc567.UI
         {
             get
             {
-                return typeof(UIAssemblyPart).GetType().GetTypeInfo().Assembly;
+                return typeof(UIAssemblyPart).GetTypeInfo().Assembly;
             }
         }
 

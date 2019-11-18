@@ -36,16 +36,6 @@
     <ProjectReference Include="..\Codific.Mvc567.Components\Codific.Mvc567.Components.csproj" />
     <ProjectReference Include="..\Codific.Mvc567.Dtos\Codific.Mvc567.Dtos.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <Content Remove="Views\AreasViews\Admin\AdminRoots\Root.cshtml" />
-    <Content Remove="Views\AreasViews\Admin\AdminStaticPages\Edit.cshtml" />
-    <Content Remove="Views\AreasViews\Admin\AdminStaticPages\Create.cshtml" />
-    <Content Remove="Views\ControllersViews\StaticPage\PageAction.cshtml" />
-    <Content Remove="Views\AreasViews\Admin\Shared\Partials\_CreateEditStaticPageForm.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Views\AreasViews\Admin\AdminSystem\" />
-  </ItemGroup>
   <Target Name="AfterCompile">
     <Exec Command="if &quot;$(PlatformName)&quot; == &quot;AnyCPU&quot; (if &quot;$(ConfigurationName)&quot; == &quot;Release&quot; (powershell.exe  -ExecutionPolicy Bypass -File  &quot;$(ProjectDir)confuserEx\confuserps.ps1&quot; &quot;'C:\ConfuserEx_bin\Confuser.CLI.exe'&quot; &quot;'$(ProjectDir)confuserEx\confuser.crproj'&quot; &quot;'$(ProjectDir)obj\$(ConfigurationName)\'&quot; &quot;'$(ProjectDir)obj\$(ConfigurationName)\$(TargetFileName)'&quot; &quot;$(ProjectDir)bin\$(ConfigurationName)&quot;)&#xD;&#xA;) else (if &quot;$(ConfigurationName)&quot; == &quot;Release&quot; (powershell.exe  -ExecutionPolicy Bypass -File  &quot;$(ProjectDir)confuserEx\confuserps.ps1&quot; &quot;'C:\ConfuserEx_bin\Confuser.CLI.exe'&quot; &quot;'$(ProjectDir)confuserEx\confuser.crproj'&quot; &quot;'$(ProjectDir)obj\$(PlatformName)\$(ConfigurationName)\'&quot; &quot;'$(ProjectDir)obj\$(PlatformName)\$(ConfigurationName)\$(TargetFileName)'&quot; &quot;$(ProjectDir)bin\$(PlatformName)\$(ConfigurationName)&quot;)&#xD;&#xA;)" />
   </Target>

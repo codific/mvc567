@@ -18,8 +18,8 @@ using System;
 using System.Text;
 using AutoMapper;
 using Codific.Mvc567.Common;
-using Codific.Mvc567.Common.Attributes;
 using Codific.Mvc567.Common.Options;
+using Codific.Mvc567.CommonCore;
 using Codific.Mvc567.DataAccess;
 using Codific.Mvc567.DataAccess.Abstractions.Repositories;
 using Codific.Mvc567.DataAccess.Core;
@@ -183,8 +183,7 @@ namespace Codific.Mvc567
                     p.ApplicationParts.Add(UIAssemblyPart.AssemblyPart);
                     p.FeatureProviders.Add(new ViewComponentFeatureProvider());
                     this.RegisterFeatureProviders(ref p);
-                })
-                .AddXmlSerializerFormatters();
+                });
             services.AddHttpContextAccessor();
         }
 

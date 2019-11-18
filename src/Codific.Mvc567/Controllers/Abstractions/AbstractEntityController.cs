@@ -220,6 +220,18 @@ namespace Codific.Mvc567.Controllers.Abstractions
             return this.View("AbstractViews/Edit", castedModel);
         }
 
+        [HttpPost]
+        [Route("x-edit")]
+        public virtual async Task<IActionResult> XEdit([FromForm(Name = "pk")]Guid id, [FromForm(Name = "name")]string name, [FromForm(Name = "value")]string value)
+        {
+            var edited = await this.entityManager.ModifyEntityPropertyAsync<TEntity, TEntityDto>(id, name, value);
+            if (edited)
+            {
+                return Ok();
+            }
+            return BadRequest();
+        }
+
         [HttpGet]
         [Route("{id}")]
         [Breadcrumb(BreadcrumbEntityNamePluralPlaceholder, true, 0, nameof(GetAll))]
