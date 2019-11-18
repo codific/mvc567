@@ -25,11 +25,13 @@ namespace Codific.Mvc567.Dtos.ViewModels.Abstractions.Table
     {
         private object content = string.Empty;
 
-        public TableCellViewModel(int order, object content, TableCellType type)
+        public TableCellViewModel(int order, object content, TableCellType type, bool editable, string relatedProperty)
         {
             Order = order;
             Type = type;
             this.content = content;
+            Editable = editable;
+            RelatedProperty = relatedProperty;
         }
 
         public int Order { get; private set; }
@@ -39,6 +41,10 @@ namespace Codific.Mvc567.Dtos.ViewModels.Abstractions.Table
         public int NumberDecimalDigits { get; set; }
 
         public string MoneyCurrency { get; set; }
+
+        public string RelatedProperty { get; set; } = "TestRelatedProperty";
+
+        public bool Editable { get; set; } = true;
 
         public void SetRawContent(object content)
         {
