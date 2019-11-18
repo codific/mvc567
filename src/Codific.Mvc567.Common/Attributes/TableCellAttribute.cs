@@ -14,8 +14,8 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-using Codific.Mvc567.Common.Enums;
 using System;
+using Codific.Mvc567.Common.Enums;
 
 namespace Codific.Mvc567.Common.Attributes
 {
@@ -23,9 +23,9 @@ namespace Codific.Mvc567.Common.Attributes
     {
         public TableCellAttribute(int order, string name, TableCellType type)
         {
-            Order = order;
-            Name = name;
-            Type = type;
+            this.Order = order;
+            this.Name = name;
+            this.Type = type;
         }
 
         public int Order { get; private set; }

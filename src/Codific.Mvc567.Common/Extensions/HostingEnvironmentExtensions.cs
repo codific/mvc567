@@ -14,10 +14,10 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-using Microsoft.AspNetCore.Hosting;
-using Codific.Mvc567.Common.Utilities;
 using System;
 using System.IO;
+using Codific.Mvc567.Common.Utilities;
+using Microsoft.AspNetCore.Hosting;
 
 namespace Codific.Mvc567.Common.Extensions
 {

@@ -36,13 +36,11 @@ namespace Codific.Mvc567.Common
         public const string DefaultControllersViewsPath = "/Views/ControllersViews";
         public const string DefaultEmailViewsPath = "/Views/EmailViews";
 
-        //public const string ControllerStaticPageRoute = "{*route:regex(^([[a-zA-Z0-9-/]]+)$)}";
-
+        // public const string ControllerStaticPageRoute = "{*route:regex(^([[a-zA-Z0-9-/]]+)$)}";
         public const string LanguageControllerRouteKey = "language";
         public const string LanguageControllerPageRoute = "{" + LanguageControllerRouteKey + ":length(2,2)}";
-        //public const string LanguageControllerStaticPageRoute = LanguageControllerPageRoute + "/" + ControllerStaticPageRoute;
 
+        // public const string LanguageControllerStaticPageRoute = LanguageControllerPageRoute + "/" + ControllerStaticPageRoute;
         public const string LanguageCookieName = ".Mvc567.Language";
-
     }
 }

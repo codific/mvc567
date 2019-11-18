@@ -14,10 +14,10 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-using Codific.Mvc567.Common.Enums;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using Codific.Mvc567.Common.Enums;
+using Newtonsoft.Json;
 
 namespace Codific.Mvc567.Common.Options
 {
@@ -36,6 +36,7 @@ namespace Codific.Mvc567.Common.Options
             {
                 return this.allowedFormatExtensions;
             }
+
             set
             {
                 this.allowedFormatExtensions = value;
@@ -49,7 +50,7 @@ namespace Codific.Mvc567.Common.Options
         {
             get
             {
-                ParseFileExtensions();
+                this.ParseFileExtensions();
                 return this.allowedFormatExtensionsAsEnum;
             }
         }

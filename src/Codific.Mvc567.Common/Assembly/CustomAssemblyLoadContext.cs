@@ -26,11 +26,12 @@ namespace Codific.Mvc567.Common.Assembly
     {
         public IntPtr LoadUnmanagedLibrary(string absolutePath)
         {
-            return LoadUnmanagedDll(absolutePath);
+            return this.LoadUnmanagedDll(absolutePath);
         }
-        protected override IntPtr LoadUnmanagedDll(String unmanagedDllName)
+
+        protected override IntPtr LoadUnmanagedDll(string unmanagedDllName)
         {
-            return LoadUnmanagedDllFromPath(unmanagedDllName);
+            return this.LoadUnmanagedDllFromPath(unmanagedDllName);
         }
 
         protected override System.Reflection.Assembly Load(AssemblyName assemblyName)

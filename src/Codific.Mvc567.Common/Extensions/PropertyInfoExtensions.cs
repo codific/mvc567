@@ -14,14 +14,14 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-using Codific.Mvc567.Common.Attributes;
-using Codific.Mvc567.Common.Enums;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using Codific.Mvc567.Common.Attributes;
+using Codific.Mvc567.Common.Enums;
 
 namespace Codific.Mvc567.Common.Extensions
 {
@@ -62,7 +62,7 @@ namespace Codific.Mvc567.Common.Extensions
         {
             if (propertyInfo.HasAttribute<T>())
             {
-                return ((T)propertyInfo.GetCustomAttributes(typeof(T), true).FirstOrDefault());
+                return (T)propertyInfo.GetCustomAttributes(typeof(T), true).FirstOrDefault();
             }
 
             return default(T);
@@ -78,7 +78,7 @@ namespace Codific.Mvc567.Common.Extensions
                 {
                     RelativePath = Path.Combine(attribute.DirectoryFolders),
                     Root = attribute.Root,
-                    UserSpecific = attribute.UserSpecific
+                    UserSpecific = attribute.UserSpecific,
                 };
 
                 return settings;

@@ -14,21 +14,35 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-using Codific.Mvc567.Common.Enums;
 using System;
+using Codific.Mvc567.Common.Enums;
 
 namespace Codific.Mvc567.Common.Utilities
 {
     public static class FilesFunctions
     {
         private static readonly string[] SizeSuffixes =
-           { "bytes", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB" };
-
-        public static string SizeSuffix(Int64 value, int decimalPlaces = 1)
         {
-            if (decimalPlaces < 0) { throw new ArgumentOutOfRangeException("decimalPlaces"); }
-            if (value < 0) { return "-" + SizeSuffix(-value); }
-            if (value == 0) { return string.Format("{0:n" + decimalPlaces + "} bytes", 0); }
+            "bytes", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB",
+        };
+
+        public static string SizeSuffix(long value, int decimalPlaces = 1)
+        {
+            if (decimalPlaces < 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(decimalPlaces));
+            }
+
+            if (value < 0)
+            {
+                return "-" + SizeSuffix(-value);
+            }
+
+            if (value == 0)
+            {
+                return string.Format("{0:n" + decimalPlaces + "} bytes", 0);
+            }
+
             int mag = (int)Math.Log(value, 1024);
             decimal adjustedSize = (decimal)value / (1L << (mag * 10));
             if (Math.Round(adjustedSize, decimalPlaces) >= 1000)
@@ -37,7 +51,8 @@ namespace Codific.Mvc567.Common.Utilities
                 adjustedSize /= 1024;
             }
 
-            return string.Format("{0:n" + decimalPlaces + "} {1}",
+            return string.Format(
+                "{0:n" + decimalPlaces + "} {1}",
                 adjustedSize,
                 SizeSuffixes[mag]);
         }
@@ -50,7 +65,7 @@ namespace Codific.Mvc567.Common.Utilities
         public static FileExtensions GetFileExtension(string extension)
         {
             string enumStandardExtension = $"_{extension.Replace(".", string.Empty)}";
-            FileExtensions result = (FileExtensions)(Enum.Parse(typeof(FileExtensions), enumStandardExtension, true));
+            FileExtensions result = (FileExtensions)Enum.Parse(typeof(FileExtensions), enumStandardExtension, true);
             return result;
         }
 

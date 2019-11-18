@@ -23,24 +23,22 @@ namespace Codific.Mvc567.Common.Utilities
 {
     public static class ExpressionFunctions
     {
-        public static Expression<Func<T, Boolean>> OrElse<T>(Expression<Func<T, Boolean>> left, Expression<Func<T, Boolean>> right)
+        public static Expression<Func<T, bool>> OrElse<T>(Expression<Func<T, bool>> left, Expression<Func<T, bool>> right)
         {
-            Expression<Func<T, Boolean>> combined = Expression.Lambda<Func<T, Boolean>>(
+            Expression<Func<T, bool>> combined = Expression.Lambda<Func<T, bool>>(
                 Expression.OrElse(
                     left.Body,
-                    new ExpressionParameterReplacer(right.Parameters, left.Parameters).Visit(right.Body)
-                    ), left.Parameters);
+                    new ExpressionParameterReplacer(right.Parameters, left.Parameters).Visit(right.Body) ?? throw new InvalidOperationException()), left.Parameters);
 
             return combined;
         }
 
-        public static Expression<Func<T, Boolean>> AndAlso<T>(Expression<Func<T, Boolean>> left, Expression<Func<T, Boolean>> right)
+        public static Expression<Func<T, bool>> AndAlso<T>(Expression<Func<T, bool>> left, Expression<Func<T, bool>> right)
         {
-            Expression<Func<T, Boolean>> combined = Expression.Lambda<Func<T, Boolean>>(
+            Expression<Func<T, bool>> combined = Expression.Lambda<Func<T, bool>>(
                 Expression.AndAlso(
                     left.Body,
-                    new ExpressionParameterReplacer(right.Parameters, left.Parameters).Visit(right.Body)
-                    ), left.Parameters);
+                    new ExpressionParameterReplacer(right.Parameters, left.Parameters).Visit(right.Body) ?? throw new InvalidOperationException()), left.Parameters);
 
             return combined;
         }

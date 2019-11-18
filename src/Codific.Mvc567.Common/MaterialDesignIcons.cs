@@ -2070,5 +2070,4 @@ namespace Codific.Mvc567.Common
         public const string ZipBox = "mdi-zip-box";
         public const string Blank = "mdi-blank";
     }
-
 }

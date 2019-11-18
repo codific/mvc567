@@ -22,8 +22,8 @@ namespace Codific.Mvc567.Common.Attributes
     {
         public DatabaseEnumAttribute(Type entityType, string property)
         {
-            EntityType = entityType;
-            Property = property;
+            this.EntityType = entityType;
+            this.Property = property;
         }
 
         public Type EntityType { get; set; }

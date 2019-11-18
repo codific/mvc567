@@ -14,14 +14,9 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-using Codific.Mvc567.Common.Utilities;
-using System.Diagnostics;
-using System.Linq;
-
 namespace Codific.Mvc567.Common.Utilities
 {
     public static class CookiesFunctions
     {
-
     }
 }

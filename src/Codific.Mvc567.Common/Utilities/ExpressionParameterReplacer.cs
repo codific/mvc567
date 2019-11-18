@@ -23,23 +23,27 @@ namespace Codific.Mvc567.Common.Utilities
 {
     public class ExpressionParameterReplacer : ExpressionVisitor
     {
-        private IDictionary<ParameterExpression, ParameterExpression> ParameterReplacements { get; set; }
-
-        public ExpressionParameterReplacer
-        (IList<ParameterExpression> fromParameters, IList<ParameterExpression> toParameters)
+        public ExpressionParameterReplacer(
+            IList<ParameterExpression> fromParameters, IList<ParameterExpression> toParameters)
         {
-            ParameterReplacements = new Dictionary<ParameterExpression, ParameterExpression>();
+            this.ParameterReplacements = new Dictionary<ParameterExpression, ParameterExpression>();
 
             for (int i = 0; i != fromParameters.Count && i != toParameters.Count; i++)
-            { ParameterReplacements.Add(fromParameters[i], toParameters[i]); }
+            {
+                this.ParameterReplacements.Add(fromParameters[i], toParameters[i]);
+            }
         }
+
+        private IDictionary<ParameterExpression, ParameterExpression> ParameterReplacements { get; set; }
 
         protected override Expression VisitParameter(ParameterExpression node)
         {
             ParameterExpression replacement;
 
-            if (ParameterReplacements.TryGetValue(node, out replacement))
-            { node = replacement; }
+            if (this.ParameterReplacements.TryGetValue(node, out replacement))
+            {
+                node = replacement;
+            }
 
             return base.VisitParameter(node);
         }

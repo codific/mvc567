@@ -14,8 +14,8 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-using Codific.Mvc567.Common.Enums;
 using System;
+using Codific.Mvc567.Common.Enums;
 
 namespace Codific.Mvc567.Common.Attributes
 {
@@ -23,8 +23,8 @@ namespace Codific.Mvc567.Common.Attributes
     {
         public SaveDirectoryAttribute(ApplicationRoots root, params string[] directoryFolders)
         {
-            Root = root;
-            DirectoryFolders = directoryFolders;
+            this.Root = root;
+            this.DirectoryFolders = directoryFolders;
         }
 
         public string[] DirectoryFolders { get; set; }

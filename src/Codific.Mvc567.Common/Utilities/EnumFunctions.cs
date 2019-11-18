@@ -28,12 +28,14 @@ namespace Codific.Mvc567.Common.Utilities
             {
                 return null;
             }
+
             var enumValues = enumType.GetEnumValues();
             Dictionary<int, string> result = new Dictionary<int, string>();
             foreach (var value in enumValues)
             {
-                result[(int)(Enum.Parse(enumType, value.ToString()))] = StringFunctions.SplitWordsByCapitalLetters(value.ToString());
+                result[(int)Enum.Parse(enumType, value.ToString())] = StringFunctions.SplitWordsByCapitalLetters(value.ToString());
             }
+
             return result;
         }
     }

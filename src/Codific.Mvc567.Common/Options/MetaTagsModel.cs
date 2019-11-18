@@ -19,43 +19,59 @@ namespace Codific.Mvc567.Common.Options
     public class MetaTagsModel
     {
         public string Title { get; set; }
+
         public string Description { get; set; }
+
         public string Keywords { get; set; }
+
         public string Author { get; set; }
+
         public string Canonical { get; set; }
+
         public string OpenGraphType { get; set; }
+
         public string OpenGraphTitle { get; set; }
+
         public string OpenGraphDescription { get; set; }
+
         public string OpenGraphImage { get; set; }
+
         public string OpenGraphUrl { get; set; }
+
         public string OpenGraphSiteName { get; set; }
+
         public string FacebookAppId { get; set; }
+
         public string TwitterCard { get; set; }
+
         public string TwitterTitle { get; set; }
+
         public string TwitterDescription { get; set; }
+
         public string TwitterImage { get; set; }
+
         public string TwitterSite { get; set; }
+
         public string TwitterCreator { get; set; }
 
         public void SetTitle(string title)
         {
-            Title = title;
-            OpenGraphTitle = title;
-            TwitterTitle = title;
+            this.Title = title;
+            this.OpenGraphTitle = title;
+            this.TwitterTitle = title;
         }
 
         public void SetDescription(string description)
         {
-            Description = description;
-            OpenGraphDescription = description;
-            TwitterDescription = description;
+            this.Description = description;
+            this.OpenGraphDescription = description;
+            this.TwitterDescription = description;
         }
 
         public void SetImage(string imageUrl)
         {
-            OpenGraphImage = imageUrl;
-            TwitterImage = imageUrl;
+            this.OpenGraphImage = imageUrl;
+            this.TwitterImage = imageUrl;
         }
-
     }
 }

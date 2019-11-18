@@ -14,26 +14,25 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.IO;
+using Newtonsoft.Json;
 
 namespace Codific.Mvc567.Common.Options
 {
     public class AdminNavigationScheme
     {
-        private const string schemeFileName = "adminmenus.json";
+        private const string SchemeFileName = "adminmenus.json";
 
         public AdminNavigationScheme(string contentRootPath)
         {
-            string schemeContentString = File.ReadAllText(Path.Combine(contentRootPath, schemeFileName));
+            string schemeContentString = File.ReadAllText(Path.Combine(contentRootPath, SchemeFileName));
             AdminNavigationScheme sheme = JsonConvert.DeserializeObject<AdminNavigationScheme>(schemeContentString);
             this.Menus = sheme.Menus;
         }
 
         public AdminNavigationScheme()
         {
-
         }
 
         [JsonProperty("navigation")]

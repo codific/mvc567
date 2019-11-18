@@ -22,13 +22,14 @@ namespace Codific.Mvc567.Common.Utilities
     {
         public static string SplitWordsByCapitalLetters(string words)
         {
-            words = words.Replace("_", "");
+            words = words.Replace("_", string.Empty);
             return words.Aggregate(string.Empty, (result, next) =>
             {
                 if (char.IsUpper(next) && result.Length > 1)
                 {
                     result += ' ';
                 }
+
                 return result + next;
             });
         }

@@ -25,7 +25,7 @@ namespace Codific.Mvc567.Common.Enums
         Number = 5,
         File = 6,
         Flag = 7,
-        TextArea = 8
+        TextArea = 8,
     }
 
     public enum CreateEntityInputType
@@ -47,6 +47,6 @@ namespace Codific.Mvc567.Common.Enums
         DatabaseRadio = 15,
         BoolSelect = 16,
         BoolRadio = 17,
-        DatabaseTablesSelect = 18
+        DatabaseTablesSelect = 18,
     }
 }

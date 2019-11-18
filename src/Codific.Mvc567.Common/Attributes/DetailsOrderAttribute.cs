@@ -22,7 +22,7 @@ namespace Codific.Mvc567.Common.Attributes
     {
         public DetailsOrderAttribute(int order)
         {
-            Order = order;
+            this.Order = order;
         }
 
         public int Order { get; private set; }
