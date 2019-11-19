@@ -18,10 +18,18 @@ using System;
 
 namespace Codific.Mvc567.Services.Validators
 {
-    internal abstract class AbstractHandler<T> : IHandler<T> where T : class
+    internal abstract class AbstractHandler<T> : IHandler<T>
+        where T : class
     {
+        private T requestObject;
         private IHandler<T> nextHandler;
-        protected T requestObject;
+
+        protected T RequestObject
+        {
+            get => this.requestObject;
+
+            set => this.requestObject = value;
+        }
 
         /// <summary>
         /// Receive object and validation message. If current validation pass successfully continue with the validation chain. If validation fail - return null.
@@ -32,7 +40,7 @@ namespace Codific.Mvc567.Services.Validators
         public virtual T Handle(T requestObject, out string validationResultMessage)
         {
             this.requestObject = requestObject;
-            validationResultMessage = HandleProcessAction();
+            validationResultMessage = this.HandleProcessAction();
 
             T returnObject = this.requestObject;
             if (returnObject != null && this.nextHandler != null)
