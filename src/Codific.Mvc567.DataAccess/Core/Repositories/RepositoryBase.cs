@@ -1,4 +1,4 @@
-// This file is part of the mvc567 distribution (https://github.com/intellisoft567/mvc567).
+// This file is part of the mvc567 distribution (https://github.com/codific/mvc567).
 // Copyright (C) 2019 Codific Ltd.
 //
 // This program is free software: you can redistribute it and/or modify
@@ -19,7 +19,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Codific.Mvc567.DataAccess.Core.Repositories
 {
-    public abstract class RepositoryBase<TContext> : IRepositoryInjection<TContext> where TContext : DbContext
+    public abstract class RepositoryBase<TContext> : IRepositoryInjection<TContext>
+        where TContext : DbContext
     {
         private DbContext context;
 

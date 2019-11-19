@@ -1,4 +1,4 @@
-// This file is part of the mvc567 distribution (https://github.com/intellisoft567/mvc567).
+// This file is part of the mvc567 distribution (https://github.com/codific/mvc567).
 // Copyright (C) 2019 Codific Ltd.
 //
 // This program is free software: you can redistribute it and/or modify
@@ -23,8 +23,8 @@ namespace Codific.Mvc567.Dtos.ViewModels.Abstractions.Table
     {
         public TableViewModel()
         {
-            Header = new TableHeaderViewModel();
-            Rows = new List<TableRowViewModel>();
+            this.Header = new TableHeaderViewModel();
+            this.Rows = new List<TableRowViewModel>();
         }
 
         public TableHeaderViewModel Header { get; set; }
@@ -37,21 +37,8 @@ namespace Codific.Mvc567.Dtos.ViewModels.Abstractions.Table
         {
             get
             {
-                return Rows.FirstOrDefault() == null ? false : Rows.FirstOrDefault().Actions.Any();
+                return this.Rows.FirstOrDefault() != null && this.Rows.FirstOrDefault().Actions.Any();
             }
-        }
-
-        public void AddRow(TableRowViewModel row)
-        {
-            if (row != null)
-            {
-                Rows.Add(row);
-            }
-        }
-
-        public void SetPagination(int currentPage, int pagesCount)
-        {
-            Pagination = new TablePaginationViewModel(currentPage, pagesCount);
         }
 
         public string Area { get; private set; }
@@ -60,11 +47,24 @@ namespace Codific.Mvc567.Dtos.ViewModels.Abstractions.Table
 
         public string Action { get; private set; }
 
+        public void AddRow(TableRowViewModel row)
+        {
+            if (row != null)
+            {
+                this.Rows.Add(row);
+            }
+        }
+
+        public void SetPagination(int currentPage, int pagesCount)
+        {
+            this.Pagination = new TablePaginationViewModel(currentPage, pagesCount);
+        }
+
         public void SetPaginationRedirection(string area, string controller, string action)
         {
-            Area = area;
-            Controller = controller;
-            Action = action;
+            this.Area = area;
+            this.Controller = controller;
+            this.Action = action;
         }
     }
 }

@@ -1,4 +1,4 @@
-// This file is part of the mvc567 distribution (https://github.com/intellisoft567/mvc567).
+// This file is part of the mvc567 distribution (https://github.com/codific/mvc567).
 // Copyright (C) 2019 Codific Ltd.
 //
 // This program is free software: you can redistribute it and/or modify
@@ -33,9 +33,11 @@ namespace Codific.Mvc567.Services.Abstractions
 
         Task<SignInResult> SignInAsync<TUser>(TUser user, string password, HttpContext httpContext, string authenticationScheme, AuthenticationProperties authenticationProperties);
 
-        Task<SignInResult> SignInWith2faAsync<TUser>(TUser user, string authenticationCode, bool rememberBrowser, HttpContext httpContext, string authenticationScheme, AuthenticationProperties authenticationProperties) where TUser : class;
+        Task<SignInResult> SignInWith2faAsync<TUser>(TUser user, string authenticationCode, bool rememberBrowser, HttpContext httpContext, string authenticationScheme, AuthenticationProperties authenticationProperties)
+            where TUser : class;
 
-        Task<TUser> GetTwoFactorAuthenticationUserAsync<TUser>(HttpContext httpContext) where TUser : class;
+        Task<TUser> GetTwoFactorAuthenticationUserAsync<TUser>(HttpContext httpContext)
+            where TUser : class;
 
         Task SignOutAsync(HttpContext httpContext);
 

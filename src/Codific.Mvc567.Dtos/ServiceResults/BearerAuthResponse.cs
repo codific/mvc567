@@ -1,4 +1,4 @@
-﻿// This file is part of the mvc567 distribution (https://github.com/intellisoft567/mvc567).
+﻿// This file is part of the mvc567 distribution (https://github.com/codific/mvc567).
 // Copyright (C) 2019 Codific Ltd.
 //
 // This program is free software: you can redistribute it and/or modify
@@ -18,6 +18,18 @@ namespace Codific.Mvc567.Dtos.ServiceResults
 {
     public class BearerAuthResponse
     {
+        public static BearerAuthResponse FailedResult
+        {
+            get
+            {
+                return new BearerAuthResponse
+                {
+                    Success = false,
+                    Message = "Authentication failed.",
+                };
+            }
+        }
+
         public bool Success { get; set; }
 
         public string Message { get; set; }
@@ -26,18 +38,6 @@ namespace Codific.Mvc567.Dtos.ServiceResults
 
         public string RefreshToken { get; set; }
 
-        public static BearerAuthResponse FailedResult
-        {
-            get
-            {
-                return new BearerAuthResponse
-                {
-                    Success = false,
-                    Message = "Authentication failed."
-                };
-            }
-        }
-
         public static BearerAuthResponse SuccessResult(string jsonWebToken, string refreshToken)
         {
             return new BearerAuthResponse
@@ -45,7 +45,7 @@ namespace Codific.Mvc567.Dtos.ServiceResults
                 Success = true,
                 Message = "Successful authentication.",
                 JsonWebToken = jsonWebToken,
-                RefreshToken = refreshToken
+                RefreshToken = refreshToken,
             };
         }
     }

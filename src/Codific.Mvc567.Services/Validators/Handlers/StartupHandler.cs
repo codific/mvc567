@@ -1,4 +1,4 @@
-// This file is part of the mvc567 distribution (https://github.com/intellisoft567/mvc567).
+// This file is part of the mvc567 distribution (https://github.com/codific/mvc567).
 // Copyright (C) 2019 Codific Ltd.
 //
 // This program is free software: you can redistribute it and/or modify
@@ -16,12 +16,13 @@
 
 namespace Codific.Mvc567.Services.Validators.Handlers
 {
-    internal class StartupHandler<T> : AbstractHandler<T> where T : class
+    internal class StartupHandler<T> : AbstractHandler<T>
+        where T : class
     {
         protected override string HandleProcessAction()
         {
             string resultMessage = string.Empty;
-            if (this.requestObject == null)
+            if (this.RequestObject == null)
             {
                 resultMessage = "Requested object for validation is null. ";
             }

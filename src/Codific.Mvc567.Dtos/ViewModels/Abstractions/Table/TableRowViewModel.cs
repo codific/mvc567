@@ -1,4 +1,4 @@
-// This file is part of the mvc567 distribution (https://github.com/intellisoft567/mvc567).
+// This file is part of the mvc567 distribution (https://github.com/codific/mvc567).
 // Copyright (C) 2019 Codific Ltd.
 //
 // This program is free software: you can redistribute it and/or modify
@@ -14,11 +14,9 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-using Codific.Mvc567.Common.Enums;
-using Codific.Mvc567.Dtos.ViewModels.Abstractions.Table;
-using System;
 using System.Collections.Generic;
 using System.Linq;
+using Codific.Mvc567.Common.Enums;
 
 namespace Codific.Mvc567.Dtos.ViewModels.Abstractions.Table
 {
@@ -53,12 +51,12 @@ namespace Codific.Mvc567.Dtos.ViewModels.Abstractions.Table
 
         public bool HasOrder(int order)
         {
-            return this.cells.Where(x => x.Order == order).Any();
+            return this.cells.Any(x => x.Order == order);
         }
 
         public void ReplaceContentOnOrder(int order, object content)
         {
-            this.cells.Where(x => x.Order == order).FirstOrDefault()?.SetRawContent(content);
+            this.cells.FirstOrDefault(x => x.Order == order)?.SetRawContent(content);
         }
 
         public void AddAction(TableRowActionViewModel action, List<string> parameters)
@@ -69,12 +67,7 @@ namespace Codific.Mvc567.Dtos.ViewModels.Abstractions.Table
                 action.Color,
                 action.UrlStringFormat,
                 action.Parameters,
-                action.Method);
-
-            newAction.HasConfirmation = action.HasConfirmation;
-            newAction.ConfirmationTitle = action.ConfirmationTitle;
-            newAction.ConfirmationMessage = action.ConfirmationMessage;
-            newAction.Parameters = parameters;
+                action.Method) { HasConfirmation = action.HasConfirmation, ConfirmationTitle = action.ConfirmationTitle, ConfirmationMessage = action.ConfirmationMessage, Parameters = parameters };
 
             this.actions.Add(newAction);
         }

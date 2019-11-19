@@ -1,4 +1,4 @@
-// This file is part of the mvc567 distribution (https://github.com/intellisoft567/mvc567).
+// This file is part of the mvc567 distribution (https://github.com/codific/mvc567).
 // Copyright (C) 2019 Codific Ltd.
 //
 // This program is free software: you can redistribute it and/or modify
@@ -43,8 +43,8 @@ namespace Codific.Mvc567.Services.Infrastructure
         private readonly SmtpConfig smtpConfiguration;
 
         public EmailService(
-            IRazorViewEngine razorViewEngine, 
-            ITempDataProvider tempDataProvider, 
+            IRazorViewEngine razorViewEngine,
+            ITempDataProvider tempDataProvider,
             IServiceProvider serviceProvider,
             IOptions<SmtpConfig> smtpConfiguration)
         {
@@ -58,7 +58,7 @@ namespace Codific.Mvc567.Services.Infrastructure
         {
             try
             {
-                string message = await RenderToStringAsync(viewName, model);
+                string message = await this.RenderToStringAsync(viewName, model);
 
                 SmtpClient client = new SmtpClient(this.smtpConfiguration.Host);
                 client.UseDefaultCredentials = false;
@@ -99,7 +99,7 @@ namespace Codific.Mvc567.Services.Infrastructure
 
                 var viewDictionary = new ViewDataDictionary(new EmptyModelMetadataProvider(), new ModelStateDictionary())
                 {
-                    Model = model
+                    Model = model,
                 };
 
                 var viewContext = new ViewContext(
@@ -108,8 +108,7 @@ namespace Codific.Mvc567.Services.Infrastructure
                     viewDictionary,
                     new TempDataDictionary(actionContext.HttpContext, this.tempDataProvider),
                     sw,
-                    new HtmlHelperOptions()
-                );
+                    new HtmlHelperOptions());
 
                 await viewResult.View.RenderAsync(viewContext);
                 return sw.ToString();

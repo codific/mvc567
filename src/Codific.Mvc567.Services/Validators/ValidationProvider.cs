@@ -1,4 +1,4 @@
-// This file is part of the mvc567 distribution (https://github.com/intellisoft567/mvc567).
+// This file is part of the mvc567 distribution (https://github.com/codific/mvc567).
 // Copyright (C) 2019 Codific Ltd.
 //
 // This program is free software: you can redistribute it and/or modify
@@ -16,15 +16,14 @@
 
 using System.Collections.Generic;
 using System.IO;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Codific.Mvc567.Common.Enums;
-using Codific.Mvc567.Common.Extensions;
 using Codific.Mvc567.Common.Options;
+using Codific.Mvc567.CommonCore;
 using Codific.Mvc567.Services.Validators.Handlers;
 using Codific.Mvc567.Services.Validators.Results;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
-using Codific.Mvc567.CommonCore;
 
 namespace Codific.Mvc567.Services.Validators
 {

@@ -1,4 +1,4 @@
-// This file is part of the mvc567 distribution (https://github.com/intellisoft567/mvc567).
+// This file is part of the mvc567 distribution (https://github.com/codific/mvc567).
 // Copyright (C) 2019 Codific Ltd.
 //
 // This program is free software: you can redistribute it and/or modify
@@ -29,7 +29,7 @@ namespace Codific.Mvc567.Entities.ViewModels.AdminViewModels.RootsViewModels
         {
             get
             {
-                return RelativePath.Substring(1).Replace("\\", "/");
+                return this.RelativePath.Substring(1).Replace("\\", "/");
             }
         }
 
@@ -39,7 +39,7 @@ namespace Codific.Mvc567.Entities.ViewModels.AdminViewModels.RootsViewModels
         {
             get
             {
-                return FilesFunctions.SizeSuffix(Size, 2);
+                return FilesFunctions.SizeSuffix(this.Size, 2);
             }
         }
 

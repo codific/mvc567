@@ -1,4 +1,4 @@
-// This file is part of the mvc567 distribution (https://github.com/intellisoft567/mvc567).
+// This file is part of the mvc567 distribution (https://github.com/codific/mvc567).
 // Copyright (C) 2019 Codific Ltd.
 //
 // This program is free software: you can redistribute it and/or modify
@@ -14,10 +14,10 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-using Microsoft.AspNetCore.Identity;
-using Codific.Mvc567.DataAccess.Abstractions.Entities;
 using System;
 using System.ComponentModel.DataAnnotations.Schema;
+using Codific.Mvc567.DataAccess.Abstractions.Entities;
+using Microsoft.AspNetCore.Identity;
 
 namespace Codific.Mvc567.Entities.Database
 {
@@ -27,30 +27,32 @@ namespace Codific.Mvc567.Entities.Database
         {
         }
 
-        public Role(string roleName) : base(roleName)
+        public Role(string roleName)
+            : base(roleName)
         {
         }
 
-        public Role(string roleName, string description) : base(roleName)
+        public Role(string roleName, string description)
+            : base(roleName)
         {
-            Description = description;
+            this.Description = description;
         }
 
         [Column(TypeName = "text")]
         public string Description { get; set; }
 
         public bool Deleted { get; set; }
-        
+
         public DateTime? DeletedOn { get; set; }
-        
+
         public string DeletedBy { get; set; }
-        
+
         public DateTime CreatedOn { get; set; }
-        
+
         public string CreatedBy { get; set; }
-        
+
         public DateTime UpdatedOn { get; set; }
-        
+
         public string UpdatedBy { get; set; }
     }
 }

@@ -1,4 +1,4 @@
-// This file is part of the mvc567 distribution (https://github.com/intellisoft567/mvc567).
+// This file is part of the mvc567 distribution (https://github.com/codific/mvc567).
 // Copyright (C) 2019 Codific Ltd.
 //
 // This program is free software: you can redistribute it and/or modify
@@ -14,13 +14,13 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-using AutoMapper;
-using Codific.Mvc567.Common.Enums;
-using Codific.Mvc567.Common.Attributes;
-using Codific.Mvc567.Entities.Database;
-using System.ComponentModel.DataAnnotations;
-using Codific.Mvc567.Dtos.ViewModels.Abstractions;
 using System;
+using System.ComponentModel.DataAnnotations;
+using AutoMapper;
+using Codific.Mvc567.Common.Attributes;
+using Codific.Mvc567.Common.Enums;
+using Codific.Mvc567.Dtos.ViewModels.Abstractions;
+using Codific.Mvc567.Entities.Database;
 
 namespace Codific.Mvc567.ViewModels
 {

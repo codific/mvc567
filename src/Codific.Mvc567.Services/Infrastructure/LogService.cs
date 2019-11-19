@@ -1,4 +1,4 @@
-// This file is part of the mvc567 distribution (https://github.com/intellisoft567/mvc567).
+// This file is part of the mvc567 distribution (https://github.com/codific/mvc567).
 // Copyright (C) 2019 Codific Ltd.
 //
 // This program is free software: you can redistribute it and/or modify
@@ -25,23 +25,23 @@ namespace Codific.Mvc567.Services.Infrastructure
 {
     public class LogService : AbstractService, ILogService
     {
-        public LogService(IUnitOfWork uow, IMapper mapper) : base(uow, mapper)
+        public LogService(IUnitOfWork uow, IMapper mapper)
+            : base(uow, mapper)
         {
-
         }
 
         public async Task<bool> ClearAllLogsAsync()
         {
             try
             {
-                await this.standardRepository.DeleteAllAsync<Log>();
-                await this.uow.SaveChangesAsync();
+                await this.StandardRepository.DeleteAllAsync<Log>();
+                await this.Uow.SaveChangesAsync();
 
                 return true;
             }
             catch (Exception ex)
             {
-                await LogErrorAsync(ex, nameof(ClearAllLogsAsync));
+                await this.LogErrorAsync(ex, nameof(this.ClearAllLogsAsync));
                 return false;
             }
         }

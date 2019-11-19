@@ -1,4 +1,4 @@
-// This file is part of the mvc567 distribution (https://github.com/intellisoft567/mvc567).
+// This file is part of the mvc567 distribution (https://github.com/codific/mvc567).
 // Copyright (C) 2019 Codific Ltd.
 //
 // This program is free software: you can redistribute it and/or modify
@@ -20,24 +20,24 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using Codific.Mvc567.Common;
+using Codific.Mvc567.Common.Utilities;
+using Codific.Mvc567.CommonCore;
+using Codific.Mvc567.DataAccess.Abstraction;
+using Codific.Mvc567.Dtos.ServiceResults;
+using Codific.Mvc567.Services.Abstractions;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.StaticFiles;
-using Codific.Mvc567.Common;
-using Codific.Mvc567.Common.Extensions;
-using Codific.Mvc567.Common.Utilities;
-using Codific.Mvc567.DataAccess.Abstraction;
-using Codific.Mvc567.Services.Abstractions;
-using Codific.Mvc567.Dtos.ServiceResults;
-using Codific.Mvc567.CommonCore;
 
 namespace Codific.Mvc567.Services.Infrastructure
 {
     public class FileSystemService : AbstractService, IFileSystemService
     {
         private readonly IWebHostEnvironment hostingEnvironment;
-        
-        public FileSystemService(IUnitOfWork uow, IMapper mapper, IWebHostEnvironment hostingEnvironment) : base(uow, mapper)
+
+        public FileSystemService(IUnitOfWork uow, IMapper mapper, IWebHostEnvironment hostingEnvironment)
+            : base(uow, mapper)
         {
             this.hostingEnvironment = hostingEnvironment;
         }
@@ -48,7 +48,8 @@ namespace Codific.Mvc567.Services.Infrastructure
 
         public async Task<FileSystemResult> GetFileAsync(string filePath, string baseDirectory = "")
         {
-            if (!(filePath.StartsWith(PublicRootDirectory) || filePath.StartsWith(PrivateRootDirectory)))
+            var doesFileStartWithRootDirectory = await Task.Factory.StartNew<bool>(() => filePath.StartsWith(this.PublicRootDirectory) || filePath.StartsWith(this.PrivateRootDirectory));
+            if (!doesFileStartWithRootDirectory)
             {
                 return null;
             }
@@ -72,9 +73,8 @@ namespace Codific.Mvc567.Services.Infrastructure
         {
             try
             {
-                var standardRepository = this.uow.GetStandardRepository();
-                var file = await standardRepository.GetAsync<Mvc567.Entities.Database.File>(id);
-                var fileDto = this.mapper.Map<TFileModel>(file);
+                var file = await this.StandardRepository.GetAsync<Mvc567.Entities.Database.File>(id);
+                var fileDto = this.Mapper.Map<TFileModel>(file);
 
                 return fileDto;
             }
@@ -88,9 +88,8 @@ namespace Codific.Mvc567.Services.Infrastructure
         {
             try
             {
-                var standardRepository = this.uow.GetStandardRepository();
-                var file = standardRepository.Get<Mvc567.Entities.Database.File>(id);
-                var fileDto = this.mapper.Map<TFileModel>(file);
+                var file = this.StandardRepository.Get<Mvc567.Entities.Database.File>(id);
+                var fileDto = this.Mapper.Map<TFileModel>(file);
 
                 return fileDto;
             }
@@ -102,7 +101,8 @@ namespace Codific.Mvc567.Services.Infrastructure
 
         public async Task<IEnumerable<FileSystemItem>> ScanDirectoryAsync(string directory, string baseDirectory = "")
         {
-            if (!(directory.StartsWith(PublicRootDirectory) || directory.StartsWith(PrivateRootDirectory)))
+            var doesDirectoryStartWithRootDirectory = await Task.Factory.StartNew<bool>(() => directory.StartsWith(this.PublicRootDirectory) || directory.StartsWith(this.PrivateRootDirectory));
+            if (!doesDirectoryStartWithRootDirectory)
             {
                 return null;
             }
@@ -124,8 +124,10 @@ namespace Codific.Mvc567.Services.Infrastructure
                     currentFileSystemItem.CreatedOn = directoryInfo.CreationTime;
                     currentFileSystemItem.LastModifiedOn = directoryInfo.LastWriteTime;
                 }
+
                 fileSystemItems.Add(currentFileSystemItem);
             }
+
             foreach (var file in files)
             {
                 FileSystemItem currentFileSystemItem = new FileSystemItem();
@@ -149,12 +151,12 @@ namespace Codific.Mvc567.Services.Infrastructure
 
         public async Task<IEnumerable<FileSystemItem>> ScanPrivateDirectoryAsync()
         {
-            return await ScanDirectoryAsync(PrivateRootDirectory, PrivateRootDirectory);
+            return await this.ScanDirectoryAsync(this.PrivateRootDirectory, this.PrivateRootDirectory);
         }
 
         public async Task<IEnumerable<FileSystemItem>> ScanPublicDirectoryAsync()
         {
-            return await ScanDirectoryAsync(PublicRootDirectory, PublicRootDirectory);
+            return await this.ScanDirectoryAsync(this.PublicRootDirectory, this.PublicRootDirectory);
         }
 
         public async Task<TFileModel> UploadFileAsync<TFileModel>(IFormFile formFile)
@@ -180,20 +182,19 @@ namespace Codific.Mvc567.Services.Infrastructure
                     Name = resultFileName,
                     Path = fileRelativePath,
                     Temp = true,
-                    FileExtension = FilesFunctions.GetFileExtension(resultFileExtension)
+                    FileExtension = FilesFunctions.GetFileExtension(resultFileExtension),
                 };
                 fileEntity.FileType = FilesFunctions.GetFileType(fileEntity.FileExtension);
 
+                this.StandardRepository.Add<Mvc567.Entities.Database.File>(fileEntity);
+                await this.Uow.SaveChangesAsync();
 
-                this.uow.GetStandardRepository().Add<Mvc567.Entities.Database.File>(fileEntity);
-                await this.uow.SaveChangesAsync();
-
-                var fileDto = this.mapper.Map<TFileModel>(fileEntity);
+                var fileDto = this.Mapper.Map<TFileModel>(fileEntity);
                 return fileDto;
             }
             catch (Exception ex)
             {
-                await this.LogErrorAsync(ex, nameof(UploadFileAsync));
+                await this.LogErrorAsync(ex, nameof(this.UploadFileAsync));
                 return default(TFileModel);
             }
         }

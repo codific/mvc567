@@ -1,4 +1,4 @@
-﻿// This file is part of the mvc567 distribution (https://github.com/intellisoft567/mvc567).
+﻿// This file is part of the mvc567 distribution (https://github.com/codific/mvc567).
 // Copyright (C) 2019 Codific Ltd.
 //
 // This program is free software: you can redistribute it and/or modify
@@ -14,10 +14,10 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-using Codific.Mvc567.Common.Extensions;
 using System;
 using System.Linq.Expressions;
 using System.Reflection;
+using Codific.Mvc567.Common.Extensions;
 
 namespace Codific.Mvc567.Dtos.Api.ExpressionFactories
 {
@@ -30,11 +30,11 @@ namespace Codific.Mvc567.Dtos.Api.ExpressionFactories
 
             Expression<Func<TEntity, bool>> expression = null;
 
-            if (propertyInfo.PropertyType.IsNumericType())
+            if (propertyInfo != null && propertyInfo.PropertyType.IsNumericType())
             {
                 expression = x => propertyInfo.GetValue(x) != null && Convert.ToDecimal(propertyInfo.GetValue(x)) < Convert.ToDecimal(queryStringItem.Value);
             }
-            else if (propertyInfo.PropertyType == typeof(DateTime))
+            else if (propertyInfo != null && propertyInfo.PropertyType == typeof(DateTime))
             {
                 expression = x => propertyInfo.GetValue(x) != null && Convert.ToDateTime(propertyInfo.GetValue(x)) < Convert.ToDateTime(queryStringItem.Value);
             }

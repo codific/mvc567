@@ -1,4 +1,4 @@
-// This file is part of the mvc567 distribution (https://github.com/intellisoft567/mvc567).
+// This file is part of the mvc567 distribution (https://github.com/codific/mvc567).
 // Copyright (C) 2019 Codific Ltd.
 //
 // This program is free software: you can redistribute it and/or modify
@@ -14,9 +14,9 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+using System;
 using ImageMagick;
 using Microsoft.AspNetCore.Http;
-using System;
 
 namespace Codific.Mvc567.Services.Validators.Handlers
 {
@@ -27,13 +27,13 @@ namespace Codific.Mvc567.Services.Validators.Handlers
             string resultMessage = string.Empty;
             try
             {
-                using (MagickImage image = new MagickImage(this.requestObject.OpenReadStream()))
+                using (MagickImage image = new MagickImage(this.RequestObject.OpenReadStream()))
                 {
                 }
             }
             catch (Exception)
             {
-                this.requestObject = null;
+                this.RequestObject = null;
                 resultMessage = $"File content cannot be used as an image. ";
             }
 

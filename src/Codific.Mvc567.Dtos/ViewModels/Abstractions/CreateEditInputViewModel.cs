@@ -1,4 +1,4 @@
-// This file is part of the mvc567 distribution (https://github.com/intellisoft567/mvc567).
+// This file is part of the mvc567 distribution (https://github.com/codific/mvc567).
 // Copyright (C) 2019 Codific Ltd.
 //
 // This program is free software: you can redistribute it and/or modify
@@ -14,10 +14,9 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-using Codific.Mvc567.Common.Enums;
 using System;
 using System.Collections.Generic;
-using System.Text;
+using Codific.Mvc567.Common.Enums;
 
 namespace Codific.Mvc567.Dtos.ViewModels.Abstractions
 {
@@ -38,9 +37,9 @@ namespace Codific.Mvc567.Dtos.ViewModels.Abstractions
             get
             {
                 Guid resultGuid = Guid.Empty;
-                if (Value != null)
+                if (this.Value != null)
                 {
-                    Guid.TryParse(Value.ToString(), out resultGuid);
+                    Guid.TryParse(this.Value.ToString(), out resultGuid);
                 }
 
                 return resultGuid;
@@ -52,9 +51,9 @@ namespace Codific.Mvc567.Dtos.ViewModels.Abstractions
             get
             {
                 List<Guid> guidArray = new List<Guid>();
-                if (Value != null)
+                if (this.Value != null)
                 {
-                    object[] tempArray = (object[])Value;
+                    object[] tempArray = (object[])this.Value;
                     foreach (var arrayItem in tempArray)
                     {
                         Guid tempGuid = Guid.Empty;
@@ -77,13 +76,13 @@ namespace Codific.Mvc567.Dtos.ViewModels.Abstractions
         {
             get
             {
-                if (Value == null)
+                if (this.Value == null)
                 {
                     return true;
                 }
                 else
                 {
-                    return Nullable.GetUnderlyingType(Value.GetType()) != null;
+                    return Nullable.GetUnderlyingType(this.Value.GetType()) != null;
                 }
             }
         }

@@ -1,4 +1,4 @@
-// This file is part of the mvc567 distribution (https://github.com/intellisoft567/mvc567).
+// This file is part of the mvc567 distribution (https://github.com/codific/mvc567).
 // Copyright (C) 2019 Codific Ltd.
 //
 // This program is free software: you can redistribute it and/or modify
@@ -32,7 +32,7 @@ namespace Codific.Mvc567.Dtos.ViewModels.Abstractions.Table
         {
             get
             {
-                return cells.OrderBy(x => x.Order).ToList();
+                return this.cells.OrderBy(x => x.Order).ToList();
             }
         }
 
@@ -41,7 +41,7 @@ namespace Codific.Mvc567.Dtos.ViewModels.Abstractions.Table
             this.cells.Add(new TableHeaderCellViewModel
             {
                 Order = this.currentCellIndex,
-                Name = name
+                Name = name,
             });
 
             this.currentCellIndex++;

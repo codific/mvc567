@@ -1,4 +1,4 @@
-// This file is part of the mvc567 distribution (https://github.com/intellisoft567/mvc567).
+// This file is part of the mvc567 distribution (https://github.com/codific/mvc567).
 // Copyright (C) 2019 Codific Ltd.
 //
 // This program is free software: you can redistribute it and/or modify
@@ -51,13 +51,14 @@ namespace Codific.Mvc567
         where TDatabaseContext : AbstractDatabaseContext<TDatabaseContext>
         where TStandardRepository : class, IStandardRepository
     {
-        private string applicationAssembly = string.Empty;
-
         public ApplicationStartup(IConfiguration configuration, IWebHostEnvironment hostingEnvironment)
         {
             this.Configuration = configuration;
             this.HostingEnvironment = hostingEnvironment;
+            this.applicationAssembly = string.Empty;
         }
+
+        public string applicationAssembly { get; set; }
 
         public IConfiguration Configuration { get; }
 

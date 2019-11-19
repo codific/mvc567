@@ -1,4 +1,4 @@
-// This file is part of the mvc567 distribution (https://github.com/intellisoft567/mvc567).
+// This file is part of the mvc567 distribution (https://github.com/codific/mvc567).
 // Copyright (C) 2019 Codific Ltd.
 //
 // This program is free software: you can redistribute it and/or modify
@@ -16,8 +16,8 @@
 
 using System;
 using System.Globalization;
-using Codific.Mvc567.Common.Enums;
 using Codific.Mvc567.Common;
+using Codific.Mvc567.Common.Enums;
 
 namespace Codific.Mvc567.Dtos.ViewModels.Abstractions.Table
 {
@@ -27,11 +27,11 @@ namespace Codific.Mvc567.Dtos.ViewModels.Abstractions.Table
 
         public TableCellViewModel(int order, object content, TableCellType type, bool editable, string relatedProperty)
         {
-            Order = order;
-            Type = type;
+            this.Order = order;
+            this.Type = type;
             this.content = content;
-            Editable = editable;
-            RelatedProperty = relatedProperty;
+            this.Editable = editable;
+            this.RelatedProperty = relatedProperty;
         }
 
         public int Order { get; private set; }
@@ -46,17 +46,12 @@ namespace Codific.Mvc567.Dtos.ViewModels.Abstractions.Table
 
         public bool Editable { get; set; } = true;
 
-        public void SetRawContent(object content)
-        {
-            this.content = content;
-        }
-
         public string Content
         {
             get
             {
                 string resultContent = string.Empty;
-                switch (Type)
+                switch (this.Type)
                 {
                     case TableCellType.Text:
                         resultContent = this.content?.ToString();
@@ -71,7 +66,7 @@ namespace Codific.Mvc567.Dtos.ViewModels.Abstractions.Table
                         resultContent = !string.IsNullOrEmpty(this.content?.ToString()) ? ((DateTime)this.content).ToString(Constants.DateTimeFormat) : string.Empty;
                         break;
                     case TableCellType.Number:
-                        resultContent = string.Format(new NumberFormatInfo() { NumberDecimalDigits = NumberDecimalDigits }, "{0:F}", (float)this.content);
+                        resultContent = string.Format(new NumberFormatInfo() { NumberDecimalDigits = this.NumberDecimalDigits }, "{0:F}", (float)this.content);
                         break;
                     case TableCellType.File:
                         resultContent = this.content?.ToString();
@@ -91,5 +86,9 @@ namespace Codific.Mvc567.Dtos.ViewModels.Abstractions.Table
             }
         }
 
+        public void SetRawContent(object content)
+        {
+            this.content = content;
+        }
     }
 }

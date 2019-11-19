@@ -1,4 +1,4 @@
-// This file is part of the mvc567 distribution (https://github.com/intellisoft567/mvc567).
+// This file is part of the mvc567 distribution (https://github.com/codific/mvc567).
 // Copyright (C) 2019 Codific Ltd.
 //
 // This program is free software: you can redistribute it and/or modify
@@ -42,31 +42,34 @@ namespace Codific.Mvc567.Services.Infrastructure
     {
         private readonly IWebHostEnvironment hostingEnvironment;
 
-        public EntityManager(IUnitOfWork uow, IMapper mapper, IWebHostEnvironment hostingEnvironment) : base(uow, mapper)
+        public EntityManager(IUnitOfWork uow, IMapper mapper, IWebHostEnvironment hostingEnvironment)
+            : base(uow, mapper)
         {
             this.hostingEnvironment = hostingEnvironment;
         }
 
-        public async Task<IEnumerable<TEntityDto>> GetAllEntitiesAsync<TEntity, TEntityDto>() where TEntity : class, IEntityBase, new()
+        public async Task<IEnumerable<TEntityDto>> GetAllEntitiesAsync<TEntity, TEntityDto>()
+            where TEntity : class, IEntityBase, new()
         {
             List<TEntityDto> resultList = new List<TEntityDto>();
             try
             {
-                var entities = await this.standardRepository.GetAllAsync<TEntity>();
+                var entities = await this.StandardRepository.GetAllAsync<TEntity>();
                 if (entities != null && entities.Count() > 0)
                 {
-                    resultList = this.mapper.Map<IEnumerable<TEntityDto>>(entities).ToList();
+                    resultList = this.Mapper.Map<IEnumerable<TEntityDto>>(entities).ToList();
                 }
             }
             catch (Exception ex)
             {
-                await LogErrorAsync(ex, nameof(GetAllEntitiesAsync));
+                await this.LogErrorAsync(ex, nameof(this.GetAllEntitiesAsync));
             }
 
             return resultList;
         }
 
-        public async Task<PaginatedEntitiesResult<TEntityDto>> GetAllEntitiesPaginatedAsync<TEntity, TEntityDto>(int page, string searchQuery = null, bool showDeleted = false) where TEntity : class, IEntityBase, new()
+        public async Task<PaginatedEntitiesResult<TEntityDto>> GetAllEntitiesPaginatedAsync<TEntity, TEntityDto>(int page, string searchQuery = null, bool showDeleted = false)
+            where TEntity : class, IEntityBase, new()
         {
             PaginatedEntitiesResult<TEntityDto> result = new PaginatedEntitiesResult<TEntityDto>();
             try
@@ -76,93 +79,98 @@ namespace Codific.Mvc567.Services.Infrastructure
                     searchQuery = searchQuery.Trim();
                 }
 
-                var standardRepository = this.uow.GetStandardRepository();
+                var standardRepository = this.Uow.GetStandardRepository();
                 if (string.IsNullOrWhiteSpace(searchQuery))
                 {
                     result.Count = await standardRepository.CountAsync<TEntity>(x => x.Deleted == showDeleted);
                 }
                 else
                 {
-                    var searchQueryExpression = GetEntitySearchQueryExpression<TEntity>(searchQuery, showDeleted);
+                    var searchQueryExpression = this.GetEntitySearchQueryExpression<TEntity>(searchQuery, showDeleted);
                     result.Count = await standardRepository.CountAsync<TEntity>(searchQueryExpression);
                 }
+
                 result.CurrentPage = page;
                 result.PageSize = PaginationPageSize;
 
                 IEnumerable<TEntity> entities = null;
-                var firstLevelIncludeQuery = GetFirstLevelIncludeQuery<TEntity>();
+                var firstLevelIncludeQuery = this.GetFirstLevelIncludeQuery<TEntity>();
                 if (string.IsNullOrWhiteSpace(searchQuery))
                 {
                     entities = await standardRepository.GetPageAsync<TEntity>(result.StartRow, PaginationPageSize, null, firstLevelIncludeQuery, showDeleted);
                 }
                 else
                 {
-                    entities = await standardRepository.QueryPageAsync<TEntity>(result.StartRow, PaginationPageSize, GetEntitySearchQueryExpression<TEntity>(searchQuery, showDeleted), null, firstLevelIncludeQuery);
+                    entities = await standardRepository.QueryPageAsync<TEntity>(result.StartRow, PaginationPageSize, this.GetEntitySearchQueryExpression<TEntity>(searchQuery, showDeleted), null, firstLevelIncludeQuery);
                 }
-                var dtoEntities = this.mapper.Map<IEnumerable<TEntityDto>>(entities);
+
+                var dtoEntities = this.Mapper.Map<IEnumerable<TEntityDto>>(entities);
                 result.Entities = dtoEntities;
             }
             catch (Exception ex)
             {
-                await LogErrorAsync(ex, nameof(GetAllEntitiesPaginatedAsync));
+                await this.LogErrorAsync(ex, nameof(this.GetAllEntitiesPaginatedAsync));
             }
 
             return result;
         }
 
-        public async Task<TEntityDto> GetEntityAsync<TEntity, TEntityDto>(Guid id) where TEntity : class, IEntityBase, new()
+        public async Task<TEntityDto> GetEntityAsync<TEntity, TEntityDto>(Guid id)
+            where TEntity : class, IEntityBase, new()
         {
             try
             {
-                var standardRepository = this.uow.GetStandardRepository();
-                var firstLevelIncludeQuery = GetFirstLevelIncludeQuery<TEntity>();
+                var standardRepository = this.Uow.GetStandardRepository();
+                var firstLevelIncludeQuery = this.GetFirstLevelIncludeQuery<TEntity>();
                 var entity = await standardRepository.GetAsync<TEntity>(id, firstLevelIncludeQuery);
-                var dtoEntity = this.mapper.Map<TEntityDto>(entity);
+                var dtoEntity = this.Mapper.Map<TEntityDto>(entity);
 
                 return dtoEntity;
             }
             catch (Exception ex)
             {
-                await LogErrorAsync(ex, nameof(GetEntityAsync));
+                await this.LogErrorAsync(ex, nameof(this.GetEntityAsync));
                 return default(TEntityDto);
             }
         }
 
-        public async Task<Guid?> CreateEntityAsync<TEntity, TEntityDto>(TEntityDto entity) where TEntity : class, IEntityBase, new()
+        public async Task<Guid?> CreateEntityAsync<TEntity, TEntityDto>(TEntityDto entity)
+            where TEntity : class, IEntityBase, new()
         {
             try
             {
-                var standardRepository = this.uow.GetStandardRepository();
-                var mappedEntity = this.mapper.Map<TEntity>(entity);
+                var standardRepository = this.Uow.GetStandardRepository();
+                var mappedEntity = this.Mapper.Map<TEntity>(entity);
 
-                await MoveTempFileAsync<TEntity>(mappedEntity);
+                await this.MoveTempFileAsync<TEntity>(mappedEntity);
 
                 standardRepository.Add<TEntity>(mappedEntity);
-                await this.uow.SaveChangesAsync();
+                await this.Uow.SaveChangesAsync();
 
                 return mappedEntity.Id;
             }
             catch (Exception ex)
             {
-                await LogErrorAsync(ex, nameof(CreateEntityAsync));
+                await this.LogErrorAsync(ex, nameof(this.CreateEntityAsync));
                 return null;
             }
         }
 
-        public async Task<Guid?> ModifyEntityAsync<TEntity, TEntityDto>(Guid id, TEntityDto modifiedEntity) where TEntity : class, IEntityBase, new()
+        public async Task<Guid?> ModifyEntityAsync<TEntity, TEntityDto>(Guid id, TEntityDto modifiedEntity)
+            where TEntity : class, IEntityBase, new()
         {
             try
             {
-                var standardRepository = this.uow.GetStandardRepository();
+                var standardRepository = this.Uow.GetStandardRepository();
                 var entityExist = (await standardRepository.CountAsync<TEntity>(x => x.Id == id)) != 0;
                 if (entityExist)
                 {
-                    TEntity mappedEntity = this.mapper.Map<TEntity>(modifiedEntity);
-                    await MoveTempFileAsync<TEntity>(mappedEntity);
+                    TEntity mappedEntity = this.Mapper.Map<TEntity>(modifiedEntity);
+                    await this.MoveTempFileAsync<TEntity>(mappedEntity);
 
                     mappedEntity.Id = id;
                     standardRepository.Update<TEntity>(mappedEntity);
-                    await this.uow.SaveChangesAsync();
+                    await this.Uow.SaveChangesAsync();
 
                     return id;
                 }
@@ -171,16 +179,17 @@ namespace Codific.Mvc567.Services.Infrastructure
             }
             catch (Exception ex)
             {
-                await LogErrorAsync(ex, nameof(ModifyEntityAsync));
+                await this.LogErrorAsync(ex, nameof(this.ModifyEntityAsync));
                 return null;
             }
         }
 
-        public async Task<bool> DeleteEntityAsync<TEntity>(Guid id, bool softDelete = true) where TEntity : class, IEntityBase, new()
+        public async Task<bool> DeleteEntityAsync<TEntity>(Guid id, bool softDelete = true)
+            where TEntity : class, IEntityBase, new()
         {
             try
             {
-                var standardRepository = this.uow.GetStandardRepository();
+                var standardRepository = this.Uow.GetStandardRepository();
                 var entity = await standardRepository.GetAsync<TEntity>(id);
                 if (softDelete)
                 {
@@ -190,31 +199,33 @@ namespace Codific.Mvc567.Services.Infrastructure
                 {
                     standardRepository.Remove<TEntity>(entity);
                 }
-                await this.uow.SaveChangesAsync();
+
+                await this.Uow.SaveChangesAsync();
 
                 return true;
             }
             catch (Exception ex)
             {
-                await LogErrorAsync(ex, nameof(DeleteEntityAsync));
+                await this.LogErrorAsync(ex, nameof(this.DeleteEntityAsync));
                 return false;
             }
         }
 
-        public async Task<bool> RestoreEntityAsync<TEntity>(Guid id) where TEntity : class, IEntityBase, new()
+        public async Task<bool> RestoreEntityAsync<TEntity>(Guid id)
+            where TEntity : class, IEntityBase, new()
         {
             try
             {
-                var standardRepository = this.uow.GetStandardRepository();
+                var standardRepository = this.Uow.GetStandardRepository();
                 var entity = await standardRepository.GetAsync<TEntity>(id);
                 standardRepository.Restore<TEntity>(entity);
-                await this.uow.SaveChangesAsync();
+                await this.Uow.SaveChangesAsync();
 
                 return false;
             }
             catch (Exception ex)
             {
-                await LogErrorAsync(ex, nameof(RestoreEntityAsync));
+                await this.LogErrorAsync(ex, nameof(this.RestoreEntityAsync));
                 return false;
             }
         }
@@ -223,7 +234,7 @@ namespace Codific.Mvc567.Services.Infrastructure
         {
             try
             {
-                var fileProperty = typeof(TEntity).GetProperties().Where(x => x.PropertyType == typeof(File)).FirstOrDefault();
+                var fileProperty = typeof(TEntity).GetProperties().FirstOrDefault(x => x.PropertyType == typeof(File));
                 if (fileProperty != null)
                 {
                     var saveDirectorySettings = fileProperty.GetSaveDirectorySettingsFromAttribute();
@@ -231,44 +242,47 @@ namespace Codific.Mvc567.Services.Infrastructure
                     {
                         var fileIdPropertyName = fileProperty.GetAttribute<ForeignKeyAttribute>().Name;
                         var fileIdProperty = typeof(TEntity).GetProperty(fileIdPropertyName);
-                        Guid fileId = Guid.Parse(fileIdProperty.GetValue(entity).ToString());
-                        var standardRepository = this.uow.GetStandardRepository();
-                        var fileEntity = await standardRepository.GetAsync<File>(fileId);
-                        if (fileEntity != null && fileEntity.Temp)
+                        if (fileIdProperty != null)
                         {
-                            string fileNameWithExtension = $"{fileEntity.Name}.{fileEntity.FileExtension.ToString().ToLower().Replace("_", string.Empty)}";
-                            string oldFilePath = System.IO.Path.Combine(this.hostingEnvironment.ContentRootPath, fileEntity.Path);
-
-                            fileEntity.Root = saveDirectorySettings.Value.Root;
-                            fileEntity.Temp = false;
-                            fileEntity.Path = System.IO.Path.Combine(saveDirectorySettings.Value.RelativePath, fileNameWithExtension);
-                            fileEntity.RelativeUrl = fileEntity.Path.Replace('\\', '/');
-                            if (saveDirectorySettings.Value.UserSpecific)
+                            Guid fileId = Guid.Parse(fileIdProperty.GetValue(entity).ToString());
+                            var standardRepository = this.Uow.GetStandardRepository();
+                            var fileEntity = await standardRepository.GetAsync<File>(fileId);
+                            if (fileEntity != null && fileEntity.Temp)
                             {
-                                fileEntity.Path = string.Format(saveDirectorySettings.Value.RelativePath, fileEntity.UserId);
+                                string fileNameWithExtension = $"{fileEntity.Name}.{fileEntity.FileExtension.ToString().ToLower().Replace("_", string.Empty)}";
+                                string oldFilePath = System.IO.Path.Combine(this.hostingEnvironment.ContentRootPath, fileEntity.Path);
+
+                                fileEntity.Root = saveDirectorySettings.Value.Root;
+                                fileEntity.Temp = false;
+                                fileEntity.Path = System.IO.Path.Combine(saveDirectorySettings.Value.RelativePath, fileNameWithExtension);
+                                fileEntity.RelativeUrl = fileEntity.Path.Replace('\\', '/');
+                                if (saveDirectorySettings.Value.UserSpecific)
+                                {
+                                    fileEntity.Path = string.Format(saveDirectorySettings.Value.RelativePath, fileEntity.UserId);
+                                }
+
+                                string newFilePath = this.hostingEnvironment.WebRootPath;
+                                if (fileEntity.Root == ApplicationRoots.Private)
+                                {
+                                    newFilePath = this.hostingEnvironment.GetPrivateRoot();
+                                }
+
+                                newFilePath = System.IO.Path.Combine(newFilePath, fileEntity.Path);
+
+                                System.IO.File.Copy(oldFilePath, newFilePath);
                             }
-
-                            string newFilePath = this.hostingEnvironment.WebRootPath;
-                            if (fileEntity.Root == ApplicationRoots.Private)
-                            {
-                                newFilePath = this.hostingEnvironment.GetPrivateRoot();
-                            }
-
-                            newFilePath = System.IO.Path.Combine(newFilePath, fileEntity.Path);
-
-                            System.IO.File.Copy(oldFilePath, newFilePath);
                         }
                     }
                 }
             }
             catch (Exception ex)
             {
-                await LogErrorAsync(ex, nameof(MoveTempFileAsync));
+                await this.LogErrorAsync(ex, nameof(this.MoveTempFileAsync));
             }
         }
 
         public async Task<PaginatedEntitiesResult<TEntityDto>> FilterEntitiesAsync<TEntity, TEntityDto>(FilterQueryRequest filterQuery)
-             where TEntity : class, IEntityBase, new()
+            where TEntity : class, IEntityBase, new()
         {
             PaginatedEntitiesResult<TEntityDto> result = new PaginatedEntitiesResult<TEntityDto>();
             try
@@ -276,23 +290,23 @@ namespace Codific.Mvc567.Services.Infrastructure
                 Expression<Func<TEntity, bool>> searchQueryExpression = null;
                 if (filterQuery.FilterQueryStringItems != null && filterQuery.FilterQueryStringItems.Count > 0)
                 {
-                    searchQueryExpression = GetEntitySearchQueryExpressionByFilterQueryRequest<TEntity>(filterQuery);
+                    searchQueryExpression = this.GetEntitySearchQueryExpressionByFilterQueryRequest<TEntity>(filterQuery);
                 }
                 else if (!string.IsNullOrEmpty(filterQuery.SearchQuery))
                 {
-                    searchQueryExpression = GetEntitySearchQueryExpression<TEntity>(filterQuery.SearchQuery);
+                    searchQueryExpression = this.GetEntitySearchQueryExpression<TEntity>(filterQuery.SearchQuery);
                 }
 
-                var orderExpression = GetOrderExpressionByFilterQueryRequest<TEntity>(filterQuery);
-                var firstLevelIncludeQuery = GetFirstLevelIncludeQuery<TEntity>();
+                var orderExpression = this.GetOrderExpressionByFilterQueryRequest<TEntity>(filterQuery);
+                var firstLevelIncludeQuery = this.GetFirstLevelIncludeQuery<TEntity>();
 
                 if (searchQueryExpression == null)
                 {
-                    result.Count = (await standardRepository.GetAllAsync<TEntity>()).Count();
+                    result.Count = (await this.StandardRepository.GetAllAsync<TEntity>()).Count();
                 }
                 else
                 {
-                    result.Count = (await standardRepository.QueryAsync<TEntity>(searchQueryExpression)).Count();
+                    result.Count = (await this.StandardRepository.QueryAsync<TEntity>(searchQueryExpression)).Count();
                 }
 
                 result.CurrentPage = filterQuery.Page.HasValue ? filterQuery.Page.Value : 1;
@@ -309,24 +323,83 @@ namespace Codific.Mvc567.Services.Infrastructure
 
                 if (searchQueryExpression != null)
                 {
-                    entities = await this.standardRepository.QueryPageAsync<TEntity>(result.StartRow, result.PageSize, searchQueryExpression, orderExpression, firstLevelIncludeQuery);
+                    entities = await this.StandardRepository.QueryPageAsync<TEntity>(result.StartRow, result.PageSize, searchQueryExpression, orderExpression, firstLevelIncludeQuery);
                 }
                 else
                 {
-                    entities = await this.standardRepository.GetPageAsync<TEntity>(result.StartRow, result.PageSize, orderExpression, firstLevelIncludeQuery);
+                    entities = await this.StandardRepository.GetPageAsync<TEntity>(result.StartRow, result.PageSize, orderExpression, firstLevelIncludeQuery);
                 }
 
-                result.Entities = this.mapper.Map<IEnumerable<TEntityDto>>(entities);
+                result.Entities = this.Mapper.Map<IEnumerable<TEntityDto>>(entities);
             }
             catch (Exception ex)
             {
-                await LogErrorAsync(ex, nameof(FilterEntitiesAsync));
+                await this.LogErrorAsync(ex, nameof(this.FilterEntitiesAsync));
             }
 
             return result;
         }
 
-        private Func<IQueryable<TEntity>, IQueryable<TEntity>> GetFirstLevelIncludeQuery<TEntity>() where TEntity : class, IEntityBase, new()
+        public async Task<bool> ModifyEntityPropertyAsync<TEntity, TEntityDto>(Guid entityId, string property, string value)
+            where TEntity : class, IEntityBase, new()
+        {
+            try
+            {
+                var entity = await this.GetEntityAsync<TEntity, TEntityDto>(entityId);
+                var propertyForEdit = typeof(TEntityDto).GetProperty(property);
+                var entityCanBeModified = propertyForEdit != null && propertyForEdit.HasAttribute<CreateEditEntityInputAttribute>();
+                if (entity != null && entityCanBeModified && !string.IsNullOrEmpty(value))
+                {
+                    propertyForEdit.SetValue(entity, value);
+                    var editedId = await this.ModifyEntityAsync<TEntity, TEntityDto>(entityId, entity);
+                    if (editedId.HasValue)
+                    {
+                        return true;
+                    }
+                }
+
+                return false;
+            }
+            catch (Exception ex)
+            {
+                await this.LogErrorAsync(ex, nameof(this.ModifyEntityPropertyAsync));
+                return false;
+            }
+        }
+
+        protected virtual Expression<Func<TEntity, bool>> GetEntitySearchQueryExpressionByFilterQueryRequest<TEntity>(FilterQueryRequest filterQuery)
+        {
+            if (filterQuery.EmptyQuery)
+            {
+                return null;
+            }
+
+            Type entityType = typeof(TEntity);
+            var expressionsList = new List<Expression<Func<TEntity, bool>>>();
+            if (filterQuery.FilterQueryStringItems != null && filterQuery.FilterQueryStringItems.Count > 0)
+            {
+                var expressionFactories = new ExpressionFactories();
+                foreach (var queryStringItem in filterQuery.FilterQueryStringItems)
+                {
+                    Expression<Func<TEntity, bool>> currentExpression = expressionFactories[queryStringItem.EqualityType].BuildExpressionByQueryStringItem<TEntity>(queryStringItem);
+                    if (currentExpression != null)
+                    {
+                        expressionsList.Add(currentExpression);
+                    }
+                }
+            }
+
+            var resultExpression = expressionsList.FirstOrDefault();
+            for (int i = 1; i < expressionsList.Count; i++)
+            {
+                resultExpression = ExpressionFunctions.AndAlso<TEntity>(resultExpression, expressionsList[i]);
+            }
+
+            return resultExpression;
+        }
+
+        private Func<IQueryable<TEntity>, IQueryable<TEntity>> GetFirstLevelIncludeQuery<TEntity>()
+            where TEntity : class, IEntityBase, new()
         {
             var targetProperties = typeof(TEntity).GetProperties().Where(x => x.HasAttribute<ForeignKeyAttribute>()).ToList();
             Func<IQueryable<TEntity>, IQueryable<TEntity>> includeQuery = (x) =>
@@ -376,7 +449,6 @@ namespace Codific.Mvc567.Services.Infrastructure
                             mainOrderFunction = x.OrderByDescending(y => y.GetType().GetProperty(orderItem.PropertyName).GetValue(y));
                         }
                     }
-                    
                 }
 
                 return mainOrderFunction;
@@ -384,63 +456,5 @@ namespace Codific.Mvc567.Services.Infrastructure
 
             return function;
         }
-
-        protected virtual Expression<Func<TEntity, bool>> GetEntitySearchQueryExpressionByFilterQueryRequest<TEntity>(FilterQueryRequest filterQuery)
-        {
-            if (filterQuery.EmptyQuery)
-            {
-                return null;
-            }
-
-            Type entityType = typeof(TEntity);
-            var expressionsList = new List<Expression<Func<TEntity, bool>>>();
-            if (filterQuery.FilterQueryStringItems != null && filterQuery.FilterQueryStringItems.Count > 0)
-            {
-                var expressionFactories = new ExpressionFactories();
-                foreach (var queryStringItem in filterQuery.FilterQueryStringItems)
-                {
-                    Expression<Func<TEntity, bool>> currentExpression = expressionFactories[queryStringItem.EqualityType].BuildExpressionByQueryStringItem<TEntity>(queryStringItem);
-                    if (currentExpression != null)
-                    {
-                        expressionsList.Add(currentExpression);
-                    }
-                }
-            }
-
-            var resultExpression = expressionsList.FirstOrDefault();
-            for (int i = 1; i < expressionsList.Count; i++)
-            {
-                resultExpression = ExpressionFunctions.AndAlso<TEntity>(resultExpression, expressionsList[i]);
-            }
-
-            return resultExpression;
-        }
-
-        public async Task<bool> ModifyEntityPropertyAsync<TEntity, TEntityDto>(Guid entityId, string property, string value) where TEntity : class, IEntityBase, new()
-        {
-            try
-            {
-                var entity = await GetEntityAsync<TEntity, TEntityDto>(entityId);
-                var propertyForEdit = typeof(TEntityDto).GetProperty(property);
-                var entityCanBeModified = propertyForEdit != null && propertyForEdit.HasAttribute<CreateEditEntityInputAttribute>();
-                if (entity != null && entityCanBeModified && !string.IsNullOrEmpty(value))
-                {
-                    propertyForEdit.SetValue(entity, value);
-                    var editedId = await ModifyEntityAsync<TEntity, TEntityDto>(entityId, entity);
-                    if (editedId.HasValue)
-                    {
-                        return true;
-                    }
-                }
-
-                return false;
-            }
-            catch (Exception ex)
-            {
-                await LogErrorAsync(ex, nameof(ModifyEntityPropertyAsync));
-                return false;
-            }
-        }
     }
 }
-

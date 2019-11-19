@@ -1,4 +1,4 @@
-// This file is part of the mvc567 distribution (https://github.com/intellisoft567/mvc567).
+// This file is part of the mvc567 distribution (https://github.com/codific/mvc567).
 // Copyright (C) 2019 Codific Ltd.
 //
 // This program is free software: you can redistribute it and/or modify
@@ -14,23 +14,15 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Http;
 
 namespace Codific.Mvc567.Services.Validators.Handlers
 {
     internal class FileMimeTypesHandler : AbstractHandler<IFormFile>
     {
-        private readonly List<string> allowedMimeTypes = new List<string>
-        {
-            "image/jpg",
-            "image/jpeg",
-            "image/pjpeg",
-            "image/gif",
-            "image/x-png",
-            "image/png"
-        };
+        private readonly List<string> allowedMimeTypes;
 
         public FileMimeTypesHandler(List<string> allowedMimeTypes)
         {
@@ -38,6 +30,7 @@ namespace Codific.Mvc567.Services.Validators.Handlers
             {
                 throw new NullReferenceException("Allowed mime types list must be valid list with at least 1 element in.");
             }
+
             this.allowedMimeTypes = allowedMimeTypes;
         }
 
@@ -46,7 +39,7 @@ namespace Codific.Mvc567.Services.Validators.Handlers
             bool isFileValid = false;
             foreach (var mimeType in this.allowedMimeTypes)
             {
-                if (this.requestObject.ContentType.Equals(mimeType, StringComparison.OrdinalIgnoreCase))
+                if (this.RequestObject.ContentType.Equals(mimeType, StringComparison.OrdinalIgnoreCase))
                 {
                     isFileValid = true;
                     break;
@@ -56,7 +49,7 @@ namespace Codific.Mvc567.Services.Validators.Handlers
             string resultMessage = string.Empty;
             if (!isFileValid)
             {
-                this.requestObject = null;
+                this.RequestObject = null;
                 resultMessage = "File is not image type. ";
             }
 

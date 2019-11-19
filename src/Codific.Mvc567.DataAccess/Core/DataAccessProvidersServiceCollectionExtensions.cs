@@ -1,4 +1,4 @@
-// This file is part of the mvc567 distribution (https://github.com/intellisoft567/mvc567).
+// This file is part of the mvc567 distribution (https://github.com/codific/mvc567).
 // Copyright (C) 2019 Codific Ltd.
 //
 // This program is free software: you can redistribute it and/or modify
@@ -15,14 +15,14 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 using System;
-using Microsoft.Extensions.DependencyInjection;
-using Codific.Mvc567.DataAccess.Core.Context;
-using Microsoft.AspNetCore.Identity;
-using Codific.Mvc567.DataAccess.Core.Repositories;
+using Codific.Mvc567.DataAccess.Abstraction;
 using Codific.Mvc567.DataAccess.Abstractions;
 using Codific.Mvc567.DataAccess.Abstractions.Context;
 using Codific.Mvc567.DataAccess.Abstractions.Repositories;
-using Codific.Mvc567.DataAccess.Abstraction;
+using Codific.Mvc567.DataAccess.Core.Context;
+using Codific.Mvc567.DataAccess.Core.Repositories;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Codific.Mvc567.DataAccess.Core
 {

@@ -1,4 +1,4 @@
-// This file is part of the mvc567 distribution (https://github.com/intellisoft567/mvc567).
+// This file is part of the mvc567 distribution (https://github.com/codific/mvc567).
 // Copyright (C) 2019 Codific Ltd.
 //
 // This program is free software: you can redistribute it and/or modify
@@ -19,25 +19,27 @@ namespace Codific.Mvc567.DataAccess.Identity
     public class ApplicationPermission
     {
         public ApplicationPermission()
-        { }
+        {
+        }
 
         public ApplicationPermission(string name)
         {
-            Name = name;
-            Value = name.Replace(' ', '.').ToLower();
+            this.Name = name;
+            this.Value = name.Replace(' ', '.').ToLower();
         }
 
         public string Name { get; set; }
-        public string Value { get; set; }
 
-        public override string ToString()
-        {
-            return Value;
-        }
+        public string Value { get; set; }
 
         public static implicit operator string(ApplicationPermission permission)
         {
             return permission.Value;
+        }
+
+        public override string ToString()
+        {
+            return this.Value;
         }
     }
 }

@@ -1,4 +1,4 @@
-// This file is part of the mvc567 distribution (https://github.com/intellisoft567/mvc567).
+// This file is part of the mvc567 distribution (https://github.com/codific/mvc567).
 // Copyright (C) 2019 Codific Ltd.
 //
 // This program is free software: you can redistribute it and/or modify
@@ -14,15 +14,16 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+using Codific.Mvc567.Common;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.Extensions.DependencyInjection;
-using Codific.Mvc567.Common;
 
 namespace Codific.Mvc567.UI.Extensions
 {
     public static class ViewsServiceCollectionExtensions
     {
-        public static IServiceCollection ConfigureRazorViews(this IServiceCollection services, 
+        public static IServiceCollection ConfigureRazorViews(
+            this IServiceCollection services,
             string areaDefault = Constants.DefaultAreasViewsPath,
             string controllerDefault = Constants.DefaultControllersViewsPath,
             string emailDefault = Constants.DefaultEmailViewsPath,
@@ -39,6 +40,7 @@ namespace Codific.Mvc567.UI.Extensions
                     options.ViewLocationFormats.Add($"{Constants.DefaultControllersViewsPath}/{{1}}/{{0}}.cshtml");
                     options.ViewLocationFormats.Add($"{Constants.DefaultControllersViewsPath}/Shared/{{0}}.cshtml");
                 }
+
                 options.ViewLocationFormats.Add($"{emailDefault}/{{1}}/{{0}}.cshtml");
                 options.ViewLocationFormats.Add($"{emailDefault}/Shared/{{0}}.cshtml");
                 if (!Constants.DefaultEmailViewsPath.Equals(emailDefault))
@@ -66,6 +68,7 @@ namespace Codific.Mvc567.UI.Extensions
                     options.AreaViewLocationFormats.Add($"{Constants.DefaultAreasViewsPath}/{{2}}/{{1}}/{{0}}.cshtml");
                     options.AreaViewLocationFormats.Add($"{Constants.DefaultAreasViewsPath}/{{2}}/Shared/{{0}}.cshtml");
                 }
+
                 if (!Constants.DefaultControllersViewsPath.Equals(controllerDefault))
                 {
                     options.AreaViewLocationFormats.Add($"{Constants.DefaultControllersViewsPath}/Shared/{{0}}.cshtml");

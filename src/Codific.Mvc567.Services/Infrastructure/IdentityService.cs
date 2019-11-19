@@ -1,4 +1,4 @@
-// This file is part of the mvc567 distribution (https://github.com/intellisoft567/mvc567).
+// This file is part of the mvc567 distribution (https://github.com/codific/mvc567).
 // Copyright (C) 2019 Codific Ltd.
 //
 // This program is free software: you can redistribute it and/or modify
@@ -23,8 +23,8 @@ using AutoMapper;
 using Codific.Mvc567.DataAccess.Abstraction;
 using Codific.Mvc567.DataAccess.Identity;
 using Codific.Mvc567.Entities.Database;
-using Microsoft.AspNetCore.Identity;
 using Codific.Mvc567.Services.Abstractions;
+using Microsoft.AspNetCore.Identity;
 
 namespace Codific.Mvc567.Services.Infrastructure
 {
@@ -33,12 +33,14 @@ namespace Codific.Mvc567.Services.Infrastructure
         private readonly UserManager<User> userManager;
         private readonly SignInManager<User> signInManager;
         private readonly RoleManager<Role> roleManager;
+
         public IdentityService(
             IUnitOfWork uow,
             IMapper mapper,
             UserManager<User> userManager,
             SignInManager<User> signInManager,
-            RoleManager<Role> roleManager) : base(uow, mapper)
+            RoleManager<Role> roleManager)
+            : base(uow, mapper)
         {
             this.userManager = userManager;
             this.signInManager = signInManager;
@@ -47,18 +49,24 @@ namespace Codific.Mvc567.Services.Infrastructure
 
         public async Task<Tuple<bool, string[]>> CreateRoleAsync<TRole>(TRole role, IEnumerable<string> claims)
         {
-            var entityRole = this.mapper.Map<Role>(role);
+            var entityRole = this.Mapper.Map<Role>(role);
 
             if (claims == null)
+            {
                 claims = new string[] { };
+            }
 
             string[] invalidClaims = claims.Where(c => ApplicationPermissions.GetPermissionByValue(c) == null).ToArray();
             if (invalidClaims.Any())
+            {
                 return Tuple.Create(false, new[] { "The following claim types are invalid: " + string.Join(", ", invalidClaims) });
+            }
 
             var result = await this.roleManager.CreateAsync(entityRole);
             if (!result.Succeeded)
+            {
                 return Tuple.Create(false, result.Errors.Select(e => e.Description).ToArray());
+            }
 
             entityRole = await this.roleManager.FindByNameAsync(entityRole.Name);
 
@@ -68,7 +76,7 @@ namespace Codific.Mvc567.Services.Infrastructure
 
                 if (!result.Succeeded)
                 {
-                    await DeleteRoleAsync(role);
+                    await this.DeleteRoleAsync(role);
                     return Tuple.Create(false, result.Errors.Select(e => e.Description).ToArray());
                 }
             }
@@ -81,14 +89,16 @@ namespace Codific.Mvc567.Services.Infrastructure
             var role = await this.roleManager.FindByNameAsync(roleName);
 
             if (role != null)
-                return await DeleteRoleAsync(role);
+            {
+                return await this.DeleteRoleAsync(role);
+            }
 
             return Tuple.Create(true, new string[] { });
         }
 
         public async Task<Tuple<bool, string[]>> DeleteRoleAsync<TRole>(TRole role)
         {
-            var entityRole = this.mapper.Map<Role>(role);
+            var entityRole = this.Mapper.Map<Role>(role);
 
             var result = await this.roleManager.DeleteAsync(entityRole);
             return Tuple.Create(result.Succeeded, result.Errors.Select(e => e.Description).ToArray());
@@ -99,13 +109,13 @@ namespace Codific.Mvc567.Services.Infrastructure
             try
             {
                 User user = await this.userManager.FindByEmailAsync(email);
-                TUserModel resultUser = this.mapper.Map<TUserModel>(user);
+                TUserModel resultUser = this.Mapper.Map<TUserModel>(user);
 
                 return resultUser;
             }
             catch (Exception ex)
             {
-                await LogErrorAsync(ex, nameof(GetUserByEmailAsync));
+                await this.LogErrorAsync(ex, nameof(this.GetUserByEmailAsync));
                 return default(TUserModel);
             }
         }
@@ -114,14 +124,14 @@ namespace Codific.Mvc567.Services.Infrastructure
         {
             try
             {
-                var users = await this.uow.GetStandardRepository().GetAllAsync<User>();
-                var usersResult = this.mapper.Map<IEnumerable<TUserModel>>(users);
+                var users = await this.StandardRepository.GetAllAsync<User>();
+                var usersResult = this.Mapper.Map<IEnumerable<TUserModel>>(users);
 
                 return usersResult;
             }
             catch (Exception ex)
             {
-                await LogErrorAsync(ex, nameof(GetAllUsersAsync));
+                await this.LogErrorAsync(ex, nameof(this.GetAllUsersAsync));
                 return null;
             }
         }
@@ -130,14 +140,14 @@ namespace Codific.Mvc567.Services.Infrastructure
         {
             try
             {
-                User user = await this.standardRepository.GetAsync<User>(userId);
-                TUserModel resultUser = this.mapper.Map<TUserModel>(user);
+                User user = await this.StandardRepository.GetAsync<User>(userId);
+                TUserModel resultUser = this.Mapper.Map<TUserModel>(user);
 
                 return resultUser;
             }
             catch (Exception ex)
             {
-                await LogErrorAsync(ex, nameof(GetUserByIdAsync));
+                await this.LogErrorAsync(ex, nameof(this.GetUserByIdAsync));
 
                 return default(TUserModel);
             }
