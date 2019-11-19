@@ -14,12 +14,12 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-using AutoMapper;
-using Codific.Mvc567.Common.Enums;
-using Codific.Mvc567.Common.Attributes;
-using Codific.Mvc567.Entities.Database;
 using System;
+using AutoMapper;
+using Codific.Mvc567.Common.Attributes;
+using Codific.Mvc567.Common.Enums;
 using Codific.Mvc567.Dtos.ViewModels.Abstractions;
+using Codific.Mvc567.Entities.Database;
 
 namespace Codific.Mvc567.ViewModels
 {
@@ -49,7 +49,7 @@ namespace Codific.Mvc567.ViewModels
         [TableCell(4, "Image", TableCellType.File)]
         [CreateEditEntityInput("Image", CreateEntityInputType.File)]
         public string ImageId { get; set; }
-        
+
         public string TranslationFileUrl { get; set; }
 
         [TableCell(5, "Last Generation", TableCellType.DateTime)]

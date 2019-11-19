@@ -14,9 +14,9 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-using Codific.Mvc567.Common.Enums;
 using System;
 using AutoMapper;
+using Codific.Mvc567.Common.Enums;
 using Codific.Mvc567.Entities.Database;
 
 namespace Codific.Mvc567.ViewModels
