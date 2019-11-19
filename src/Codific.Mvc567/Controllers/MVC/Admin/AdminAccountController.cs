@@ -35,7 +35,7 @@ namespace Codific.Mvc567.Controllers.MVC.Admin
     public class AdminAccountController : Controller
     {
         private readonly UserManager<User> userManager;
-        private readonly Codific.Mvc567.Services.Abstractions.IAuthenticationService authenticationService;
+        private readonly Services.Abstractions.IAuthenticationService authenticationService;
         private readonly IWebHostEnvironment hostingEnvironment;
 
         public AdminAccountController(
