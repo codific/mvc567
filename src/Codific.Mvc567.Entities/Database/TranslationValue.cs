@@ -14,11 +14,9 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-using AutoMapper.Configuration.Annotations;
-using Codific.Mvc567.Common.Attributes;
-using Codific.Mvc567.DataAccess.Abstractions.Entities;
 using System;
 using System.ComponentModel.DataAnnotations.Schema;
+using Codific.Mvc567.Common.Attributes;
 
 namespace Codific.Mvc567.Entities.Database
 {

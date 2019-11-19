@@ -16,6 +16,8 @@
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <AssemblyName>Codific.Mvc567.Entities</AssemblyName>
     <RootNamespace>Codific.Mvc567.Entities</RootNamespace>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <CodeAnalysisRuleSet>../../Codific.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
 
   <ItemGroup>

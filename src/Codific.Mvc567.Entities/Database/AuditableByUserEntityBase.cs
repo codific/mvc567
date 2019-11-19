@@ -14,10 +14,9 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-using Codific.Mvc567.DataAccess.Abstractions.Entities;
-using Microsoft.AspNetCore.Identity;
 using System;
 using System.ComponentModel.DataAnnotations.Schema;
+using Codific.Mvc567.DataAccess.Abstractions.Entities;
 
 namespace Codific.Mvc567.Entities.Database
 {
