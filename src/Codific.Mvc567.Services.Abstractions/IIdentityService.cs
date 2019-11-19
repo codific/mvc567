@@ -23,10 +23,15 @@ namespace Codific.Mvc567.Services.Abstractions
     public interface IIdentityService
     {
         Task<TUserModel> GetUserByIdAsync<TUserModel>(Guid userId);
+
         Task<TUserModel> GetUserByEmailAsync<TUserModel>(string email);
+
         Task<IEnumerable<TUserModel>> GetAllUsersAsync<TUserModel>();
+
         Task<Tuple<bool, string[]>> CreateRoleAsync<TRoleModel>(TRoleModel role, IEnumerable<string> claims);
+
         Task<Tuple<bool, string[]>> DeleteRoleAsync<TRoleModel>(TRoleModel role);
+
         Task<Tuple<bool, string[]>> DeleteRoleAsync(string roleName);
     }
 }

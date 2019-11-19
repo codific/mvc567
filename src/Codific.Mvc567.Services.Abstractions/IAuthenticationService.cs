@@ -33,9 +33,11 @@ namespace Codific.Mvc567.Services.Abstractions
 
         Task<SignInResult> SignInAsync<TUser>(TUser user, string password, HttpContext httpContext, string authenticationScheme, AuthenticationProperties authenticationProperties);
 
-        Task<SignInResult> SignInWith2faAsync<TUser>(TUser user, string authenticationCode, bool rememberBrowser, HttpContext httpContext, string authenticationScheme, AuthenticationProperties authenticationProperties) where TUser : class;
+        Task<SignInResult> SignInWith2faAsync<TUser>(TUser user, string authenticationCode, bool rememberBrowser, HttpContext httpContext, string authenticationScheme, AuthenticationProperties authenticationProperties)
+            where TUser : class;
 
-        Task<TUser> GetTwoFactorAuthenticationUserAsync<TUser>(HttpContext httpContext) where TUser : class;
+        Task<TUser> GetTwoFactorAuthenticationUserAsync<TUser>(HttpContext httpContext)
+            where TUser : class;
 
         Task SignOutAsync(HttpContext httpContext);
 
