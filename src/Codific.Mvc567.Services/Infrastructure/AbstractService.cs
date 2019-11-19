@@ -31,11 +31,11 @@ namespace Codific.Mvc567.Services.Infrastructure
 {
     public abstract class AbstractService
     {
-        protected readonly IUnitOfWork uow;
-        protected readonly IMapper mapper;
-        protected readonly IStandardRepository standardRepository;
-
         protected const int PaginationPageSize = 10;
+
+        private readonly IUnitOfWork uow;
+        private readonly IMapper mapper;
+        private readonly IStandardRepository standardRepository;
 
         public AbstractService(IUnitOfWork uow, IMapper mapper)
         {
@@ -44,25 +44,32 @@ namespace Codific.Mvc567.Services.Infrastructure
             this.standardRepository = this.uow.GetStandardRepository();
         }
 
+        public IUnitOfWork Uow => this.uow;
+
+        public IMapper Mapper => this.mapper;
+
+        public IStandardRepository StandardRepository => this.standardRepository;
+
         protected async Task LogErrorAsync(Exception exception, string method)
         {
             try
             {
                 string serviceClass = this.GetType().Name;
-                var standardRepository = this.uow.GetStandardRepository();
                 Log log = new Log
                 {
                     StackTrace = exception.StackTrace,
                     Source = exception.Source,
                     Message = exception.Message,
                     Method = method,
-                    Class = serviceClass
+                    Class = serviceClass,
                 };
 
-                standardRepository.Add(log);
+                this.standardRepository.Add(log);
                 await this.uow.SaveChangesAsync();
             }
-            catch (Exception) { }
+            catch (Exception)
+            {
+            }
         }
 
         protected void LogError(Exception exception, string method)
@@ -70,23 +77,25 @@ namespace Codific.Mvc567.Services.Infrastructure
             try
             {
                 string serviceClass = this.GetType().Name;
-                var standardRepository = this.uow.GetStandardRepository();
                 Log log = new Log
                 {
                     StackTrace = exception.StackTrace,
                     Source = exception.Source,
                     Message = exception.Message,
                     Method = method,
-                    Class = serviceClass
+                    Class = serviceClass,
                 };
 
-                standardRepository.Add(log);
+                this.standardRepository.Add(log);
                 this.uow.SaveChanges();
             }
-            catch (Exception) { }
+            catch (Exception)
+            {
+            }
         }
 
-        protected virtual Expression<Func<TEntity, bool>> GetEntitySearchQueryExpression<TEntity>(string searchQuery, bool showDeleted = false) where TEntity : class, IEntityBase
+        protected virtual Expression<Func<TEntity, bool>> GetEntitySearchQueryExpression<TEntity>(string searchQuery, bool showDeleted = false)
+            where TEntity : class, IEntityBase
         {
             var searchQueryArray = searchQuery.ToLower().Split(' ', ',', ';');
 
@@ -98,9 +107,9 @@ namespace Codific.Mvc567.Services.Infrastructure
                 if (property.GetCustomAttributes(typeof(SearchCriteriaAttribute), false).Length > 0)
                 {
                     Expression<Func<TEntity, bool>> currentExpression = x =>
-                           x.GetType().GetProperty(property.Name).GetValue(x) != null &&
-                           (x.GetType().GetProperty(property.Name).GetValue(x).ToString().ToLower().Contains(searchQuery.ToLower()) ||
-                            searchQueryArray.Contains(x.GetType().GetProperty(property.Name).GetValue(x).ToString().ToLower()));
+                        x.GetType().GetProperty(property.Name).GetValue(x) != null &&
+                        (x.GetType().GetProperty(property.Name).GetValue(x).ToString().ToLower().Contains(searchQuery.ToLower()) ||
+                         searchQueryArray.Contains(x.GetType().GetProperty(property.Name).GetValue(x).ToString().ToLower()));
 
                     expressionsList.Add(currentExpression);
                 }
@@ -111,7 +120,7 @@ namespace Codific.Mvc567.Services.Infrastructure
             {
                 propertyExpression = ExpressionFunctions.OrElse<TEntity>(propertyExpression, expressionsList[i]);
             }
-            
+
             var resultExpression = ExpressionFunctions.AndAlso<TEntity>(x => x.Deleted == showDeleted, propertyExpression);
 
             return resultExpression;

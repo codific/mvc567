@@ -14,20 +14,12 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-namespace Codific.Mvc567.Services.Validators.Handlers
+namespace Codific.Mvc567.Services.Infrastructure
 {
-    internal class StartupHandler<T> : AbstractHandler<T>
-        where T : class
+    internal class TwoFactorAuthenticationInfo
     {
-        protected override string HandleProcessAction()
-        {
-            string resultMessage = string.Empty;
-            if (this.RequestObject == null)
-            {
-                resultMessage = "Requested object for validation is null. ";
-            }
+        public string UserId { get; set; }
 
-            return resultMessage;
-        }
+        public string LoginProvider { get; set; }
     }
 }

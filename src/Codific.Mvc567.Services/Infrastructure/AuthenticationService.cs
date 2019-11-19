@@ -37,10 +37,10 @@ namespace Codific.Mvc567.Services.Infrastructure
 {
     public class AuthenticationService : Codific.Mvc567.Services.Abstractions.IAuthenticationService
     {
+        private const string TwoFactorAuthenticationTokenProvider = "Authenticator";
         private readonly UserManager<User> userManager;
         private readonly RoleManager<Role> roleManager;
         private readonly SignInManager<User> signInManager;
-        private const string TwoFactorAuthenticationTokenProvider = "Authenticator";
         private readonly IConfiguration configuration;
         private readonly IUnitOfWork uow;
 
@@ -58,33 +58,6 @@ namespace Codific.Mvc567.Services.Infrastructure
             return await this.GetUserClaimsActionAsync<User>(user as User);
         }
 
-
-        private async Task<IEnumerable<Claim>> GetUserClaimsActionAsync<TUser>(TUser user) where TUser : User
-        {
-            if (user != null)
-            {
-                var claims = await this.userManager.GetClaimsAsync(user);
-                var userRoles = await this.userManager.GetRolesAsync(user);
-                foreach (var roleName in userRoles)
-                {
-                    Role currentRole = await this.roleManager.FindByNameAsync(roleName);
-                    var roleClaims = await this.roleManager.GetClaimsAsync(currentRole);
-                    claims.Add(new Claim(ClaimTypes.Role, roleName));
-                    foreach (var roleClaim in roleClaims)
-                    {
-                        claims.Add(roleClaim);
-                    }
-                }
-                claims.Add(new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()));
-                claims.Add(new Claim(ClaimTypes.Name, user.Email));
-                claims.Add(new Claim(ClaimTypes.Email, user.Email));
-
-                return claims.ToList();
-            }
-
-            return null;
-        }
-
         public async Task<SignInResult> SignInAsync<TUser>(TUser user, string password, HttpContext httpContext, string authenticationScheme, AuthenticationProperties authenticationProperties)
         {
             var parsedUser = user as User;
@@ -93,7 +66,7 @@ namespace Codific.Mvc567.Services.Infrastructure
                 return SignInResult.LockedOut;
             }
 
-            var claims = await GetUserClaimsAsync(parsedUser);
+            var claims = await this.GetUserClaimsAsync(parsedUser);
             if (claims == null)
             {
                 return SignInResult.Failed;
@@ -105,17 +78,17 @@ namespace Codific.Mvc567.Services.Infrastructure
             var isPasswordCorrect = await this.userManager.CheckPasswordAsync(parsedUser, password);
             if (isPasswordCorrect)
             {
-                if (!parsedUser.TwoFactorEnabled && !parsedUser.IsLockedOut)
+                if (parsedUser != null && (!parsedUser.TwoFactorEnabled && !parsedUser.IsLockedOut))
                 {
                     await httpContext.SignInAsync(authenticationScheme, new ClaimsPrincipal(claimsIdentity), authenticationProperties);
                     signInResult = SignInResult.Success;
                 }
-                else if (parsedUser.TwoFactorEnabled)
+                else if (parsedUser != null && parsedUser.TwoFactorEnabled)
                 {
-                    await httpContext.SignInAsync(IdentityConstants.TwoFactorUserIdScheme, StoreTwoFactorInfo(parsedUser.Id, null));
+                    await httpContext.SignInAsync(IdentityConstants.TwoFactorUserIdScheme, this.StoreTwoFactorInfo(parsedUser.Id, null));
                     signInResult = SignInResult.TwoFactorRequired;
                 }
-                else if (parsedUser.IsLockedOut)
+                else if (parsedUser != null && parsedUser.IsLockedOut)
                 {
                     signInResult = SignInResult.LockedOut;
                 }
@@ -128,26 +101,16 @@ namespace Codific.Mvc567.Services.Infrastructure
             return signInResult;
         }
 
-        private ClaimsPrincipal StoreTwoFactorInfo(Guid userId, string loginProvider)
-        {
-            var identity = new ClaimsIdentity(IdentityConstants.TwoFactorUserIdScheme);
-            identity.AddClaim(new Claim(ClaimTypes.Name, userId.ToString()));
-            if (loginProvider != null)
-            {
-                identity.AddClaim(new Claim(ClaimTypes.AuthenticationMethod, loginProvider));
-            }
-            return new ClaimsPrincipal(identity);
-        }
-
         public async Task<bool> UserHasAdministrationAccessRightsAsync<TUser>(TUser user)
         {
             bool userHasAdministrationAccessRights = false;
-            var userClaims = await GetUserClaimsAsync(user);
+            var userClaims = await this.GetUserClaimsAsync(user);
             if (userClaims == null)
             {
                 return false;
             }
-            if (userClaims.Where(x => x.Type == CustomClaimTypes.Permission && x.Value == ApplicationPermissions.AccessAdministration).Any())
+
+            if (userClaims.Any(x => x.Type == CustomClaimTypes.Permission && x.Value == ApplicationPermissions.AccessAdministration))
             {
                 userHasAdministrationAccessRights = true;
             }
@@ -155,23 +118,10 @@ namespace Codific.Mvc567.Services.Infrastructure
             return userHasAdministrationAccessRights;
         }
 
-        private async Task<TwoFactorAuthenticationInfo> RetrieveTwoFactorInfoAsync(HttpContext httpContext)
+        public async Task<TUser> GetTwoFactorAuthenticationUserAsync<TUser>(HttpContext httpContext)
+            where TUser : class
         {
-            var result = await httpContext.AuthenticateAsync(IdentityConstants.TwoFactorUserIdScheme);
-            if (result?.Principal != null)
-            {
-                return new TwoFactorAuthenticationInfo
-                {
-                    UserId = result.Principal.FindFirstValue(ClaimTypes.Name),
-                    LoginProvider = result.Principal.FindFirstValue(ClaimTypes.AuthenticationMethod)
-                };
-            }
-            return null;
-        }
-
-        public async Task<TUser> GetTwoFactorAuthenticationUserAsync<TUser>(HttpContext httpContext) where TUser : class
-        {
-            var info = await RetrieveTwoFactorInfoAsync(httpContext);
+            var info = await this.RetrieveTwoFactorInfoAsync(httpContext);
             if (info == null)
             {
                 return default(TUser);
@@ -180,7 +130,8 @@ namespace Codific.Mvc567.Services.Infrastructure
             return await this.userManager.FindByIdAsync(info.UserId) as TUser;
         }
 
-        public async Task<SignInResult> SignInWith2faAsync<TUser>(TUser user, string authenticationCode, bool rememberBrowser, HttpContext httpContext, string authenticationScheme, AuthenticationProperties authenticationProperties) where TUser : class
+        public async Task<SignInResult> SignInWith2faAsync<TUser>(TUser user, string authenticationCode, bool rememberBrowser, HttpContext httpContext, string authenticationScheme, AuthenticationProperties authenticationProperties)
+            where TUser : class
         {
             var parsedUser = user as User;
             if (await this.userManager.IsLockedOutAsync(parsedUser))
@@ -188,7 +139,7 @@ namespace Codific.Mvc567.Services.Infrastructure
                 return SignInResult.LockedOut;
             }
 
-            var claims = await GetUserClaimsAsync(user);
+            var claims = await this.GetUserClaimsAsync(user);
             if (claims == null)
             {
                 return SignInResult.Failed;
@@ -200,7 +151,7 @@ namespace Codific.Mvc567.Services.Infrastructure
             var isAuthenticationCodeCorrect = await this.userManager.VerifyTwoFactorTokenAsync(parsedUser, TwoFactorAuthenticationTokenProvider, authenticationCode);
             if (isAuthenticationCodeCorrect)
             {
-                if (!parsedUser.IsLockedOut)
+                if (parsedUser != null && !parsedUser.IsLockedOut)
                 {
                     await httpContext.SignInAsync(authenticationScheme, new ClaimsPrincipal(claimsIdentity), authenticationProperties);
                     signInResult = SignInResult.Success;
@@ -246,8 +197,8 @@ namespace Codific.Mvc567.Services.Infrastructure
 
                 if (user.EmailConfirmed)
                 {
-                    var userClaims = await GetAllUserClaimsAsync(user);
-                    string jwt = BuildJwtToken(user, userClaims);
+                    var userClaims = await this.GetAllUserClaimsAsync(user);
+                    string jwt = this.BuildJwtToken(user, userClaims);
                     string refreshToken = $"{Guid.NewGuid().ToString().Replace("-", "0")}{Guid.NewGuid().ToString().Replace("-", "1")}";
                     user.RefreshToken = refreshToken;
                     user.RefreshTokenExpiration = DateTime.Now.AddMonths(1);
@@ -256,7 +207,7 @@ namespace Codific.Mvc567.Services.Infrastructure
 
                     return BearerAuthResponse.SuccessResult(jwt, refreshToken);
                 }
-                
+
                 return BearerAuthResponse.FailedResult;
             }
             catch (Exception)
@@ -281,8 +232,8 @@ namespace Codific.Mvc567.Services.Infrastructure
 
                 if (user != null && user.RefreshToken == refreshToken && user.RefreshTokenExpiration.HasValue && user.RefreshTokenExpiration > DateTime.Now)
                 {
-                    var userClaims = await GetAllUserClaimsAsync(user);
-                    string jwt = BuildJwtToken(user, userClaims);
+                    var userClaims = await this.GetAllUserClaimsAsync(user);
+                    string jwt = this.BuildJwtToken(user, userClaims);
 
                     return BearerAuthResponse.SuccessResult(jwt, refreshToken);
                 }
@@ -293,50 +244,6 @@ namespace Codific.Mvc567.Services.Infrastructure
             {
                 return BearerAuthResponse.FailedResult;
             }
-        }
-
-        private string BuildJwtToken(User user, List<Claim> claims)
-        {
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(this.configuration["Jwt:Key"]));
-            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-
-            DateTime expirationDate;
-            expirationDate = DateTime.Now.AddMinutes(15);
-
-            var token = new JwtSecurityToken(this.configuration["Jwt:Issuer"],
-              this.configuration["Jwt:Issuer"],
-              claims,
-              expires: expirationDate,
-              signingCredentials: creds);
-
-            return new JwtSecurityTokenHandler().WriteToken(token);
-        }
-
-        private async Task<List<Claim>> GetAllUserClaimsAsync(User user)
-        {
-            var userClaims = await this.userManager.GetClaimsAsync(user);
-            userClaims.Add(new Claim(JwtRegisteredClaimNames.Jti, user.Id.ToString()));
-            userClaims.Add(new Claim(JwtRegisteredClaimNames.Sub, user.Email));
-            var rolesClaims = new List<Claim>();
-            var userRoles = await this.userManager.GetRolesAsync(user);
-            foreach (string role in userRoles)
-            {
-                
-                if (role != UserRoles.Admin)
-                {
-                    var currentRole = await this.roleManager.FindByNameAsync(role);
-                    var currentRoleClaims = await this.roleManager.GetClaimsAsync(currentRole);
-                    foreach (var currentRoleClaim in currentRoleClaims)
-                    {
-                        if (!userClaims.Where(x => x.Type == currentRoleClaim.Type && x.Value == currentRoleClaim.Value).Any())
-                        {
-                            userClaims.Add(currentRoleClaim);
-                        }
-                    }
-                }
-            }
-
-            return userClaims?.ToList();
         }
 
         public async Task<bool> ResetUserRefreshTokensAsync(Guid userId)
@@ -361,11 +268,104 @@ namespace Codific.Mvc567.Services.Infrastructure
                 return false;
             }
         }
-    }
 
-    internal class TwoFactorAuthenticationInfo
-    {
-        public string UserId { get; set; }
-        public string LoginProvider { get; set; }
+        private async Task<IEnumerable<Claim>> GetUserClaimsActionAsync<TUser>(TUser user)
+            where TUser : User
+        {
+            if (user != null)
+            {
+                var claims = await this.userManager.GetClaimsAsync(user);
+                var userRoles = await this.userManager.GetRolesAsync(user);
+                foreach (var roleName in userRoles)
+                {
+                    Role currentRole = await this.roleManager.FindByNameAsync(roleName);
+                    var roleClaims = await this.roleManager.GetClaimsAsync(currentRole);
+                    claims.Add(new Claim(ClaimTypes.Role, roleName));
+                    foreach (var roleClaim in roleClaims)
+                    {
+                        claims.Add(roleClaim);
+                    }
+                }
+
+                claims.Add(new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()));
+                claims.Add(new Claim(ClaimTypes.Name, user.Email));
+                claims.Add(new Claim(ClaimTypes.Email, user.Email));
+
+                return claims.ToList();
+            }
+
+            return null;
+        }
+
+        private ClaimsPrincipal StoreTwoFactorInfo(Guid userId, string loginProvider)
+        {
+            var identity = new ClaimsIdentity(IdentityConstants.TwoFactorUserIdScheme);
+            identity.AddClaim(new Claim(ClaimTypes.Name, userId.ToString()));
+            if (loginProvider != null)
+            {
+                identity.AddClaim(new Claim(ClaimTypes.AuthenticationMethod, loginProvider));
+            }
+
+            return new ClaimsPrincipal(identity);
+        }
+
+        private async Task<TwoFactorAuthenticationInfo> RetrieveTwoFactorInfoAsync(HttpContext httpContext)
+        {
+            var result = await httpContext.AuthenticateAsync(IdentityConstants.TwoFactorUserIdScheme);
+            if (result?.Principal != null)
+            {
+                return new TwoFactorAuthenticationInfo
+                {
+                    UserId = result.Principal.FindFirstValue(ClaimTypes.Name),
+                    LoginProvider = result.Principal.FindFirstValue(ClaimTypes.AuthenticationMethod),
+                };
+            }
+
+            return null;
+        }
+
+        private string BuildJwtToken(User user, List<Claim> claims)
+        {
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(this.configuration["Jwt:Key"]));
+            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
+            DateTime expirationDate;
+            expirationDate = DateTime.Now.AddMinutes(15);
+
+            var token = new JwtSecurityToken(
+                this.configuration["Jwt:Issuer"],
+                this.configuration["Jwt:Issuer"],
+                claims,
+                expires: expirationDate,
+                signingCredentials: creds);
+
+            return new JwtSecurityTokenHandler().WriteToken(token);
+        }
+
+        private async Task<List<Claim>> GetAllUserClaimsAsync(User user)
+        {
+            var userClaims = await this.userManager.GetClaimsAsync(user);
+            userClaims.Add(new Claim(JwtRegisteredClaimNames.Jti, user.Id.ToString()));
+            userClaims.Add(new Claim(JwtRegisteredClaimNames.Sub, user.Email));
+            var rolesClaims = new List<Claim>();
+            var userRoles = await this.userManager.GetRolesAsync(user);
+            foreach (string role in userRoles)
+            {
+                if (role != UserRoles.Admin)
+                {
+                    var currentRole = await this.roleManager.FindByNameAsync(role);
+                    var currentRoleClaims = await this.roleManager.GetClaimsAsync(currentRole);
+                    foreach (var currentRoleClaim in currentRoleClaims)
+                    {
+                        if (!userClaims.Any(x => x.Type == currentRoleClaim.Type && x.Value == currentRoleClaim.Value))
+                        {
+                            userClaims.Add(currentRoleClaim);
+                        }
+                    }
+                }
+            }
+
+            return userClaims?.ToList();
+        }
     }
 }

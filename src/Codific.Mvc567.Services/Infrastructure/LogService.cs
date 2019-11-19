@@ -25,23 +25,23 @@ namespace Codific.Mvc567.Services.Infrastructure
 {
     public class LogService : AbstractService, ILogService
     {
-        public LogService(IUnitOfWork uow, IMapper mapper) : base(uow, mapper)
+        public LogService(IUnitOfWork uow, IMapper mapper)
+            : base(uow, mapper)
         {
-
         }
 
         public async Task<bool> ClearAllLogsAsync()
         {
             try
             {
-                await this.standardRepository.DeleteAllAsync<Log>();
-                await this.uow.SaveChangesAsync();
+                await this.StandardRepository.DeleteAllAsync<Log>();
+                await this.Uow.SaveChangesAsync();
 
                 return true;
             }
             catch (Exception ex)
             {
-                await LogErrorAsync(ex, nameof(ClearAllLogsAsync));
+                await this.LogErrorAsync(ex, nameof(this.ClearAllLogsAsync));
                 return false;
             }
         }

@@ -36,7 +36,8 @@ namespace Codific.Mvc567.Services.Infrastructure
     {
         private readonly IWebHostEnvironment hostingEnvironment;
 
-        public LanguageService(IUnitOfWork uow, IMapper mapper, IWebHostEnvironment hostingEnvironment) : base(uow, mapper)
+        public LanguageService(IUnitOfWork uow, IMapper mapper, IWebHostEnvironment hostingEnvironment)
+            : base(uow, mapper)
         {
             this.hostingEnvironment = hostingEnvironment;
         }
@@ -45,14 +46,14 @@ namespace Codific.Mvc567.Services.Infrastructure
         {
             try
             {
-                var languages = this.standardRepository.GetAll<Language>();
+                var languages = this.StandardRepository.GetAll<Language>();
                 string[] languageCodes = languages.Select(x => x.Code).ToArray();
 
                 return languageCodes;
             }
             catch (Exception ex)
             {
-                LogError(ex, nameof(GetAllLanguageCodesAsync));
+                this.LogError(ex, nameof(this.GetAllLanguageCodesAsync));
                 return null;
             }
         }
@@ -61,14 +62,14 @@ namespace Codific.Mvc567.Services.Infrastructure
         {
             try
             {
-                var languages = await this.standardRepository.GetAllAsync<Language>();
+                var languages = await this.StandardRepository.GetAllAsync<Language>();
                 string[] languageCodes = languages.Select(x => x.Code).ToArray();
 
                 return languageCodes;
             }
             catch (Exception ex)
             {
-                await LogErrorAsync(ex, nameof(GetAllLanguageCodesAsync));
+                await this.LogErrorAsync(ex, nameof(this.GetAllLanguageCodesAsync));
                 return null;
             }
         }
@@ -77,14 +78,14 @@ namespace Codific.Mvc567.Services.Infrastructure
         {
             try
             {
-                var languageEntity = this.standardRepository.Query<Language>(x => x.IsDefault).FirstOrDefault();
-                var mappedLanguage = this.mapper.Map<TLanguageModel>(languageEntity);
+                var languageEntity = this.StandardRepository.Query<Language>(x => x.IsDefault).FirstOrDefault();
+                var mappedLanguage = this.Mapper.Map<TLanguageModel>(languageEntity);
 
                 return mappedLanguage;
             }
             catch (Exception ex)
             {
-                LogError(ex, nameof(GetAllLanguageCodesAsync));
+                this.LogError(ex, nameof(this.GetAllLanguageCodesAsync));
                 return default(TLanguageModel);
             }
         }
@@ -93,14 +94,14 @@ namespace Codific.Mvc567.Services.Infrastructure
         {
             try
             {
-                var languageEntity = (await this.standardRepository.QueryAsync<Language>(x => x.IsDefault)).FirstOrDefault();
-                var mappedLanguage = this.mapper.Map<TLanguageModel>(languageEntity);
+                var languageEntity = (await this.StandardRepository.QueryAsync<Language>(x => x.IsDefault)).FirstOrDefault();
+                var mappedLanguage = this.Mapper.Map<TLanguageModel>(languageEntity);
 
                 return mappedLanguage;
             }
             catch (Exception ex)
             {
-                await LogErrorAsync(ex, nameof(GetAllLanguageCodesAsync));
+                await this.LogErrorAsync(ex, nameof(this.GetAllLanguageCodesAsync));
                 return default(TLanguageModel);
             }
         }
@@ -109,17 +110,17 @@ namespace Codific.Mvc567.Services.Infrastructure
         {
             try
             {
-                var language = await this.standardRepository.GetAsync<Language>(languageId);
+                var language = await this.StandardRepository.GetAsync<Language>(languageId);
                 if (language != null)
                 {
-                    var translationsEntities = await this.standardRepository.QueryAsync<TranslationValue>(
+                    var translationsEntities = await this.StandardRepository.QueryAsync<TranslationValue>(
                         x => x.LanguageId == languageId,
                         x => x.OrderBy(y => y.TranslationKey.Key),
                         x => x.Include(y => y.TranslationKey));
 
                     Dictionary<string, string> translationDictionary = translationsEntities.ToDictionary(x => x.TranslationKey.Key, x => x.Value);
 
-                    if (translationDictionary != null && translationDictionary.Count > 0)
+                    if (translationDictionary.Count > 0)
                     {
                         string jsonContent = JsonConvert.SerializeObject(translationDictionary);
 
@@ -130,9 +131,9 @@ namespace Codific.Mvc567.Services.Infrastructure
                         language.LastTranslationFileGeneration = DateTime.Now;
                         language.TranslationFileUrl = $"{Constants.LanguagesFolderName}/{fileName}";
 
-                        this.standardRepository.Update<Language>(language);
+                        this.StandardRepository.Update<Language>(language);
 
-                        await this.uow.SaveChangesAsync();
+                        await this.Uow.SaveChangesAsync();
 
                         System.IO.File.WriteAllText(saveFilePath, jsonContent);
 
@@ -144,7 +145,7 @@ namespace Codific.Mvc567.Services.Infrastructure
             }
             catch (Exception ex)
             {
-                await LogErrorAsync(ex, nameof(GenerateLanguageTranslationFileAsync));
+                await this.LogErrorAsync(ex, nameof(this.GenerateLanguageTranslationFileAsync));
                 return false;
             }
         }
@@ -153,7 +154,7 @@ namespace Codific.Mvc567.Services.Infrastructure
         {
             try
             {
-                string value = this.standardRepository.Query<TranslationValue>(x => x.Language.Code.ToLower() == languageCode.ToLower() && x.TranslationKey.Key == key).FirstOrDefault()?.Value;
+                string value = this.StandardRepository.Query<TranslationValue>(x => x.Language.Code.ToLower() == languageCode.ToLower() && x.TranslationKey.Key == key).FirstOrDefault()?.Value;
                 return string.IsNullOrEmpty(value) ? key : value;
             }
             catch (Exception)

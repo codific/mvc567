@@ -16,15 +16,14 @@
 
 using System.Collections.Generic;
 using System.IO;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Codific.Mvc567.Common.Enums;
-using Codific.Mvc567.Common.Extensions;
 using Codific.Mvc567.Common.Options;
+using Codific.Mvc567.CommonCore;
 using Codific.Mvc567.Services.Validators.Handlers;
 using Codific.Mvc567.Services.Validators.Results;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
-using Codific.Mvc567.CommonCore;
 
 namespace Codific.Mvc567.Services.Validators
 {

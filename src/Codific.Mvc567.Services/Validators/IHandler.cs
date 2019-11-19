@@ -16,8 +16,9 @@
 
 namespace Codific.Mvc567.Services.Validators
 {
-    public interface IHandler<T> where T : class
-     {
+    public interface IHandler<T>
+        where T : class
+    {
         IHandler<T> SetNext(IHandler<T> handler);
 
         T Handle(T requestObject, out string validationResultMessage);

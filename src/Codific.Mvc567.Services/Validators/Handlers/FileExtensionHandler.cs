@@ -14,10 +14,10 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-using Microsoft.AspNetCore.Http;
-using Codific.Mvc567.Common.Enums;
 using System;
 using System.Collections.Generic;
+using Codific.Mvc567.Common.Enums;
+using Microsoft.AspNetCore.Http;
 
 namespace Codific.Mvc567.Services.Validators.Handlers
 {
@@ -31,14 +31,16 @@ namespace Codific.Mvc567.Services.Validators.Handlers
             {
                 throw new NullReferenceException("Allowed file extensions list must be valid list with at least 1 element in.");
             }
+
             this.allowedFileExtensions = allowedFileExtensions;
         }
+
         protected override string HandleProcessAction()
         {
             bool isFileValid = false;
             foreach (var fileExtension in this.allowedFileExtensions)
             {
-                if (this.requestObject.FileName.EndsWith($".{fileExtension.ToString().Replace("_", "").ToLower()}"))
+                if (this.RequestObject.FileName.EndsWith($".{fileExtension.ToString().Replace("_", string.Empty).ToLower()}"))
                 {
                     isFileValid = true;
                     break;
@@ -48,7 +50,7 @@ namespace Codific.Mvc567.Services.Validators.Handlers
             string resultMessage = string.Empty;
             if (!isFileValid)
             {
-                this.requestObject = null;
+                this.RequestObject = null;
                 resultMessage = "File extension is not allowed. ";
             }
 

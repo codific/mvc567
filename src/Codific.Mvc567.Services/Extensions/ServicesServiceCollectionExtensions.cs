@@ -14,18 +14,18 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-using Microsoft.Extensions.DependencyInjection;
-using Codific.Mvc567.DataAccess.Abstractions.Context;
-using Codific.Mvc567.Entities.Database;
-using Codific.Mvc567.Services.Infrastructure;
 using Codific.Mvc567.DataAccess.Core.Context;
+using Codific.Mvc567.Entities.Database;
 using Codific.Mvc567.Services.Abstractions;
+using Codific.Mvc567.Services.Infrastructure;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Codific.Mvc567.Services.Extensions
 {
     public static class ServicesServiceCollectionExtensions
     {
-        public static IServiceCollection RegisterServices<TDatabaseContext>(this IServiceCollection services) where TDatabaseContext : DatabaseContextBase<TDatabaseContext, User, Role>
+        public static IServiceCollection RegisterServices<TDatabaseContext>(this IServiceCollection services)
+            where TDatabaseContext : DatabaseContextBase<TDatabaseContext, User, Role>
         {
             services.AddScoped<IEmailService, EmailService>();
             services.AddScoped<IEntityManager, EntityManager>();
