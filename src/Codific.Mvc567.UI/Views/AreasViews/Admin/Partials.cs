@@ -25,6 +25,7 @@ namespace Codific.Mvc567.UI.Views.AreasViews.Admin
     {
         public const string TablePartial = "Partials/_TableView";
         public const string CreateEditFormItemsPartial = "Partials/_CreateEditFormItemsView";
-        //public const string CreateEditStaticPageFormPartial = "Partials/_CreateEditStaticPageForm";
+
+        // public const string CreateEditStaticPageFormPartial = "Partials/_CreateEditStaticPageForm";
     }
 }
