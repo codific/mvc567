@@ -18,10 +18,10 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 @inject Microsoft.AspNetCore.Hosting.IHostingEnvironment hostingEnvironment
 @{ 
-    var navigationScheme = new Codific.Mvc567.Common.Options.AdminNavigationScheme(hostingEnvironment.ContentRootPath);
+    //var navigationScheme = new Codific.Mvc567.Common.Options.AdminNavigationScheme(hostingEnvironment.ContentRootPath);
 }
 <nav class="sidebar sidebar-offcanvas" id="sidebar">
-    <ul class="nav">
+    <ul class="nav">@*
         @foreach (var menuSection in navigationScheme.Menus)
         {
             if (menuSection.Single)
@@ -37,6 +37,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
                     }
                 </menu-section>
             }
-        }
+        }*@
     </ul>
 </nav>
