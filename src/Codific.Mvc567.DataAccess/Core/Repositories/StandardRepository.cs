@@ -204,6 +204,7 @@ namespace Codific.Mvc567.DataAccess.Core.Repositories
         {
             entity.Deleted = true;
             entity.DeletedOn = DateTime.Now;
+            this.Context.Entry<TEntity>(entity).State = EntityState.Modified;
         }
 
         public virtual void SoftDelete<TEntity>(Guid id)
@@ -212,6 +213,7 @@ namespace Codific.Mvc567.DataAccess.Core.Repositories
             var entity = new TEntity() { Id = id };
             entity.Deleted = true;
             entity.DeletedOn = DateTime.Now;
+            this.Context.Entry<TEntity>(entity).State = EntityState.Modified;
         }
 
         public virtual void Restore<TEntity>(TEntity entity)
@@ -219,6 +221,7 @@ namespace Codific.Mvc567.DataAccess.Core.Repositories
         {
             entity.Deleted = false;
             entity.DeletedOn = null;
+            this.Context.Entry<TEntity>(entity).State = EntityState.Modified;
         }
 
         public virtual void Restore<TEntity>(Guid id)
@@ -227,6 +230,7 @@ namespace Codific.Mvc567.DataAccess.Core.Repositories
             var entity = new TEntity() { Id = id };
             entity.Deleted = false;
             entity.DeletedOn = null;
+            this.Context.Entry<TEntity>(entity).State = EntityState.Modified;
         }
 
         public IEnumerable<IEntityBase> GetAllByEntityTableName(string entityTableName)
@@ -271,6 +275,26 @@ namespace Codific.Mvc567.DataAccess.Core.Repositories
             where TEntity : class, IEntityBase, new()
         {
             this.Context.RemoveRange(await this.GetAllAsync<TEntity>());
+        }
+
+        public void SoftDeleteAll<TEntity>()
+            where TEntity : class, IEntityBase, new()
+        {
+            var entities = this.GetAll<TEntity>();
+            foreach (var entity in entities)
+            {
+                this.SoftDelete<TEntity>(entity);
+            }
+        }
+
+        public async Task SoftDeleteAllAsync<TEntity>()
+            where TEntity : class, IEntityBase, new()
+        {
+            var entities = await this.GetAllAsync<TEntity>();
+            foreach (var entity in entities)
+            {
+                this.SoftDelete<TEntity>(entity);
+            }
         }
 
         protected IQueryable<TEntity> QueryDb<TEntity>(Expression<Func<TEntity, bool>> filter, Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy, Func<IQueryable<TEntity>, IQueryable<TEntity>> includes, int? skip = null, int? take = null)

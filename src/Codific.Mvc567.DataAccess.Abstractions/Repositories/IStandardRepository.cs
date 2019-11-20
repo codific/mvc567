@@ -106,5 +106,11 @@ namespace Codific.Mvc567.DataAccess.Abstractions.Repositories
 
         Task DeleteAllAsync<TEntity>()
             where TEntity : class, IEntityBase, new();
+
+        void SoftDeleteAll<TEntity>()
+            where TEntity : class, IEntityBase, new();
+
+        Task SoftDeleteAllAsync<TEntity>()
+            where TEntity : class, IEntityBase, new();
     }
 }
