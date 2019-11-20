@@ -1,4 +1,4 @@
-// This file is part of the mvc567 distribution (https://github.com/codific/mvc567).
+// This file is part of the mvc567 distribution (https://github.com/intellisoft567/mvc567).
 // Copyright (C) 2019 Codific Ltd.
 //
 // This program is free software: you can redistribute it and/or modify
@@ -55,10 +55,9 @@ namespace Codific.Mvc567
         {
             this.Configuration = configuration;
             this.HostingEnvironment = hostingEnvironment;
-            this.applicationAssembly = string.Empty;
         }
 
-        public string applicationAssembly { get; set; }
+        public string ApplicationAssembly { get; protected set; }
 
         public IConfiguration Configuration { get; }
 
@@ -86,7 +85,7 @@ namespace Codific.Mvc567
                 configuration.AddMaps("Codific.Mvc567.ViewModels");
                 configuration.AllowNullCollections = true;
                 configuration.AllowNullDestinationValues = true;
-                configuration.AddMaps(this.applicationAssembly);
+                configuration.AddMaps(this.ApplicationAssembly);
                 configuration.AddProfile<BaseMappingProfile>();
                 this.RegisterMappingProfiles(ref configuration);
             })));
@@ -188,7 +187,7 @@ namespace Codific.Mvc567
             var connectionString = this.Configuration.GetConnectionString("DatabaseConnection");
 
             services.AddEntityFrameworkNpgsql()
-                .AddDbContext<TDatabaseContext>(options => { options.UseNpgsql(connectionString, b => b.MigrationsAssembly(this.applicationAssembly)); })
+                .AddDbContext<TDatabaseContext>(options => { options.UseNpgsql(connectionString, b => b.MigrationsAssembly(this.ApplicationAssembly)); })
                 .BuildServiceProvider();
 
             services.AddIdentity<User, Role>()
