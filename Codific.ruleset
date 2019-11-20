@@ -2,6 +2,8 @@
 <RuleSet Name="Sample rule set" Description="Sample rule set illustrating customizing StyleCopAnalyzer rule severity" ToolsVersion="14.0">
     <Rules AnalyzerId="StyleCop.Analyzers" RuleNamespace="StyleCop.Analyzers">
         <Rule Id="AD0001" Action="None" />
+        <Rule Id="CS0436" Action="None" />
+        <Rule Id="CS8034" Action="None" />
         <Rule Id="SA0001" Action="None" />
         <Rule Id="SA1200" Action="None" />
         <Rule Id="SA1300" Action="None" />
