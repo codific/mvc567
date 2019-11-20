@@ -8,10 +8,8 @@ namespace Codific.Mvc567.Services.Infrastructure
     public class AdminMenuService : AbstractService, IAdminMenuService
     {
         public AdminMenuService(IUnitOfWork uow, IMapper mapper)
-            : base (uow, mapper)
+            : base(uow, mapper)
         {
         }
-
-
     }
 }
