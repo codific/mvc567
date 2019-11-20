@@ -43,12 +43,11 @@ namespace Codific.Mvc567.DataAccess
 
         public DbSet<TranslationValue> TranslationValues { get; set; }
 
-        public DbSet<AdminNavigationScheme> AdminNavigationSchemes { get; set; }
+// public DbSet<AdminNavigationScheme> AdminNavigationSchemes { get; set; }
 
-        public DbSet<SidebarMenuSectionItem> SidebarMenuSectionItems { get; set; }
+// public DbSet<SidebarMenuSectionItem> SidebarMenuSectionItems { get; set; }
 
-        public DbSet<SidebarNavigationLinkItem> SidebarNavigationLinkItems { get; set; }
-
+// public DbSet<SidebarNavigationLinkItem> SidebarNavigationLinkItems { get; set; }
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);

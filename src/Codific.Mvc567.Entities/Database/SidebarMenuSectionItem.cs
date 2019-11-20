@@ -20,13 +20,13 @@ using Newtonsoft.Json;
 
 namespace Codific.Mvc567.Entities.Database
 {
-    [Table("SidebarMenuSectionItems")]
-    public class SidebarMenuSectionItem : SidebarNavigationLinkItem
-    {
-        public bool Single { get; set; }
-
-        public string Icon { get; set; }
-
-        public ICollection<SidebarNavigationLinkItem> Children { get; set; }
-    }
+// [Table("SidebarMenuSectionItems")]
+//    public class SidebarMenuSectionItem : SidebarNavigationLinkItem
+//    {
+//        public bool Single { get; set; }
+//
+//        public string Icon { get; set; }
+//
+//        public ICollection<SidebarNavigationLinkItem> Children { get; set; }
+//    }
 }

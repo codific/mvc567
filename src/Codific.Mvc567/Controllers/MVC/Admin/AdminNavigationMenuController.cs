@@ -9,15 +9,15 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Codific.Mvc567.Controllers.MVC.Admin
 {
-    [Area("Admin")]
-    [Route("admin/system/navigation-menus/")]
-    [ApiExplorerSettings(IgnoreApi = true)]
-    [Authorize(Policy = ApplicationPermissions.AccessAdministrationPolicy)]
-    public class AdminNavigationMenuController : AbstractEntityController<AdminNavigationScheme, AdminNavigationSchemeViewModel>
-    {
-        public AdminNavigationMenuController(IEntityManager entityManager)
-            : base(entityManager)
-        {
-        }
-    }
+// [Area("Admin")]
+//    [Route("admin/system/navigation-menus/")]
+//    [ApiExplorerSettings(IgnoreApi = true)]
+//    [Authorize(Policy = ApplicationPermissions.AccessAdministrationPolicy)]
+//    public class AdminNavigationMenuController : AbstractEntityController<AdminNavigationScheme, AdminNavigationSchemeViewModel>
+//    {
+//        public AdminNavigationMenuController(IEntityManager entityManager)
+//            : base(entityManager)
+//        {
+//        }
+//    }
 }

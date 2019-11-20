@@ -20,16 +20,16 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Codific.Mvc567.Entities.Database
 {
-    [Table("AdminNavigationSchemes")]
-    public class AdminNavigationScheme : EntityBase
-    {
-        public string Name { get; set; }
-
-        public Guid? RoleId { get; set; }
-
-        [ForeignKey("RoleId")]
-        public virtual Role Role { get; set; }
-
-        public virtual ICollection<SidebarMenuSectionItem> Menus { get; set; }
-    }
+// [Table("AdminNavigationSchemes")]
+//    public class AdminNavigationScheme : EntityBase
+//    {
+//        public string Name { get; set; }
+//
+//        public Guid? RoleId { get; set; }
+//
+//        [ForeignKey("RoleId")]
+//        public virtual Role Role { get; set; }
+//
+//        public virtual ICollection<SidebarMenuSectionItem> Menus { get; set; }
+//    }
 }

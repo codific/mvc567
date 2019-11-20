@@ -19,20 +19,20 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Codific.Mvc567.Entities.Database
 {
-    [Table("SidebarNavigationLinkItems")]
-    public class SidebarNavigationLinkItem : EntityBase
-    {
-        public string Title { get; set; }
-
-        public string Controller { get; set; }
-
-        public string Action { get; set; }
-
-        public string Area { get; set; }
-
-        public Guid? ParentSectionId { get; set; }
-
-        [ForeignKey("ParentSectionId")]
-        public virtual SidebarMenuSectionItem ParentSection { get; set; }
-    }
+// [Table("SidebarNavigationLinkItems")]
+//    public class SidebarNavigationLinkItem : EntityBase
+//    {
+//        public string Title { get; set; }
+//
+//        public string Controller { get; set; }
+//
+//        public string Action { get; set; }
+//
+//        public string Area { get; set; }
+//
+//        public Guid? ParentSectionId { get; set; }
+//
+//        [ForeignKey("ParentSectionId")]
+//        public virtual SidebarMenuSectionItem ParentSection { get; set; }
+//    }
 }
