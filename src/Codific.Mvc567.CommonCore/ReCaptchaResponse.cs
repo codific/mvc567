@@ -14,16 +14,22 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+using Newtonsoft.Json;
+
 namespace Codific.Mvc567.CommonCore
 {
-    public abstract class ReCaptchaResponse
+    public class ReCaptchaResponse
     {
+        [JsonProperty("success")]
         public bool Success { get; set; }
 
-        public string ChallengeTs { get; set; }
+        [JsonProperty("challenge_ts")]
+        public string Challenge_ts { get; set; }
 
+        [JsonProperty("hostname")]
         public string Hostname { get; set; }
 
+        [JsonProperty("errorcodes")]
         public string[] Errorcodes { get; set; }
     }
 }
