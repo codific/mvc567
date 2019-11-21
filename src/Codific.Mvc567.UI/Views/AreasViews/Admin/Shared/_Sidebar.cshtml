@@ -16,27 +16,31 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 *@
 
-@inject Microsoft.AspNetCore.Hosting.IHostingEnvironment hostingEnvironment
-@{ 
-    //var navigationScheme = new Codific.Mvc567.Common.Options.AdminNavigationScheme(hostingEnvironment.ContentRootPath);
+@inject Codific.Mvc567.Services.Abstractions.IAdminMenuService adminMenuService
+@{
+    string roleName = User.Claims.Where(x => x.Type == System.Security.Claims.ClaimTypes.Role).Select(x => x.Value).FirstOrDefault();
+    var navigationScheme = await adminMenuService.GetRoleShemeOrDefaultAsync<Codific.Mvc567.Dtos.ViewModels.AdminNavigationSchemeViewModel>(roleName);
 }
 <nav class="sidebar sidebar-offcanvas" id="sidebar">
-    <ul class="nav">@*
-        @foreach (var menuSection in navigationScheme.Menus)
+    <ul class="nav">
+        @if (navigationScheme != null && navigationScheme.Menus != null && navigationScheme.Menus.Count > 0)
         {
-            if (menuSection.Single)
+            foreach (var menuSection in navigationScheme.Menus)
             {
-                <menu-section controller="@menuSection.Controller" title="@menuSection.Title" icon="@menuSection.Icon" single="true" href="@Url.Action(menuSection.Action, menuSection.Controller, new { Area = menuSection.Area })" />
+                if (menuSection.Single)
+                {
+                    <menu-section controller="@menuSection.ItemController" title="@menuSection.Title" icon="@menuSection.Icon" single="true" href="@Url.Action(menuSection.ItemArea, menuSection.ItemController, new { Area = menuSection.ItemArea })" />
+                }
+                else
+                {
+                    <menu-section controller="@menuSection.ItemController" title="@menuSection.Title" icon="@menuSection.Icon">
+                        @foreach (var navigationLink in menuSection.Children)
+                        {
+                            <sidebar-navigation-link title="@navigationLink.Title" action="@navigationLink.ItemAction" controller="@navigationLink.ItemController" area="@navigationLink.ItemArea" />
+                        }
+                    </menu-section>
+                }
             }
-            else
-            {
-                <menu-section controller="@menuSection.Controller" title="@menuSection.Title" icon="@menuSection.Icon">
-                    @foreach (var navigationLink in menuSection.Children)
-                    {
-                        <sidebar-navigation-link title="@navigationLink.Title" action="@navigationLink.Action" controller="@navigationLink.Controller" area="@navigationLink.Area" />
-                    }
-                </menu-section>
-            }
-        }*@
+        }
     </ul>
 </nav>

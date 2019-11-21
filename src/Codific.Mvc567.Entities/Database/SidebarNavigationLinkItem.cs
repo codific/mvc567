@@ -24,11 +24,13 @@ namespace Codific.Mvc567.Entities.Database
     {
         public string Title { get; set; }
 
-        public string Controller { get; set; }
+        public string ItemController { get; set; }
 
-        public string Action { get; set; }
+        public string ItemAction { get; set; }
 
-        public string Area { get; set; }
+        public string ItemArea { get; set; }
+
+        public int Order { get; set; }
 
         public Guid? ParentSectionId { get; set; }
 

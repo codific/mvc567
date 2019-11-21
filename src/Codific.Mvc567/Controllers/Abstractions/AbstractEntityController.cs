@@ -75,6 +75,10 @@ namespace Codific.Mvc567.Controllers.Abstractions
 
         protected bool HasRestore { get; set; } = true;
 
+        protected bool SoftDelete { get; set; } = true;
+
+        protected Func<Guid, string> DeleteRedirectUrlFunction { get; set; }
+
         [HttpGet]
         [Route("all")]
         [Breadcrumb(BreadcrumbPageTitlePlaceholder, false, 0)]
@@ -83,7 +87,7 @@ namespace Codific.Mvc567.Controllers.Abstractions
             PaginatedEntitiesResult<TEntityDto> entitiesResult = await this.entityManager.GetAllEntitiesPaginatedAsync<TEntity, TEntityDto>(page, query, showDeleted);
             AllEntitiesViewModel model = new AllEntitiesViewModel();
             model.SingleEntityName = StringFunctions.SplitWordsByCapitalLetters(typeof(TEntity).Name);
-            model.Title = typeof(TEntity).Name.ToLower().EndsWith("s") ? $"{model.SingleEntityName}es" : $"{model.SingleEntityName}s";
+            model.Title = typeof(TEntity).Name.ToLower().EndsWith("s", StringComparison.Ordinal) ? $"{model.SingleEntityName}es" : $"{model.SingleEntityName}s";
             this.ViewData[BreadcrumbPageTitlePlaceholder] = model.Title;
 
             List<TableRowActionViewModel> actions = new List<TableRowActionViewModel>();
@@ -112,19 +116,25 @@ namespace Codific.Mvc567.Controllers.Abstractions
         [Route("create")]
         [Breadcrumb(BreadcrumbEntityNamePluralPlaceholder, true, 0, nameof(GetAll))]
         [Breadcrumb("Create", false, 1)]
-        public virtual async Task<IActionResult> Create()
+        public virtual async Task<IActionResult> CreateGet(TEntityDto model = null)
         {
             if (!this.HasGenericCreate)
             {
                 return this.NotFound();
             }
 
-            ICreateEditEntityDto model = (ICreateEditEntityDto)new TEntityDto();
-            model.Area = "Admin";
-            model.Controller = await Task.FromResult(this.GetType().Name.Replace("Controller", string.Empty));
-            model.Action = "Create";
-            model.EntityName = StringFunctions.SplitWordsByCapitalLetters(typeof(TEntity).Name);
-            this.ViewData[BreadcrumbEntityNamePluralPlaceholder] = model.EntityName.ToPluralString();
+            if (model is null)
+            {
+                model = new TEntityDto();
+            }
+
+            ((ICreateEditEntityDto)model).Area = "Admin";
+            ((ICreateEditEntityDto)model).Controller = await Task.FromResult(this.GetType().Name.Replace("Controller", string.Empty));
+            ((ICreateEditEntityDto)model).Action = "CreatePost";
+            ((ICreateEditEntityDto)model).EntityName = StringFunctions.SplitWordsByCapitalLetters(typeof(TEntity).Name);
+            this.ViewData[BreadcrumbEntityNamePluralPlaceholder] = ((ICreateEditEntityDto)model).EntityName.ToPluralString();
+
+            this.ModelState.Clear();
 
             return this.View("AbstractViews/Create", model);
         }
@@ -134,7 +144,7 @@ namespace Codific.Mvc567.Controllers.Abstractions
         [ValidateAntiForgeryToken]
         [Breadcrumb(BreadcrumbEntityNamePluralPlaceholder, true, 0, nameof(GetAll))]
         [Breadcrumb("Create", false, 1)]
-        public virtual async Task<IActionResult> Create(TEntityDto model)
+        public virtual async Task<IActionResult> CreatePost(TEntityDto model)
         {
             if (!this.HasGenericCreate)
             {
@@ -144,7 +154,7 @@ namespace Codific.Mvc567.Controllers.Abstractions
             ICreateEditEntityDto castedModel = (ICreateEditEntityDto)model;
             castedModel.Area = "Admin";
             castedModel.Controller = this.GetType().Name.Replace("Controller", string.Empty);
-            castedModel.Action = "Create";
+            castedModel.Action = "CreatePost";
             castedModel.EntityName = StringFunctions.SplitWordsByCapitalLetters(typeof(TEntity).Name);
             this.ViewData[BreadcrumbEntityNamePluralPlaceholder] = castedModel.EntityName.ToPluralString();
             this.ModelState.Remove("Area");
@@ -266,10 +276,18 @@ namespace Codific.Mvc567.Controllers.Abstractions
                 return this.NotFound();
             }
 
-            bool isEntityDeleted = await this.entityManager.DeleteEntityAsync<TEntity>(id);
+            IActionResult deleteRedirect = this.RedirectToAction("GetAll");
+
+            if (this.DeleteRedirectUrlFunction != null)
+            {
+                string redirectUrl = this.DeleteRedirectUrlFunction.Invoke(id);
+                deleteRedirect = this.Redirect(redirectUrl);
+            }
+
+            bool isEntityDeleted = await this.entityManager.DeleteEntityAsync<TEntity>(id, this.SoftDelete);
             this.TempData["EntityDeletedStatus"] = isEntityDeleted;
 
-            return this.RedirectToAction("GetAll");
+            return deleteRedirect;
         }
 
         [HttpPost]

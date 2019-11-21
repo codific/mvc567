@@ -21,7 +21,10 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 @foreach (var inputItem in Model)
 {
 <div class="form-group">
-    <label>@inputItem.Label:</label>
+    @if (inputItem.Type != CreateEntityInputType.Hidden)
+    {
+        <label>@inputItem.Label:</label>
+    }
     @switch (inputItem.Type)
     {
         case CreateEntityInputType.Text:
@@ -77,6 +80,9 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
             break;
         case CreateEntityInputType.DatabaseTablesSelect:
             <database-tables-select name="@inputItem.Name" selected-value="@inputItem.Value?.ToString()" class="form-control"></database-tables-select>
+            break;
+        case CreateEntityInputType.Hidden:
+            <input type="hidden" name="@inputItem.Name" value="@inputItem.Value?.ToString()"/>
             break;
         default:
             break;

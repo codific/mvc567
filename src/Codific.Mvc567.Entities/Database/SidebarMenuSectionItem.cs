@@ -14,19 +14,37 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
+using Codific.Mvc567.Common.Attributes;
 using Newtonsoft.Json;
 
 namespace Codific.Mvc567.Entities.Database
 {
     [Table("SidebarMenuSectionItems")]
-    public class SidebarMenuSectionItem : SidebarNavigationLinkItem
+    public class SidebarMenuSectionItem : EntityBase
     {
+        public string Title { get; set; }
+
+        public string ItemController { get; set; }
+
+        public string ItemAction { get; set; }
+
+        public string ItemArea { get; set; }
+
+        public int Order { get; set; }
+
         public bool Single { get; set; }
 
         public string Icon { get; set; }
 
         public ICollection<SidebarNavigationLinkItem> Children { get; set; }
+
+        [SearchCriteria]
+        public Guid AdminNavigationSchemeId { get; set; }
+
+        [ForeignKey("AdminNavigationSchemeId")]
+        public virtual AdminNavigationScheme AdminNavigationScheme { get; set; }
     }
 }

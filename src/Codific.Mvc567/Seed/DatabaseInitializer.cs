@@ -70,6 +70,11 @@ namespace Codific.Mvc567.Seed
                 await this.CreateUserAsync("admin@example.com", "Admin123!", "AdminFirst", "AdminLast", new string[] { UserRoles.Admin.ToString() });
                 await this.CreateUserAsync("user@example.com", "User123!", "UserFirst", "UserLast", new string[] { UserRoles.User.ToString() });
             }
+
+            if (!await this.context.AdminNavigationSchemes.AnyAsync())
+            {
+                await this.InitDefaultAdminNavigationMenusAsync();
+            }
         }
 
         private async Task EnsureRoleAsync(string roleName, string description, string[] claims)
@@ -100,6 +105,119 @@ namespace Codific.Mvc567.Seed
             }
 
             return user;
+        }
+
+        private async Task InitDefaultAdminNavigationMenusAsync()
+        {
+            AdminNavigationScheme defaultScheme = new AdminNavigationScheme();
+            AdminNavigationScheme adminSheme = new AdminNavigationScheme();
+            var defaultDashboardSection = new SidebarMenuSectionItem()
+            {
+                Title = "Dashboard",
+                ItemArea = "Admin",
+                ItemController = "AdminDashboard",
+                ItemAction = "Index",
+                Order = 0,
+                Single = true,
+                Icon = "mdi mdi-television",
+            };
+            var defaultAdminDashboardSection = new SidebarMenuSectionItem()
+            {
+                Title = "Dashboard",
+                ItemArea = "Admin",
+                ItemController = "AdminDashboard",
+                ItemAction = "Index",
+                Order = 0,
+                Single = true,
+                Icon = "mdi mdi-television",
+            };
+
+            var usersSection = new SidebarMenuSectionItem
+            {
+                Title = "Users",
+                ItemController = "AdminUsers",
+                Order = 8,
+                Single = false,
+                Icon = "mdi mdi-account",
+                Children = new List<SidebarNavigationLinkItem>(),
+            };
+
+            var allUsersNavigationItem = new SidebarNavigationLinkItem
+            {
+                Title = "All Users",
+                ItemAction = "GetAll",
+                ItemController = "AdminUsers",
+                ItemArea = "Admin",
+            };
+
+            usersSection.Children.Add(allUsersNavigationItem);
+
+            var settingsSection = new SidebarMenuSectionItem
+            {
+                Title = "Settings",
+                ItemController = "AdminSettings",
+                Order = 10,
+                Single = false,
+                Icon = "mdi mdi-settings",
+                Children = new List<SidebarNavigationLinkItem>(),
+            };
+
+            var languagesSettingsNavigationItem = new SidebarNavigationLinkItem
+            {
+                Title = "Languages",
+                ItemAction = "GetAll",
+                ItemController = "AdminLanguages",
+                ItemArea = "Admin",
+                Order = 5,
+            };
+
+            var menuSettingsNavigationItem = new SidebarNavigationLinkItem
+            {
+                Title = "Menus",
+                ItemAction = "GetAll",
+                ItemController = "AdminNavigationMenu",
+                ItemArea = "Admin",
+                Order = 10,
+            };
+
+            var logsSettingsNavigationItem = new SidebarNavigationLinkItem
+            {
+                Title = "Logs",
+                ItemAction = "GetAll",
+                ItemController = "AdminLogs",
+                ItemArea = "Admin",
+                Order = 15,
+            };
+
+            var systemConstantsSettingsNavigationItem = new SidebarNavigationLinkItem
+            {
+                Title = "System Constants",
+                ItemAction = "GetAll",
+                ItemController = "AdminSystemConstants",
+                ItemArea = "Admin",
+                Order = 20,
+            };
+
+            settingsSection.Children.Add(languagesSettingsNavigationItem);
+            settingsSection.Children.Add(menuSettingsNavigationItem);
+            settingsSection.Children.Add(logsSettingsNavigationItem);
+            settingsSection.Children.Add(systemConstantsSettingsNavigationItem);
+
+            defaultScheme.Name = "Default";
+            defaultScheme.Menus = new List<SidebarMenuSectionItem>();
+            defaultScheme.Menus.Add(defaultDashboardSection);
+
+            adminSheme.Name = "Admin Menu";
+            adminSheme.Role = this.context.Roles.Where(x => x.Name == UserRoles.Admin).FirstOrDefault();
+            adminSheme.Menus = new List<SidebarMenuSectionItem>();
+            adminSheme.Menus.Add(defaultAdminDashboardSection);
+            adminSheme.Menus.Add(usersSection);
+            adminSheme.Menus.Add(settingsSection);
+
+            this.context.AdminNavigationSchemes.Add(defaultScheme);
+            this.context.AdminNavigationSchemes.Add(adminSheme);
+
+            await this.context.SaveChangesAsync();
         }
     }
 }

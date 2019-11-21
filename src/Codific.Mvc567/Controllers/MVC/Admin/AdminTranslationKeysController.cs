@@ -20,6 +20,7 @@ using Codific.Mvc567.Common.Attributes;
 using Codific.Mvc567.Controllers.Abstractions;
 using Codific.Mvc567.DataAccess.Identity;
 using Codific.Mvc567.Dtos.Entities;
+using Codific.Mvc567.Dtos.ViewModels.Abstractions;
 using Codific.Mvc567.Entities.Database;
 using Codific.Mvc567.Services.Abstractions;
 using Codific.Mvc567.Services.Infrastructure;
@@ -44,23 +45,23 @@ namespace Codific.Mvc567.Controllers.MVC.Admin
         [Breadcrumb(BreadcrumbPageTitlePlaceholder, false, 1)]
         public override Task<IActionResult> GetAll([FromQuery(Name = "p")] int page = 1, [FromQuery(Name = "q")] string query = null, [FromQuery(Name = "d")]bool showDeleted = false)
         {
-            return base.GetAll(page, query);
+            return base.GetAll(page, query, showDeleted);
         }
 
         [Breadcrumb("Languages", true, 0, "GetAll", "AdminLanguages")]
         [Breadcrumb(BreadcrumbEntityNamePluralPlaceholder, true, 1, nameof(GetAll))]
         [Breadcrumb("Create", false, 2)]
-        public override Task<IActionResult> Create()
+        public override Task<IActionResult> CreateGet(TranslationKeyViewModel model = null)
         {
-            return base.Create();
+            return base.CreateGet(model);
         }
 
         [Breadcrumb("Languages", true, 0, "GetAll", "AdminLanguages")]
         [Breadcrumb(BreadcrumbEntityNamePluralPlaceholder, true, 1, nameof(GetAll))]
         [Breadcrumb("Create", false, 2)]
-        public override Task<IActionResult> Create(TranslationKeyViewModel model)
+        public override Task<IActionResult> CreatePost(TranslationKeyViewModel model)
         {
-            return base.Create(model);
+            return base.CreatePost(model);
         }
 
         [Breadcrumb("Languages", true, 0, "GetAll", "AdminLanguages")]

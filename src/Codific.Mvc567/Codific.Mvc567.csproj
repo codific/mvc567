@@ -104,6 +104,9 @@
     <ProjectReference Include="..\Codific.Mvc567.CommonCore\Codific.Mvc567.CommonCore.csproj" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Remove="Controllers\MVC\Admin\AdminSidebarMenuSectionItemController.цс" />
+  </ItemGroup>
+  <ItemGroup>
     <Compile Update="Resources.Designer.cs">
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>

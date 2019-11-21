@@ -48,5 +48,6 @@ namespace Codific.Mvc567.Common.Enums
         BoolSelect = 16,
         BoolRadio = 17,
         DatabaseTablesSelect = 18,
+        Hidden = 19,
     }
 }

@@ -123,43 +123,46 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
                     </tbody>
                 </table>
             </div>
-            <nav class="d-flex mt-4">
-                <ul class="pagination m-auto">
-                    @if (Model.Pagination.PreviousPage != null && Model.Pagination.PreviousPagesCount > 0)
-                    {
-                        <li class="page-item mx-0">
-                            <a class="page-link btn btn-secondary p-2" href="@Url.Action(Model.Action, Model.Controller, new { Area = Model.Area, p = Model.Pagination.PreviousPage, q = ViewData["searchQuery"] })">⯇</a>
-                        </li>
-                    }
-                    @if (Model.Pagination.PreviousPagesCount > 0)
-                    {
-                        for (int i = Model.Pagination.PreviousPagesCount; i >= 1; i--)
+            @if (Model.Pagination.NextPagesCount != 0 || Model.Pagination.PreviousPagesCount != 0)
+            {
+                <nav class="d-flex mt-4">
+                    <ul class="pagination m-auto">
+                        @if (Model.Pagination.PreviousPage != null && Model.Pagination.PreviousPagesCount > 0)
                         {
-                            <li class="page-item ml-1 mr-0">
-                                <a class="page-link btn btn-secondary p-2" href="@Url.Action(Model.Action, Model.Controller, new { Area = Model.Area, p = Model.Pagination.CurrentPage - i, q = ViewData["searchQuery"] })">@(Model.Pagination.CurrentPage - i)</a>
+                            <li class="page-item mx-0">
+                                <a class="page-link btn btn-secondary p-2" href="@Url.Action(Model.Action, Model.Controller, new { Area = Model.Area, p = Model.Pagination.PreviousPage, q = ViewData["searchQuery"] })">⯇</a>
                             </li>
                         }
-                    }
-                    <li class="page-item active mx-1 mb-0">
-                        <p class="page-link btn btn-primary p-2">@Model.Pagination.CurrentPage</p>
-                    </li>
-                    @if (Model.Pagination.NextPagesCount > 0)
-                    {
-                        for (int i = 1; i <= Model.Pagination.NextPagesCount; i++)
+                        @if (Model.Pagination.PreviousPagesCount > 0)
                         {
-                            <li class="page-item mr-1 ml-0">
-                                <a class="page-link btn btn-secondary p-2" href="@Url.Action(Model.Action, Model.Controller, new { Area = Model.Area, p = Model.Pagination.CurrentPage + i, q = ViewData["searchQuery"] })">@(Model.Pagination.CurrentPage + i)</a>
+                            for (int i = Model.Pagination.PreviousPagesCount; i >= 1; i--)
+                            {
+                                <li class="page-item ml-1 mr-0">
+                                    <a class="page-link btn btn-secondary p-2" href="@Url.Action(Model.Action, Model.Controller, new { Area = Model.Area, p = Model.Pagination.CurrentPage - i, q = ViewData["searchQuery"] })">@(Model.Pagination.CurrentPage - i)</a>
+                                </li>
+                            }
+                        }
+                        <li class="page-item active mx-1 mb-0">
+                            <p class="page-link btn btn-primary p-2">@Model.Pagination.CurrentPage</p>
+                        </li>
+                        @if (Model.Pagination.NextPagesCount > 0)
+                        {
+                            for (int i = 1; i <= Model.Pagination.NextPagesCount; i++)
+                            {
+                                <li class="page-item mr-1 ml-0">
+                                    <a class="page-link btn btn-secondary p-2" href="@Url.Action(Model.Action, Model.Controller, new { Area = Model.Area, p = Model.Pagination.CurrentPage + i, q = ViewData["searchQuery"] })">@(Model.Pagination.CurrentPage + i)</a>
+                                </li>
+                            }
+                        }
+                        @if (Model.Pagination.NextPage != null && Model.Pagination.NextPagesCount > 0)
+                        {
+                            <li class="page-item mx-0">
+                                <a class="page-link btn btn-secondary p-2" href="@Url.Action(Model.Action, Model.Controller, new { Area = Model.Area, p = Model.Pagination.NextPage, q = ViewData["searchQuery"] })">⯈</a>
                             </li>
                         }
-                    }
-                    @if (Model.Pagination.NextPage != null && Model.Pagination.NextPagesCount > 0)
-                    {
-                        <li class="page-item mx-0">
-                            <a class="page-link btn btn-secondary p-2" href="@Url.Action(Model.Action, Model.Controller, new { Area = Model.Area, p = Model.Pagination.NextPage, q = ViewData["searchQuery"] })">⯈</a>
-                        </li>
-                    }
-                </ul>
-            </nav>
+                    </ul>
+                </nav>
+            }
         </div>
     </div>
 </div>

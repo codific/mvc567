@@ -1,6 +1,7 @@
 ﻿using System;
 using AutoMapper;
 using Codific.Mvc567.Dtos.Entities;
+using Codific.Mvc567.Dtos.ViewModels;
 using Codific.Mvc567.Entities.Database;
 
 namespace Codific.Mvc567.Profiles
@@ -14,6 +15,12 @@ namespace Codific.Mvc567.Profiles
             this.CreateMap<Language, SimpleLanguageDto>().ReverseMap();
 
             this.CreateMap<User, SimpleUserDto>().ReverseMap();
+
+            this.CreateMap<AdminNavigationScheme, AdminNavigationSchemeViewModel>().ReverseMap();
+
+            this.CreateMap<SidebarMenuSectionItem, SidebarMenuSectionItemViewModel>().ReverseMap();
+
+            this.CreateMap<SidebarNavigationLinkItem, SidebarNavigationLinkItemViewModel>().ReverseMap();
         }
     }
 }
