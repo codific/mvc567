@@ -32,7 +32,7 @@ namespace Codific.Mvc567.Controllers.Abstractions
         where TEntityDto : class, new()
         where TCreateEditEntityDto : class, new()
     {
-        private readonly IEntityManager entityManager;
+        protected readonly IEntityManager entityManager;
 
         public AbstractApiController(IEntityManager entityManager)
         {
