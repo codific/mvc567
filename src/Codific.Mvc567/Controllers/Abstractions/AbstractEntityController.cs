@@ -40,8 +40,7 @@ namespace Codific.Mvc567.Controllers.Abstractions
     {
         protected const string BreadcrumbPageTitlePlaceholder = "[PageTitle]";
         protected const string BreadcrumbEntityNamePluralPlaceholder = "[EntityNamePlural]";
-
-        private readonly IEntityManager entityManager;
+        protected readonly IEntityManager entityManager;
 
         private string controllerRoute = string.Empty;
         private string controllerName = string.Empty;
