@@ -14,7 +14,7 @@ namespace Codific.Mvc567.Services.Infrastructure
     public class AdminMenuService : AbstractService, IAdminMenuService
     {
         public AdminMenuService(IUnitOfWork uow, IMapper mapper)
-            : base (uow, mapper)
+            : base(uow, mapper)
         {
         }
 
@@ -36,7 +36,7 @@ namespace Codific.Mvc567.Services.Infrastructure
 
                 return result;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return null;
             }
@@ -61,7 +61,7 @@ namespace Codific.Mvc567.Services.Infrastructure
 
                 return result;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return null;
             }
@@ -83,6 +83,7 @@ namespace Codific.Mvc567.Services.Infrastructure
                     null,
                     x => x.Include(y => y.Menus).ThenInclude(z => ((SidebarMenuSectionItem)z).Children))).FirstOrDefault();
                 }
+
                 if (resultScheme == null)
                 {
                     return default(TShemeModel);
@@ -98,7 +99,7 @@ namespace Codific.Mvc567.Services.Infrastructure
             }
             catch (Exception ex)
             {
-                await LogErrorAsync(ex, nameof(GetRoleShemeOrDefaultAsync));
+                await this.LogErrorAsync(ex, nameof(this.GetRoleShemeOrDefaultAsync));
                 return default(TShemeModel);
             }
         }
@@ -117,7 +118,7 @@ namespace Codific.Mvc567.Services.Infrastructure
             }
             catch (Exception ex)
             {
-                await LogErrorAsync(ex, nameof(GetShemeBySectionIdAsync));
+                await this.LogErrorAsync(ex, nameof(this.GetShemeBySectionIdAsync));
                 return default(TSectionModel);
             }
         }
@@ -136,7 +137,7 @@ namespace Codific.Mvc567.Services.Infrastructure
             }
             catch (Exception ex)
             {
-                await LogErrorAsync(ex, nameof(GetShemeBySectionIdAsync));
+                await this.LogErrorAsync(ex, nameof(this.GetShemeBySectionIdAsync));
                 return default(TShemeModel);
             }
         }
