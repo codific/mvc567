@@ -8,14 +8,15 @@ using Codific.Mvc567.Common.Attributes;
 using Codific.Mvc567.Controllers.Abstractions;
 using Codific.Mvc567.DataAccess.Identity;
 using Codific.Mvc567.Dtos.ServiceResults;
+using Codific.Mvc567.Dtos.ViewModels;
 using Codific.Mvc567.Dtos.ViewModels.Abstractions;
 using Codific.Mvc567.Dtos.ViewModels.Abstractions.Table;
-using Codific.Mvc567.Entities.Database;
-using Codific.Mvc567.Entities.ViewModels.Mapping;
+using Codific.Mvc567.Dtos.ViewModels.Mapping;
 using Codific.Mvc567.Services.Abstractions;
-using Codific.Mvc567.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using SidebarMenuSectionItemViewModel = Codific.Mvc567.ViewModels.SidebarMenuSectionItemViewModel;
+using SidebarNavigationLinkItemViewModel = Codific.Mvc567.ViewModels.SidebarNavigationLinkItemViewModel;
 
 namespace Codific.Mvc567.Controllers.MVC.Admin
 {

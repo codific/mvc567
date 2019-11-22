@@ -27,7 +27,7 @@ using Codific.Mvc567.DataAccess.Abstractions.Entities;
 using Codific.Mvc567.Dtos.ServiceResults;
 using Codific.Mvc567.Dtos.ViewModels.Abstractions;
 using Codific.Mvc567.Dtos.ViewModels.Abstractions.Table;
-using Codific.Mvc567.Entities.ViewModels.Mapping;
+using Codific.Mvc567.Dtos.ViewModels.Mapping;
 using Codific.Mvc567.Services.Abstractions;
 using Microsoft.AspNetCore.Mvc;
 

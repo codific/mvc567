@@ -22,7 +22,7 @@ using Codific.Mvc567.Common.Extensions;
 using Codific.Mvc567.Common.Utilities;
 using Codific.Mvc567.Dtos.ViewModels.Abstractions.Details;
 
-namespace Codific.Mvc567.Entities.ViewModels.Mapping
+namespace Codific.Mvc567.Dtos.ViewModels.Mapping
 {
     public static class DetailsMapper
     {
