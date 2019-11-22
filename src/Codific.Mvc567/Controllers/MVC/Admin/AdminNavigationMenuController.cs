@@ -24,7 +24,7 @@ namespace Codific.Mvc567.Controllers.MVC.Admin
     [Route("admin/system/navigation-menus/")]
     [ApiExplorerSettings(IgnoreApi = true)]
     [Authorize(Policy = ApplicationPermissions.AccessAdministrationPolicy)]
-    public class AdminNavigationMenuController : AbstractEntityController<AdminNavigationScheme, AdminNavigationSchemeViewModel>
+    public class AdminNavigationMenuController : AbstractEntityController<AdminNavigationScheme, ViewModels.AdminNavigationSchemeViewModel>
     {
         private readonly IAdminMenuService adminMenuService;
 
@@ -41,7 +41,7 @@ namespace Codific.Mvc567.Controllers.MVC.Admin
         [Breadcrumb("Sidebar Menu Sections", false, 1)]
         public async Task<IActionResult> GetMenuSections(Guid menuId)
         {
-            PaginatedEntitiesResult<SidebarMenuSectionItemViewModel> entitiesResult = await this.adminMenuService.GetAllMenuSectionsAsync<SidebarMenuSectionItemViewModel>(menuId);
+            PaginatedEntitiesResult<ViewModels.SidebarMenuSectionItemViewModel> entitiesResult = await this.adminMenuService.GetAllMenuSectionsAsync<ViewModels.SidebarMenuSectionItemViewModel>(menuId);
             AllEntitiesViewModel model = new AllEntitiesViewModel();
             model.SingleEntityName = "Sidebar Section";
             model.Title = "Menu Sidebar Sections";
@@ -54,7 +54,7 @@ namespace Codific.Mvc567.Controllers.MVC.Admin
             actions.Add(TableMapper.EditAction($"/admin/system/navigation-menus/sidebar-menu-section-items/{{0}}/edit", "[Id]"));
             actions.Add(TableMapper.DeleteAction($"/admin/system/navigation-menus/sidebar-menu-section-items/{{0}}/delete", "[Id]"));
 
-            model.Table = TableMapper.DtoMapper<SidebarMenuSectionItemViewModel>(entitiesResult, actions.ToArray());
+            model.Table = TableMapper.DtoMapper<ViewModels.SidebarMenuSectionItemViewModel>(entitiesResult, actions.ToArray());
             model.Table.SetPaginationRedirection("Admin", this.GetType().Name.Replace("Controller", string.Empty), nameof(this.GetAll));
 
             model.NavigationActions.Add(new NavigationActionViewModel
@@ -75,13 +75,13 @@ namespace Codific.Mvc567.Controllers.MVC.Admin
         [Breadcrumb("Sidebar Section Link Items", false, 2)]
         public async Task<IActionResult> GetSectionItems(Guid sectionId)
         {
-            PaginatedEntitiesResult<SidebarNavigationLinkItemViewModel> entitiesResult = await this.adminMenuService.GetAllLinkItemsAsync<SidebarNavigationLinkItemViewModel>(sectionId);
+            PaginatedEntitiesResult<ViewModels.SidebarNavigationLinkItemViewModel> entitiesResult = await this.adminMenuService.GetAllLinkItemsAsync<ViewModels.SidebarNavigationLinkItemViewModel>(sectionId);
             AllEntitiesViewModel model = new AllEntitiesViewModel();
             model.SingleEntityName = "Sidebar Section Link Items";
             model.Title = "Menu Sidebar Section Link Items";
             this.ViewData[BreadcrumbPageTitlePlaceholder] = model.Title;
 
-            this.ViewData["[SectionMenuId]"] = (await this.adminMenuService.GetShemeBySectionIdAsync<AdminNavigationSchemeViewModel>(sectionId))?.Id;
+            this.ViewData["[SectionMenuId]"] = (await this.adminMenuService.GetShemeBySectionIdAsync<ViewModels.AdminNavigationSchemeViewModel>(sectionId))?.Id;
 
             List<TableRowActionViewModel> actions = new List<TableRowActionViewModel>();
 
@@ -89,7 +89,7 @@ namespace Codific.Mvc567.Controllers.MVC.Admin
             actions.Add(TableMapper.EditAction($"/admin/system/navigation-menus/sidebar-menu-link-items/{{0}}/edit", "[Id]"));
             actions.Add(TableMapper.DeleteAction($"/admin/system/navigation-menus/sidebar-menu-link-items/{{0}}/delete", "[Id]"));
 
-            model.Table = TableMapper.DtoMapper<SidebarNavigationLinkItemViewModel>(entitiesResult, actions.ToArray());
+            model.Table = TableMapper.DtoMapper<ViewModels.SidebarNavigationLinkItemViewModel>(entitiesResult, actions.ToArray());
             model.Table.SetPaginationRedirection("Admin", this.GetType().Name.Replace("Controller", string.Empty), nameof(this.GetAll));
 
             model.NavigationActions.Add(new NavigationActionViewModel
