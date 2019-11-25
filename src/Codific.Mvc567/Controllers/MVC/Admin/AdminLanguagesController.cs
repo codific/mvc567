@@ -100,7 +100,7 @@ namespace Codific.Mvc567.Controllers.MVC.Admin
                                             MaterialDesignIcons.Json,
                                             Color.DimGray,
                                             TableRowActionMethod.Post,
-                                            $"/{this.ControllerName}{{0}}/generate-translation-file",
+                                            $"/{this.ControllerRoute}{{0}}/generate-translation-file",
                                             "[Id]"));
         }
     }
