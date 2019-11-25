@@ -8,6 +8,7 @@ using Codific.Mvc567.DataAccess.Abstractions.Repositories;
 using Codific.Mvc567.DataAccess.Core;
 using Codific.Mvc567.DataAccess.Identity;
 using Codific.Mvc567.Entities.Database;
+using Codific.Mvc567.Options;
 using Codific.Mvc567.Profiles;
 using Codific.Mvc567.Seed;
 using Codific.Mvc567.Services.Extensions;
@@ -142,16 +143,27 @@ namespace Codific.Mvc567.Extensions
             return services;
         }
 
-        public static IServiceCollection AddMvc567Mapping(this IServiceCollection services, string migrationAssembly, Action<IMapperConfigurationExpression> configurationAction)
+        public static IServiceCollection AddMvc567Mapping(this IServiceCollection services, string migrationAssembly, Action<MappingConfigurationOptions> configurationAction)
         {
-            IMapperConfigurationExpression customConfiguration = null;
+            MappingConfigurationOptions customConfiguration = new MappingConfigurationOptions();
             configurationAction.Invoke(customConfiguration);
 
             services.AddSingleton<IMapper>(new Mapper(new MapperConfiguration(configuration =>
             {
-                if (customConfiguration != null)
+                if (customConfiguration != null && customConfiguration.MappingProfiles != null && customConfiguration.MappingProfiles.Count > 0)
                 {
-                    configuration = customConfiguration;
+                    foreach (var profileType in customConfiguration.MappingProfiles)
+                    {
+                        configuration.AddProfile(profileType);
+                    }
+                }
+
+                if (customConfiguration != null && customConfiguration.MappingAssemblies != null && customConfiguration.MappingAssemblies.Count > 0)
+                {
+                    foreach (var assemblyString in customConfiguration.MappingAssemblies)
+                    {
+                        configuration.AddMaps(assemblyString);
+                    }
                 }
 
                 configuration.AddMaps("Codific.Mvc567.Entities");
