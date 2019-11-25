@@ -11,6 +11,7 @@ using Codific.Mvc567.Dtos.ServiceResults;
 using Codific.Mvc567.Dtos.ViewModels.Abstractions;
 using Codific.Mvc567.Dtos.ViewModels.Abstractions.Table;
 using Codific.Mvc567.Dtos.ViewModels.Mapping;
+using Codific.Mvc567.Entities.Database;
 using Codific.Mvc567.Services.Abstractions;
 using Codific.Mvc567.ViewModels;
 using Microsoft.AspNetCore.Authorization;
@@ -101,11 +102,11 @@ namespace Codific.Mvc567.Controllers.MVC.Admin
             return this.View("AbstractViews/GetAll", model);
         }
 
-        protected override void TableViewActionsInit(ref List<TableRowActionViewModel> actions)
+        protected override void TableViewActionsInit()
         {
-            actions.Add(TableMapper.CreateAction("Sections", MaterialDesignIcons.ViewList, Color.DarkSlateBlue, TableRowActionMethod.Get, $"/admin/system/navigation-menus/{{0}}/sections", "[Id]"));
+            this.TableRowActions.Add(TableMapper.CreateAction("Sections", MaterialDesignIcons.ViewList, Color.DarkSlateBlue, TableRowActionMethod.Get, $"/admin/system/navigation-menus/{{0}}/sections", "[Id]"));
 
-            base.TableViewActionsInit(ref actions);
+            base.TableViewActionsInit();
         }
     }
 }

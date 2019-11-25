@@ -137,18 +137,18 @@ namespace Codific.Mvc567.Controllers.MVC.Admin
             return this.NotFound();
         }
 
-        protected override void TableViewActionsInit(ref List<TableRowActionViewModel> actions)
+        protected override void TableViewActionsInit()
         {
-            base.TableViewActionsInit(ref actions);
-            actions.Insert(1, TableMapper.CreateAction("Send Email", MaterialDesignIcons.Email, Color.ForestGreen, TableRowActionMethod.Get, $"/{this.ControllerRoute}{{0}}/send-email", "[Id]"));
+            base.TableViewActionsInit();
+            this.TableRowActions.Insert(1, TableMapper.CreateAction("Send Email", MaterialDesignIcons.Email, Color.ForestGreen, TableRowActionMethod.Get, $"/{this.ControllerRoute}{{0}}/send-email", "[Id]"));
             var resetRefreshTokenAction = TableMapper.CreateAction("Reset Refresh Token", MaterialDesignIcons.Refresh, Color.PaleVioletRed, TableRowActionMethod.Post, $"/{this.ControllerRoute}{{0}}/reset-refresh-token", "[Id]");
             resetRefreshTokenAction.SetConfirmation("Reset Refresh Token", "Are you sure you want to reset refresh token of this user?");
-            actions.Insert(2, resetRefreshTokenAction);
+            this.TableRowActions.Insert(2, resetRefreshTokenAction);
         }
 
-        protected override void InitNavigationActionsIntoListPage(ref AllEntitiesViewModel model)
+        protected override void InitNavigationActionsIntoListPage()
         {
-            // no global actions
+            this.NavigationActions.Clear();
         }
     }
 }
