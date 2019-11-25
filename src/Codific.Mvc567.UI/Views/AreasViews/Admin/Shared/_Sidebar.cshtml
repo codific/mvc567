@@ -29,7 +29,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
             {
                 if (menuSection.Single)
                 {
-                    <menu-section controller="@menuSection.ItemController" title="@menuSection.Title" icon="@menuSection.Icon" single="true" href="@Url.Action(menuSection.ItemArea, menuSection.ItemController, new { Area = menuSection.ItemArea })" />
+                    <menu-section controller="@menuSection.ItemController" title="@menuSection.Title" icon="@menuSection.Icon" single="true" href="@Url.Action(menuSection.ItemAction, menuSection.ItemController, new { Area = menuSection.ItemArea })" />
                 }
                 else
                 {
