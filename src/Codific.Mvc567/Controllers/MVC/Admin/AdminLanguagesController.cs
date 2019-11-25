@@ -65,18 +65,18 @@ namespace Codific.Mvc567.Controllers.MVC.Admin
             return this.RedirectToAction(nameof(this.GetAll));
         }
 
-        protected override void InitNavigationActionsIntoListPage(ref AllEntitiesViewModel model)
+        protected override void InitNavigationActionsIntoListPage()
         {
-            base.InitNavigationActionsIntoListPage(ref model);
+            base.InitNavigationActionsIntoListPage();
 
-            model.NavigationActions.Add(new NavigationActionViewModel
+            this.NavigationActions.Add(new NavigationActionViewModel
             {
                 Name = "Translations",
                 ActionUrl = "/admin/languages/translations/all",
                 Icon = MaterialDesignIcons.Translate,
             });
 
-            model.NavigationActions.Add(new NavigationActionViewModel
+            this.NavigationActions.Add(new NavigationActionViewModel
             {
                 Name = "Keys",
                 ActionUrl = "/admin/languages/translations/keys/all",
@@ -84,22 +84,22 @@ namespace Codific.Mvc567.Controllers.MVC.Admin
             });
         }
 
-        protected override void TableViewActionsInit(ref List<TableRowActionViewModel> actions)
+        protected override void TableViewActionsInit()
         {
-            base.TableViewActionsInit(ref actions);
-            actions.Insert(1, TableMapper.CreateAction(
+            base.TableViewActionsInit();
+            this.TableRowActions.Insert(1, TableMapper.CreateAction(
                                             "Translations",
                                             MaterialDesignIcons.Translate,
                                             Color.ForestGreen,
                                             TableRowActionMethod.Get,
                                             $"/{this.ControllerRoute}translations/all?q={{0}}",
                                             "[Id]"));
-            actions.Insert(2, TableMapper.CreateAction(
+            this.TableRowActions.Insert(2, TableMapper.CreateAction(
                                             "Generate Translation Json",
                                             MaterialDesignIcons.Json,
                                             Color.DimGray,
                                             TableRowActionMethod.Post,
-                                            $"/{this.ControllerName}{{0}}/generate-translation-file",
+                                            $"/{this.ControllerRoute}{{0}}/generate-translation-file",
                                             "[Id]"));
         }
     }

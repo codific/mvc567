@@ -63,9 +63,9 @@ namespace Codific.Mvc567.Controllers.MVC.Admin
             return this.RedirectToAction(nameof(this.GetAll));
         }
 
-        protected override void InitNavigationActionsIntoListPage(ref AllEntitiesViewModel model)
+        protected override void InitNavigationActionsIntoListPage()
         {
-            model.NavigationActions.Add(new NavigationActionViewModel
+            this.NavigationActions.Add(new NavigationActionViewModel
             {
                 Name = "Clean Logs",
                 ActionUrl = "/admin/system/logs/clean",

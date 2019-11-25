@@ -40,7 +40,7 @@ namespace Codific.Mvc567.Controllers.Abstractions
     {
         protected const string BreadcrumbPageTitlePlaceholder = "[PageTitle]";
         protected const string BreadcrumbEntityNamePluralPlaceholder = "[EntityNamePlural]";
-        protected readonly IEntityManager entityManager;
+        private readonly IEntityManager entityManager;
 
         private string controllerRoute = string.Empty;
         private string controllerName = string.Empty;
@@ -50,6 +50,16 @@ namespace Codific.Mvc567.Controllers.Abstractions
             this.entityManager = entityManager;
             this.controllerRoute = ((RouteAttribute)this.GetType().GetCustomAttributes(typeof(RouteAttribute), false).FirstOrDefault())?.Template;
             this.controllerName = this.GetType().Name.Replace("Controller", string.Empty);
+            this.TableRowActions = new List<TableRowActionViewModel>();
+            this.NavigationActions = new List<NavigationActionViewModel>();
+        }
+
+        public IEntityManager EntityManager
+        {
+            get
+            {
+                return this.entityManager;
+            }
         }
 
         public string ControllerRoute
@@ -76,6 +86,10 @@ namespace Codific.Mvc567.Controllers.Abstractions
 
         protected bool SoftDelete { get; set; } = true;
 
+        protected List<TableRowActionViewModel> TableRowActions { get; }
+
+        protected List<NavigationActionViewModel> NavigationActions { get; }
+
         protected Func<Guid, string> DeleteRedirectUrlFunction { get; set; }
 
         [HttpGet]
@@ -89,7 +103,6 @@ namespace Codific.Mvc567.Controllers.Abstractions
             model.Title = typeof(TEntity).Name.ToLower().EndsWith("s", StringComparison.Ordinal) ? $"{model.SingleEntityName}es" : $"{model.SingleEntityName}s";
             this.ViewData[BreadcrumbPageTitlePlaceholder] = model.Title;
 
-            List<TableRowActionViewModel> actions = new List<TableRowActionViewModel>();
             if (showDeleted)
             {
                 this.HasDelete = false;
@@ -100,13 +113,14 @@ namespace Codific.Mvc567.Controllers.Abstractions
                 this.HasRestore = false;
             }
 
-            this.TableViewActionsInit(ref actions);
+            this.TableViewActionsInit();
 
-            model.Table = TableMapper.DtoMapper<TEntityDto>(entitiesResult, actions.ToArray());
+            model.Table = TableMapper.DtoMapper<TEntityDto>(entitiesResult, this.TableRowActions.ToArray());
             model.Table.SetPaginationRedirection("Admin", this.GetType().Name.Replace("Controller", string.Empty), nameof(this.GetAll));
             this.ViewData.Add("searchQuery", query);
 
-            this.InitNavigationActionsIntoListPage(ref model);
+            this.InitNavigationActionsIntoListPage();
+            model.NavigationActions = this.NavigationActions;
 
             return this.View("AbstractViews/GetAll", model);
         }
@@ -305,11 +319,14 @@ namespace Codific.Mvc567.Controllers.Abstractions
             return this.RedirectToAction("GetAll");
         }
 
-        protected virtual void InitNavigationActionsIntoListPage(ref AllEntitiesViewModel model)
+        /// <summary>
+        /// Initialize the default table view navigation actions. To add new action add new item to NavigationActions collection.
+        /// </summary>
+        protected virtual void InitNavigationActionsIntoListPage()
         {
-            model.NavigationActions.Add(new NavigationActionViewModel
+            this.NavigationActions.Add(new NavigationActionViewModel
             {
-                Name = $"Create {model.SingleEntityName}",
+                Name = $"Create {StringFunctions.SplitWordsByCapitalLetters(typeof(TEntity).Name)}",
                 ActionUrl = $"/{this.GetControllerRoute()}create",
                 Icon = MaterialDesignIcons.Plus,
                 Method = HttpMethod.Get,
@@ -328,26 +345,29 @@ namespace Codific.Mvc567.Controllers.Abstractions
             return string.Empty;
         }
 
-        protected virtual void TableViewActionsInit(ref List<TableRowActionViewModel> actions)
+        /// <summary>
+        /// Initialize the default table view actions. To add new action add new item to TableRowActions collection.
+        /// </summary>
+        protected virtual void TableViewActionsInit()
         {
             if (this.HasDetails)
             {
-                actions.Add(TableMapper.DetailsAction($"/{this.ControllerRoute}{{0}}", "[Id]"));
+                this.TableRowActions.Add(TableMapper.DetailsAction($"/{this.ControllerRoute}{{0}}", "[Id]"));
             }
 
             if (this.HasEdit)
             {
-                actions.Add(TableMapper.EditAction($"/{this.ControllerRoute}{{0}}/edit", "[Id]"));
+                this.TableRowActions.Add(TableMapper.EditAction($"/{this.ControllerRoute}{{0}}/edit", "[Id]"));
             }
 
             if (this.HasDelete)
             {
-                actions.Add(TableMapper.DeleteAction($"/{this.ControllerRoute}{{0}}/delete", "[Id]"));
+                this.TableRowActions.Add(TableMapper.DeleteAction($"/{this.ControllerRoute}{{0}}/delete", "[Id]"));
             }
 
             if (this.HasRestore)
             {
-                actions.Add(TableMapper.RestoreAction($"/{this.ControllerRoute}{{0}}/restore", "[Id]"));
+                this.TableRowActions.Add(TableMapper.RestoreAction($"/{this.ControllerRoute}{{0}}/restore", "[Id]"));
             }
         }
     }
