@@ -92,7 +92,7 @@ namespace Codific.Mvc567.Controllers.MVC.Admin
         public async override Task<IActionResult> Edit(Guid id, SidebarMenuSectionItemViewModel model)
         {
             this.ViewData["[SectionMenuId]"] = (await this.adminMenuService.GetShemeBySectionIdAsync<AdminNavigationSchemeViewModel>(id))?.Id;
-            return await base.Edit(id);
+            return await base.Edit(id, model);
         }
     }
 }
