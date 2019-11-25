@@ -27,7 +27,7 @@ using Codific.Mvc567.DataAccess.Abstractions.Entities;
 using Codific.Mvc567.Dtos.ServiceResults;
 using Codific.Mvc567.Dtos.ViewModels.Abstractions;
 using Codific.Mvc567.Dtos.ViewModels.Abstractions.Table;
-using Codific.Mvc567.Entities.ViewModels.Mapping;
+using Codific.Mvc567.Dtos.ViewModels.Mapping;
 using Codific.Mvc567.Services.Abstractions;
 using Microsoft.AspNetCore.Mvc;
 
@@ -40,8 +40,7 @@ namespace Codific.Mvc567.Controllers.Abstractions
     {
         protected const string BreadcrumbPageTitlePlaceholder = "[PageTitle]";
         protected const string BreadcrumbEntityNamePluralPlaceholder = "[EntityNamePlural]";
-
-        private readonly IEntityManager entityManager;
+        protected readonly IEntityManager entityManager;
 
         private string controllerRoute = string.Empty;
         private string controllerName = string.Empty;

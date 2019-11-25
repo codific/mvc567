@@ -8,11 +8,9 @@ using Codific.Mvc567.Common.Attributes;
 using Codific.Mvc567.Controllers.Abstractions;
 using Codific.Mvc567.DataAccess.Identity;
 using Codific.Mvc567.Dtos.ServiceResults;
-using Codific.Mvc567.Dtos.ViewModels;
 using Codific.Mvc567.Dtos.ViewModels.Abstractions;
 using Codific.Mvc567.Dtos.ViewModels.Abstractions.Table;
-using Codific.Mvc567.Entities.Database;
-using Codific.Mvc567.Entities.ViewModels.Mapping;
+using Codific.Mvc567.Dtos.ViewModels.Mapping;
 using Codific.Mvc567.Services.Abstractions;
 using Codific.Mvc567.ViewModels;
 using Microsoft.AspNetCore.Authorization;
@@ -24,7 +22,7 @@ namespace Codific.Mvc567.Controllers.MVC.Admin
     [Route("admin/system/navigation-menus/")]
     [ApiExplorerSettings(IgnoreApi = true)]
     [Authorize(Policy = ApplicationPermissions.AccessAdministrationPolicy)]
-    public class AdminNavigationMenuController : AbstractEntityController<AdminNavigationScheme, ViewModels.AdminNavigationSchemeViewModel>
+    public class AdminNavigationMenuController : AbstractEntityController<AdminNavigationScheme, AdminNavigationSchemeViewModel>
     {
         private readonly IAdminMenuService adminMenuService;
 
@@ -41,7 +39,7 @@ namespace Codific.Mvc567.Controllers.MVC.Admin
         [Breadcrumb("Sidebar Menu Sections", false, 1)]
         public async Task<IActionResult> GetMenuSections(Guid menuId)
         {
-            PaginatedEntitiesResult<ViewModels.SidebarMenuSectionItemViewModel> entitiesResult = await this.adminMenuService.GetAllMenuSectionsAsync<ViewModels.SidebarMenuSectionItemViewModel>(menuId);
+            PaginatedEntitiesResult<SidebarMenuSectionItemViewModel> entitiesResult = await this.adminMenuService.GetAllMenuSectionsAsync<SidebarMenuSectionItemViewModel>(menuId);
             AllEntitiesViewModel model = new AllEntitiesViewModel();
             model.SingleEntityName = "Sidebar Section";
             model.Title = "Menu Sidebar Sections";
@@ -54,7 +52,7 @@ namespace Codific.Mvc567.Controllers.MVC.Admin
             actions.Add(TableMapper.EditAction($"/admin/system/navigation-menus/sidebar-menu-section-items/{{0}}/edit", "[Id]"));
             actions.Add(TableMapper.DeleteAction($"/admin/system/navigation-menus/sidebar-menu-section-items/{{0}}/delete", "[Id]"));
 
-            model.Table = TableMapper.DtoMapper<ViewModels.SidebarMenuSectionItemViewModel>(entitiesResult, actions.ToArray());
+            model.Table = TableMapper.DtoMapper<SidebarMenuSectionItemViewModel>(entitiesResult, actions.ToArray());
             model.Table.SetPaginationRedirection("Admin", this.GetType().Name.Replace("Controller", string.Empty), nameof(this.GetAll));
 
             model.NavigationActions.Add(new NavigationActionViewModel
@@ -75,13 +73,13 @@ namespace Codific.Mvc567.Controllers.MVC.Admin
         [Breadcrumb("Sidebar Section Link Items", false, 2)]
         public async Task<IActionResult> GetSectionItems(Guid sectionId)
         {
-            PaginatedEntitiesResult<ViewModels.SidebarNavigationLinkItemViewModel> entitiesResult = await this.adminMenuService.GetAllLinkItemsAsync<ViewModels.SidebarNavigationLinkItemViewModel>(sectionId);
+            PaginatedEntitiesResult<SidebarNavigationLinkItemViewModel> entitiesResult = await this.adminMenuService.GetAllLinkItemsAsync<SidebarNavigationLinkItemViewModel>(sectionId);
             AllEntitiesViewModel model = new AllEntitiesViewModel();
             model.SingleEntityName = "Sidebar Section Link Items";
             model.Title = "Menu Sidebar Section Link Items";
             this.ViewData[BreadcrumbPageTitlePlaceholder] = model.Title;
 
-            this.ViewData["[SectionMenuId]"] = (await this.adminMenuService.GetShemeBySectionIdAsync<ViewModels.AdminNavigationSchemeViewModel>(sectionId))?.Id;
+            this.ViewData["[SectionMenuId]"] = (await this.adminMenuService.GetShemeBySectionIdAsync<AdminNavigationSchemeViewModel>(sectionId))?.Id;
 
             List<TableRowActionViewModel> actions = new List<TableRowActionViewModel>();
 
@@ -89,7 +87,7 @@ namespace Codific.Mvc567.Controllers.MVC.Admin
             actions.Add(TableMapper.EditAction($"/admin/system/navigation-menus/sidebar-menu-link-items/{{0}}/edit", "[Id]"));
             actions.Add(TableMapper.DeleteAction($"/admin/system/navigation-menus/sidebar-menu-link-items/{{0}}/delete", "[Id]"));
 
-            model.Table = TableMapper.DtoMapper<ViewModels.SidebarNavigationLinkItemViewModel>(entitiesResult, actions.ToArray());
+            model.Table = TableMapper.DtoMapper<SidebarNavigationLinkItemViewModel>(entitiesResult, actions.ToArray());
             model.Table.SetPaginationRedirection("Admin", this.GetType().Name.Replace("Controller", string.Empty), nameof(this.GetAll));
 
             model.NavigationActions.Add(new NavigationActionViewModel
