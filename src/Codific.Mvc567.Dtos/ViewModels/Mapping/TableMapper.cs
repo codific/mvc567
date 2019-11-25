@@ -23,7 +23,7 @@ using Codific.Mvc567.Common.Attributes;
 using Codific.Mvc567.Dtos.ServiceResults;
 using Codific.Mvc567.Dtos.ViewModels.Abstractions.Table;
 
-namespace Codific.Mvc567.Entities.ViewModels.Mapping
+namespace Codific.Mvc567.Dtos.ViewModels.Mapping
 {
     public static class TableMapper
     {

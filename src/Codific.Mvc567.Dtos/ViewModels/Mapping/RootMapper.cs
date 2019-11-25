@@ -18,7 +18,7 @@ using System.Collections.Generic;
 using Codific.Mvc567.Dtos.ServiceResults;
 using Codific.Mvc567.Entities.ViewModels.AdminViewModels.RootsViewModels;
 
-namespace Codific.Mvc567.Entities.ViewModels.Mapping
+namespace Codific.Mvc567.Dtos.ViewModels.Mapping
 {
     public static class RootMapper
     {
