@@ -27,14 +27,14 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Codific.Mvc567.Controllers.Abstractions
 {
-    public abstract class AbstractApiController<TEntity, TEntityDto, TCreateEditEntityDto> : Controller
+    public abstract class ApiController<TEntity, TEntityDto, TCreateEditEntityDto> : Controller
         where TEntity : class, IEntityBase, new()
         where TEntityDto : class, new()
         where TCreateEditEntityDto : class, new()
     {
         private readonly IEntityManager entityManager;
 
-        public AbstractApiController(IEntityManager entityManager)
+        public ApiController(IEntityManager entityManager)
         {
             this.entityManager = entityManager;
         }

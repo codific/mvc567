@@ -38,7 +38,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Codific.Mvc567.Services.Infrastructure
 {
-    public class EntityManager : AbstractService, IEntityManager
+    public class EntityManager : Service, IEntityManager
     {
         private readonly IWebHostEnvironment hostingEnvironment;
 

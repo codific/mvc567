@@ -20,8 +20,10 @@ using System.Net;
 using System.Net.Mail;
 using System.Threading.Tasks;
 using Codific.Mvc567.Common.Options;
+using Codific.Mvc567.DataAccess.Abstraction;
 using Codific.Mvc567.Dtos.EmailModels.Abstraction;
 using Codific.Mvc567.Dtos.ServiceResults;
+using Codific.Mvc567.Entities.Database;
 using Codific.Mvc567.Services.Abstractions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -41,39 +43,69 @@ namespace Codific.Mvc567.Services.Infrastructure
         private readonly ITempDataProvider tempDataProvider;
         private readonly IServiceProvider serviceProvider;
         private readonly SmtpConfig smtpConfiguration;
+        private readonly IUnitOfWork uow;
 
         public EmailService(
             IRazorViewEngine razorViewEngine,
             ITempDataProvider tempDataProvider,
             IServiceProvider serviceProvider,
+            IUnitOfWork uow,
             IOptions<SmtpConfig> smtpConfiguration)
         {
             this.razorViewEngine = razorViewEngine;
             this.tempDataProvider = tempDataProvider;
             this.serviceProvider = serviceProvider;
+            this.uow = uow;
             this.smtpConfiguration = smtpConfiguration.Value;
         }
 
-        public async Task<EmailServiceResult> SendEmailAsync(string viewName, AbstractEmailModel model)
+        public async Task<bool> ResendEmailAsync(Guid emailId)
+        {
+            try
+            {
+                var email = await this.uow.GetStandardRepository().GetAsync<Email>(emailId);
+                if (email.Sent)
+                {
+                    return false;
+                }
+
+                this.SendEmail(email);
+
+                email.Sent = true;
+                this.uow.GetStandardRepository().Update(email);
+                await this.uow.SaveChangesAsync();
+
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
+        public async Task<EmailServiceResult> SendEmailAsync(string viewName, EmailModel model)
         {
             try
             {
                 string message = await this.RenderToStringAsync(viewName, model);
 
-                SmtpClient client = new SmtpClient(this.smtpConfiguration.Host);
-                client.UseDefaultCredentials = false;
-                client.Credentials = new NetworkCredential(this.smtpConfiguration.Username, this.smtpConfiguration.Password);
-                client.Port = this.smtpConfiguration.Port;
-                client.EnableSsl = this.smtpConfiguration.UseSSL;
+                Email emailEntity = new Email
+                {
+                    ReceiverName = $"{model.GivenName} {model.Surname}",
+                    ReceiverEmail = model.Email,
+                    Sent = false,
+                    Type = model.Subject,
+                    EmailBody = message,
+                };
 
-                MailMessage mailMessage = new MailMessage();
-                mailMessage.From = new MailAddress(this.smtpConfiguration.EmailAddress);
-                mailMessage.To.Add(model.Email);
-                mailMessage.Body = message;
-                mailMessage.IsBodyHtml = true;
-                mailMessage.BodyEncoding = System.Text.Encoding.UTF8;
-                mailMessage.Subject = model.Subject;
-                client.Send(mailMessage);
+                this.uow.GetStandardRepository().Add(emailEntity);
+                await this.uow.SaveChangesAsync();
+
+                this.SendEmail(emailEntity);
+
+                emailEntity.Sent = true;
+                this.uow.GetStandardRepository().Update(emailEntity);
+                await this.uow.SaveChangesAsync();
 
                 return new EmailServiceResult { Success = true };
             }
@@ -83,7 +115,32 @@ namespace Codific.Mvc567.Services.Infrastructure
             }
         }
 
-        private async Task<string> RenderToStringAsync(string viewName, AbstractEmailModel model)
+        private void SendEmail(Email email)
+        {
+            var client = this.GetSmtpClient();
+
+            MailMessage mailMessage = new MailMessage();
+            mailMessage.From = new MailAddress(this.smtpConfiguration.EmailAddress);
+            mailMessage.To.Add(email.ReceiverEmail);
+            mailMessage.Body = email.EmailBody;
+            mailMessage.IsBodyHtml = true;
+            mailMessage.BodyEncoding = System.Text.Encoding.UTF8;
+            mailMessage.Subject = email.Type;
+            client.Send(mailMessage);
+        }
+
+        private SmtpClient GetSmtpClient()
+        {
+            SmtpClient client = new SmtpClient(this.smtpConfiguration.Host);
+            client.UseDefaultCredentials = false;
+            client.Credentials = new NetworkCredential(this.smtpConfiguration.Username, this.smtpConfiguration.Password);
+            client.Port = this.smtpConfiguration.Port;
+            client.EnableSsl = this.smtpConfiguration.UseSSL;
+
+            return client;
+        }
+
+        private async Task<string> RenderToStringAsync(string viewName, EmailModel model)
         {
             var httpContext = new DefaultHttpContext { RequestServices = this.serviceProvider };
             var actionContext = new ActionContext(httpContext, new RouteData(), new ActionDescriptor());

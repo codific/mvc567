@@ -39,7 +39,7 @@ namespace Codific.Mvc567.Controllers.MVC.Admin
     [Route("admin/users/")]
     [Authorize(Policy = ApplicationPermissions.AccessAdministrationPolicy)]
     [Authorize(Policy = ApplicationPermissions.UsersManagementPolicy)]
-    public class AdminUsersController : AbstractEntityController<User, UserViewModel>
+    public class AdminUsersController : AdminEntityController<User, UserViewModel>
     {
         private readonly IIdentityService identityService;
         private readonly IEmailService emailService;

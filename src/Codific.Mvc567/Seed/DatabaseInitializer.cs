@@ -28,7 +28,7 @@ using Microsoft.EntityFrameworkCore;
 namespace Codific.Mvc567.Seed
 {
     public class DatabaseInitializer<TDatabaseContext> : IApplicationDatabaseInitializer
-        where TDatabaseContext : AbstractDatabaseContext<TDatabaseContext>
+        where TDatabaseContext : DatabaseContext<TDatabaseContext>
     {
         private readonly TDatabaseContext context;
         private readonly UserManager<User> userManager;

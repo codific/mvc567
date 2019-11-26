@@ -29,7 +29,7 @@ namespace Codific.Mvc567.Extensions
     public static class StartupServiceCollectionExtensions
     {
         public static IServiceCollection AddMvc567Database<TDatabaseContext, TStandardRepository>(this IServiceCollection services, IConfiguration configuration, string migrationAssembly)
-            where TDatabaseContext : AbstractDatabaseContext<TDatabaseContext>
+            where TDatabaseContext : DatabaseContext<TDatabaseContext>
             where TStandardRepository : class, IStandardRepository
         {
             var connectionString = configuration.GetConnectionString("DatabaseConnection");
@@ -49,7 +49,7 @@ namespace Codific.Mvc567.Extensions
         }
 
         public static IServiceCollection AddMvc567Services<TDatabaseContext>(this IServiceCollection services)
-            where TDatabaseContext : AbstractDatabaseContext<TDatabaseContext>
+            where TDatabaseContext : DatabaseContext<TDatabaseContext>
         {
             services.RegisterValidationProvider();
             services.RegisterServices<TDatabaseContext>();

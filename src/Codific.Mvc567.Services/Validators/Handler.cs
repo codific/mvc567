@@ -18,7 +18,7 @@ using System;
 
 namespace Codific.Mvc567.Services.Validators
 {
-    internal abstract class AbstractHandler<T> : IHandler<T>
+    internal abstract class Handler<T> : IHandler<T>
         where T : class
     {
         private T requestObject;

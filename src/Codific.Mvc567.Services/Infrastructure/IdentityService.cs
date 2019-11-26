@@ -28,7 +28,7 @@ using Microsoft.AspNetCore.Identity;
 
 namespace Codific.Mvc567.Services.Infrastructure
 {
-    public class IdentityService : AbstractService, IIdentityService
+    public class IdentityService : Service, IIdentityService
     {
         private readonly UserManager<User> userManager;
         private readonly SignInManager<User> signInManager;

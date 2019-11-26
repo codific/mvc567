@@ -24,7 +24,7 @@ using Microsoft.AspNetCore.Razor.TagHelpers;
 namespace Codific.Mvc567.Components.TagHelpers
 {
     [HtmlTargetElement("form-text-input", TagStructure = TagStructure.NormalOrSelfClosing)]
-    public class FormInputTagHelper : AbstractFormComponentTagHelper
+    public class FormInputTagHelper : FormComponentTagHelper
     {
         public FormInputTagHelper(IHtmlGenerator htmlGenerator)
             : base(htmlGenerator)
