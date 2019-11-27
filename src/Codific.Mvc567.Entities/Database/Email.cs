@@ -14,16 +14,27 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-namespace Codific.Mvc567.Dtos.EmailModels.Abstraction
+using System.ComponentModel.DataAnnotations.Schema;
+using Codific.Mvc567.Common.Attributes;
+
+namespace Codific.Mvc567.Entities.Database
 {
-    public abstract class AbstractEmailModel
+    [Table("Email")]
+    public class Email : AuditableEntityBase
     {
-        public string Email { get; set; }
+        [Column(TypeName = "text")]
+        [SearchCriteria]
+        public string EmailBody { get; set; }
 
-        public string GivenName { get; set; }
+        public bool Sent { get; set; }
 
-        public string Surname { get; set; }
+        [SearchCriteria]
+        public string ReceiverName { get; set; }
 
-        public string Subject { get; set; }
+        [SearchCriteria]
+        public string ReceiverEmail { get; set; }
+
+        [SearchCriteria]
+        public string Type { get; set; }
     }
 }

@@ -18,7 +18,7 @@ using Codific.Mvc567.Dtos.EmailModels.Abstraction;
 
 namespace Codific.Mvc567.Dtos.EmailModels
 {
-    public class UserMessageEmailModel : AbstractEmailModel
+    public class UserMessageEmailModel : EmailModel
     {
         public string Message { get; set; }
     }

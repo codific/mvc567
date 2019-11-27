@@ -19,7 +19,7 @@ using global::Microsoft.AspNetCore.Http;
 
 namespace Codific.Mvc567.Services.Validators.Handlers
 {
-    internal class FileSizeHandler : AbstractHandler<IFormFile>
+    internal class FileSizeHandler : Handler<IFormFile>
     {
         private readonly long maxAllowedFileSize;
 

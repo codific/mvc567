@@ -29,6 +29,10 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
             {
                 if (menuSection.Single)
                 {
+                    if (string.IsNullOrEmpty(menuSection.ItemAction))
+                    {
+                        menuSection.ItemAction = "Index";
+                    }
                     <menu-section controller="@menuSection.ItemController" title="@menuSection.Title" icon="@menuSection.Icon" single="true" href="@Url.Action(menuSection.ItemAction, menuSection.ItemController, new { Area = menuSection.ItemArea })" />
                 }
                 else
@@ -36,6 +40,10 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
                     <menu-section controller="@menuSection.ItemController" title="@menuSection.Title" icon="@menuSection.Icon">
                         @foreach (var navigationLink in menuSection.Children)
                         {
+                            if (string.IsNullOrEmpty(navigationLink.ItemAction))
+                            {
+                                navigationLink.ItemAction = "Index";
+                            }
                             <sidebar-navigation-link title="@navigationLink.Title" action="@navigationLink.ItemAction" controller="@navigationLink.ItemController" area="@navigationLink.ItemArea" />
                         }
                     </menu-section>

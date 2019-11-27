@@ -23,13 +23,13 @@ using Microsoft.AspNetCore.Razor.TagHelpers;
 
 namespace Codific.Mvc567.Components.TagHelpers
 {
-    public abstract class AbstractPartialBaseTagHelper : TagHelper
+    public abstract class PartialBaseTagHelper : TagHelper
     {
         private readonly IHtmlHelper htmlHelper;
         private string partialPath;
         private string outputTagName = string.Empty;
 
-        public AbstractPartialBaseTagHelper(IHtmlHelper htmlHelper)
+        public PartialBaseTagHelper(IHtmlHelper htmlHelper)
         {
             this.htmlHelper = htmlHelper;
         }

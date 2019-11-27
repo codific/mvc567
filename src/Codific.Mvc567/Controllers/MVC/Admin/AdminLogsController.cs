@@ -32,7 +32,7 @@ namespace Codific.Mvc567.Controllers.MVC.Admin
     [Route("admin/system/logs/")]
     [Authorize(Policy = ApplicationPermissions.AccessAdministrationPolicy)]
     [Authorize(Policy = ApplicationPermissions.AccessErrorLogsPolicy)]
-    public class AdminLogsController : AbstractEntityController<Log, LogViewModel>
+    public class AdminLogsController : AdminEntityController<Log, LogViewModel>
     {
         private readonly ILogService logService;
 

@@ -26,7 +26,7 @@ using Microsoft.Extensions.Configuration;
 namespace Codific.Mvc567.Components.TagHelpers
 {
     [HtmlTargetElement("meta-tags", TagStructure = TagStructure.Unspecified)]
-    public class MetaTagsTagHelper : AbstractPartialBaseTagHelper
+    public class MetaTagsTagHelper : PartialBaseTagHelper
     {
         private readonly IConfiguration configuration;
 

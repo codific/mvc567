@@ -15,28 +15,30 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Codific.Mvc567.Dtos.ViewModels.Abstractions.Details
 {
     public class DetailsViewModel
     {
+        private List<DetailsPropertyViewModel> properties;
+
         public DetailsViewModel()
         {
-            this.Properties = new List<DetailsPropertyViewModel>();
+            this.properties = new List<DetailsPropertyViewModel>();
         }
 
-        public List<DetailsPropertyViewModel> Properties { get; set; }
-
-        public void AddProperty(DetailsPropertyViewModel property, int order)
+        public List<DetailsPropertyViewModel> Properties
         {
-            if (order == 0 || order > this.Properties.Count)
+            get
             {
-                this.Properties.Add(property);
+                return this.properties.OrderBy(x => x.Order).ToList();
             }
-            else
-            {
-                this.Properties.Insert(order, property);
-            }
+        }
+
+        public void AddProperty(DetailsPropertyViewModel property)
+        {
+            this.properties.Add(property);
         }
     }
 }

@@ -23,10 +23,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Codific.Mvc567.DataAccess
 {
-    public abstract class AbstractDatabaseContext<TContext> : DatabaseContextBase<TContext, User, Role>
+    public abstract class DatabaseContext<TContext> : DatabaseContextBase<TContext, User, Role>
         where TContext : IdentityDbContext<User, Role, Guid>
     {
-        public AbstractDatabaseContext(DbContextOptions<TContext> options)
+        public DatabaseContext(DbContextOptions<TContext> options)
             : base(options)
         {
         }
@@ -48,6 +48,8 @@ namespace Codific.Mvc567.DataAccess
         public DbSet<SidebarMenuSectionItem> SidebarMenuSectionItems { get; set; }
 
         public DbSet<SidebarNavigationLinkItem> SidebarNavigationLinkItems { get; set; }
+
+        public DbSet<Email> Emails { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

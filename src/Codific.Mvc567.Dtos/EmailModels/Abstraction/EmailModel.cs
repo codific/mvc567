@@ -14,30 +14,16 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-using System;
-using ImageMagick;
-using Microsoft.AspNetCore.Http;
-
-namespace Codific.Mvc567.Services.Validators.Handlers
+namespace Codific.Mvc567.Dtos.EmailModels.Abstraction
 {
-    internal class ImageBoxingHandler : Handler<IFormFile>
+    public abstract class EmailModel
     {
-        protected override string HandleProcessAction()
-        {
-            string resultMessage = string.Empty;
-            try
-            {
-                using (MagickImage image = new MagickImage(this.RequestObject.OpenReadStream()))
-                {
-                }
-            }
-            catch (Exception)
-            {
-                this.RequestObject = null;
-                resultMessage = $"File content cannot be used as an image. ";
-            }
+        public string Email { get; set; }
 
-            return resultMessage;
-        }
+        public string GivenName { get; set; }
+
+        public string Surname { get; set; }
+
+        public string Subject { get; set; }
     }
 }

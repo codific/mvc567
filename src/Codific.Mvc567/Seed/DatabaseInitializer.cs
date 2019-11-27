@@ -28,7 +28,7 @@ using Microsoft.EntityFrameworkCore;
 namespace Codific.Mvc567.Seed
 {
     public class DatabaseInitializer<TDatabaseContext> : IApplicationDatabaseInitializer
-        where TDatabaseContext : AbstractDatabaseContext<TDatabaseContext>
+        where TDatabaseContext : DatabaseContext<TDatabaseContext>
     {
         private readonly TDatabaseContext context;
         private readonly UserManager<User> userManager;
@@ -180,13 +180,22 @@ namespace Codific.Mvc567.Seed
                 Order = 10,
             };
 
+            var emailsSettingsNavigationItem = new SidebarNavigationLinkItem
+            {
+                Title = "Emails",
+                ItemAction = "GetAll",
+                ItemController = "AdminEmails",
+                ItemArea = "Admin",
+                Order = 15,
+            };
+
             var logsSettingsNavigationItem = new SidebarNavigationLinkItem
             {
                 Title = "Logs",
                 ItemAction = "GetAll",
                 ItemController = "AdminLogs",
                 ItemArea = "Admin",
-                Order = 15,
+                Order = 20,
             };
 
             var systemConstantsSettingsNavigationItem = new SidebarNavigationLinkItem
@@ -195,11 +204,12 @@ namespace Codific.Mvc567.Seed
                 ItemAction = "GetAll",
                 ItemController = "AdminSystemConstants",
                 ItemArea = "Admin",
-                Order = 20,
+                Order = 25,
             };
 
             settingsSection.Children.Add(languagesSettingsNavigationItem);
             settingsSection.Children.Add(menuSettingsNavigationItem);
+            settingsSection.Children.Add(emailsSettingsNavigationItem);
             settingsSection.Children.Add(logsSettingsNavigationItem);
             settingsSection.Children.Add(systemConstantsSettingsNavigationItem);
 

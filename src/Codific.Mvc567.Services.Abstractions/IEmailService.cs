@@ -14,6 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+using System;
 using System.Threading.Tasks;
 using Codific.Mvc567.Dtos.EmailModels.Abstraction;
 using Codific.Mvc567.Dtos.ServiceResults;
@@ -22,6 +23,8 @@ namespace Codific.Mvc567.Services.Abstractions
 {
     public interface IEmailService
     {
-        Task<EmailServiceResult> SendEmailAsync(string viewName, AbstractEmailModel model);
+        Task<EmailServiceResult> SendEmailAsync(string viewName, EmailModel model);
+
+        Task<bool> ResendEmailAsync(Guid emailId);
     }
 }

@@ -41,12 +41,13 @@ namespace Codific.Mvc567.Dtos.ViewModels.Mapping
                     detailsProperty.Name = string.IsNullOrEmpty(attribute.Title) ? StringFunctions.SplitWordsByCapitalLetters(property.Name) : attribute.Title;
                     detailsProperty.Value = property.GetValue(entity);
                     detailsProperty.Type = TableCellType.Text;
+                    detailsProperty.Order = order;
                     if (property.GetCustomAttributes(typeof(TableCellAttribute), false).Length > 0)
                     {
                         detailsProperty.Type = ((TableCellAttribute)property.GetCustomAttributes(typeof(TableCellAttribute), false).FirstOrDefault()).Type;
                     }
 
-                    detailsViewModel.AddProperty(detailsProperty, order);
+                    detailsViewModel.AddProperty(detailsProperty);
                 }
             }
 

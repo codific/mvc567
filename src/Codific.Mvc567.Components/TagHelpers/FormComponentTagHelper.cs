@@ -26,11 +26,11 @@ using Microsoft.AspNetCore.Razor.TagHelpers;
 
 namespace Codific.Mvc567.Components.TagHelpers
 {
-    public abstract class AbstractFormComponentTagHelper : TagHelper
+    public abstract class FormComponentTagHelper : TagHelper
     {
         private readonly IHtmlGenerator htmlGenerator;
 
-        public AbstractFormComponentTagHelper(IHtmlGenerator htmlGenerator)
+        public FormComponentTagHelper(IHtmlGenerator htmlGenerator)
         {
             this.htmlGenerator = htmlGenerator;
         }

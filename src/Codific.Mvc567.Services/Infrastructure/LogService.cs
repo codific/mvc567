@@ -23,7 +23,7 @@ using Codific.Mvc567.Services.Abstractions;
 
 namespace Codific.Mvc567.Services.Infrastructure
 {
-    public class LogService : AbstractService, ILogService
+    public class LogService : Service, ILogService
     {
         public LogService(IUnitOfWork uow, IMapper mapper)
             : base(uow, mapper)
