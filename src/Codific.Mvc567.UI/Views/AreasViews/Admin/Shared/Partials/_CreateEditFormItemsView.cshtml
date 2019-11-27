@@ -23,7 +23,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 <div class="form-group">
     @if (inputItem.Type != CreateEntityInputType.Hidden)
     {
-        <label>@inputItem.Label:</label>
+        <label>@inputItem.Label @(inputItem.Required ? "<span class='color-red'>*<span>" : String.Empty):</label>
     }
     @switch (inputItem.Type)
     {
