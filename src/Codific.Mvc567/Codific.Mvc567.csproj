@@ -133,5 +133,6 @@
     <Folder Include="Middlewares\" />
     <Folder Include="Extensions\" />
     <Folder Include="Options\" />
+    <Folder Include="FeatureProviders\" />
   </ItemGroup>
 </Project>
