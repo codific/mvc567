@@ -135,7 +135,7 @@ namespace Codific.Mvc567.Extensions
                 .ConfigureApplicationPartManager(p =>
                 {
                     ApplicationPartManager applicationPartManager = new ApplicationPartManager();
-                    applicationPartAction.Invoke(applicationPartManager);
+                    applicationPartAction?.Invoke(applicationPartManager);
                     if (applicationPartManager != null)
                     {
                         foreach (var part in applicationPartManager.ApplicationParts)
