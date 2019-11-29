@@ -35,6 +35,7 @@ namespace Codific.Mvc567.Services.Extensions
             services.AddScoped<ILanguageService, LanguageService>();
             services.AddScoped<ILogService, LogService>();
             services.AddScoped<IAdminMenuService, AdminMenuService>();
+            services.AddScoped<IExcelImportService, ExcelImportService>();
 
             return services;
         }

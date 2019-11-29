@@ -165,6 +165,19 @@ namespace Codific.Mvc567.DataAccess.Core.Repositories
             return await result.ToListAsync();
         }
 
+        public virtual IEnumerable<TEntity> EnumerableQueryPage<TEntity>(int startRow, int pageLength, Func<TEntity, bool> filter, Func<IEnumerable<TEntity>, IOrderedEnumerable<TEntity>> orderBy = null, Func<IQueryable<TEntity>, IQueryable<TEntity>> includes = null)
+            where TEntity : class, IEntityBase, new()
+        {
+            if (orderBy == null)
+            {
+                orderBy = new Func<IEnumerable<TEntity>, IOrderedEnumerable<TEntity>>(x => { return x.OrderByDescending(y => y.Id); });
+            }
+
+            var result = this.EnumerableQueryDb(filter, orderBy, includes, startRow, pageLength);
+
+            return result.ToList();
+        }
+
         public void SetUnchanged<TEntity>(TEntity entity)
             where TEntity : class, IEntityBase, new()
         {
@@ -265,6 +278,13 @@ namespace Codific.Mvc567.DataAccess.Core.Repositories
             return await result.CountAsync();
         }
 
+        public int EnumerableCount<TEntity>(Func<TEntity, bool> filter)
+            where TEntity : class, IEntityBase, new()
+        {
+            var result = this.EnumerableQueryDb(filter, null, null);
+            return result.Count();
+        }
+
         public void DeleteAll<TEntity>()
             where TEntity : class, IEntityBase, new()
         {
@@ -323,6 +343,36 @@ namespace Codific.Mvc567.DataAccess.Core.Repositories
             }
 
             return query;
+        }
+
+        protected IEnumerable<TEntity> EnumerableQueryDb<TEntity>(Func<TEntity, bool> filter, Func<IEnumerable<TEntity>, IOrderedEnumerable<TEntity>> orderBy, Func<IQueryable<TEntity>, IQueryable<TEntity>> includes, int? skip = null, int? take = null)
+            where TEntity : class, IEntityBase, new()
+        {
+            IQueryable<TEntity> query = this.Context.Set<TEntity>();
+
+            if (includes != null)
+            {
+                query = includes(query);
+            }
+
+            IEnumerable<TEntity> list = new List<TEntity>();
+
+            if (filter != null)
+            {
+                list = query.Where(filter);
+            }
+
+            if (orderBy != null)
+            {
+                list = orderBy(list);
+            }
+
+            if (take != null && skip != null)
+            {
+                list = list.Skip(skip.Value).Take(take.Value);
+            }
+
+            return list.AsEnumerable();
         }
     }
 }
