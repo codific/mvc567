@@ -14,7 +14,10 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+using System.Collections.Generic;
 using System.Threading.Tasks;
+using Codific.Mvc567.Common;
+using Codific.Mvc567.Common.Enums;
 using Codific.Mvc567.DataAccess.Identity;
 using Codific.Mvc567.Services.Abstractions;
 using Codific.Mvc567.Services.Validators;
@@ -27,7 +30,9 @@ using Microsoft.AspNetCore.Mvc;
 namespace Codific.Mvc567.Controllers.API
 {
     [Route("api/upload")]
+#if !DEBUG
     [Authorize(Policy = Policies.AuthorizedUploadPolicy)]
+#endif
     public class UploadController : Controller
     {
         private readonly IValidationProvider validationProvider;
@@ -50,7 +55,7 @@ namespace Codific.Mvc567.Controllers.API
             if (validationResult.Success)
             {
                 var file = await this.fileSystemService.UploadFileAsync<FileViewModel>(formFile);
-                if (!(file is null))
+                if (file != null)
                 {
                     return this.Ok(file);
                 }
@@ -75,6 +80,30 @@ namespace Codific.Mvc567.Controllers.API
             var result = this.validationProvider.ValidateFormVideoFile(this.GetFormFileFromFormCollection(formCollection));
 
             return this.Json(result);
+        }
+
+        [HttpPost]
+        [Route("excel")]
+        [ProducesResponseType(typeof(ValidationResult), StatusCodes.Status415UnsupportedMediaType)]
+        [ProducesResponseType(typeof(FileViewModel), StatusCodes.Status200OK)]
+        public async Task<IActionResult> Excel([FromForm]IFormCollection formCollection)
+        {
+            var formFile = this.GetFormFileFromFormCollection(formCollection);
+            var validationResult = this.validationProvider.ValidateFormFile(
+                formFile,
+                new List<FileExtensions> { FileExtensions._Xlsx, FileExtensions._Xls },
+                new List<string> { "application/vnd.ms-excel", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" },
+                209715200);
+            if (validationResult.Success)
+            {
+                var file = await this.fileSystemService.UploadFileAsync<FileViewModel>(formFile);
+                if (file != null)
+                {
+                    return this.Ok(file);
+                }
+            }
+
+            return this.StatusCode(StatusCodes.Status415UnsupportedMediaType, validationResult);
         }
 
         private IFormFile GetFormFileFromFormCollection(IFormCollection formCollection)

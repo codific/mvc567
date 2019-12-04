@@ -97,6 +97,9 @@ namespace Codific.Mvc567.DataAccess.Abstractions.Repositories
         Task<int> CountAsync<TEntity>(Expression<Func<TEntity, bool>> filter)
             where TEntity : class, IEntityBase, new();
 
+        int EnumerableCount<TEntity>(Func<TEntity, bool> filter)
+            where TEntity : class, IEntityBase, new();
+
         IEnumerable<IEntityBase> GetAllByEntityTableName(string entityTableName);
 
         IEnumerable<IEntityBase> GetAllByType(Type entityType);
@@ -111,6 +114,9 @@ namespace Codific.Mvc567.DataAccess.Abstractions.Repositories
             where TEntity : class, IEntityBase, new();
 
         Task SoftDeleteAllAsync<TEntity>()
+            where TEntity : class, IEntityBase, new();
+
+        IEnumerable<TEntity> EnumerableQueryPage<TEntity>(int startRow, int pageLength, Func<TEntity, bool> filter, Func<IEnumerable<TEntity>, IOrderedEnumerable<TEntity>> orderBy = null, Func<IQueryable<TEntity>, IQueryable<TEntity>> includes = null)
             where TEntity : class, IEntityBase, new();
     }
 }
