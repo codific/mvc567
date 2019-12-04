@@ -374,7 +374,6 @@ namespace Codific.Mvc567.Services.Infrastructure
                 return null;
             }
 
-            Type entityType = typeof(TEntity);
             var expressionsList = new List<Expression<Func<TEntity, bool>>>();
             if (filterQuery.FilterQueryStringItems != null && filterQuery.FilterQueryStringItems.Count > 0)
             {
@@ -392,7 +391,7 @@ namespace Codific.Mvc567.Services.Infrastructure
             var resultExpression = expressionsList.FirstOrDefault();
             for (int i = 1; i < expressionsList.Count; i++)
             {
-                resultExpression = ExpressionFunctions.AndAlso<TEntity>(resultExpression, expressionsList[i]);
+                resultExpression = ExpressionFunctions.AndAlso(resultExpression, expressionsList[i]);
             }
 
             return resultExpression;
