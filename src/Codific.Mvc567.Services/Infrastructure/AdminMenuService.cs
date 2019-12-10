@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Codific.Mvc567.Services.Infrastructure
 {
-    public class AdminMenuService : AbstractService, IAdminMenuService
+    public class AdminMenuService : Service, IAdminMenuService
     {
         public AdminMenuService(IUnitOfWork uow, IMapper mapper)
             : base(uow, mapper)

@@ -16,7 +16,7 @@ namespace Codific.Mvc567.Controllers.MVC.Admin
     [Route("admin/system/navigation-menus/sidebar-menu-link-items/")]
     [ApiExplorerSettings(IgnoreApi = true)]
     [Authorize(Policy = ApplicationPermissions.AccessAdministrationPolicy)]
-    public class AdminSidebarNavigationLinkItemController : AbstractEntityController<SidebarNavigationLinkItem, SidebarNavigationLinkItemViewModel>
+    public class AdminSidebarNavigationLinkItemController : AdminEntityController<SidebarNavigationLinkItem, SidebarNavigationLinkItemViewModel>
     {
         private readonly IAdminMenuService adminMenuService;
 

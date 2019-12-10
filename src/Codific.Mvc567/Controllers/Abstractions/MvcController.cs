@@ -27,13 +27,13 @@ using Microsoft.Extensions.Configuration;
 
 namespace Codific.Mvc567.Controllers.Abstractions
 {
-    public abstract class AbstractController : Controller
+    public abstract class MvcController : Controller
     {
         private readonly IConfiguration configuration;
         private readonly IEmailService emailService;
         private readonly ILanguageService languageService;
 
-        public AbstractController(IConfiguration configuration, IEmailService emailService, ILanguageService languageService)
+        public MvcController(IConfiguration configuration, IEmailService emailService, ILanguageService languageService)
         {
             this.configuration = configuration;
             this.emailService = emailService;

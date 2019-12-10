@@ -32,7 +32,7 @@ using Newtonsoft.Json;
 
 namespace Codific.Mvc567.Services.Infrastructure
 {
-    public class LanguageService : AbstractService, ILanguageService
+    public class LanguageService : Service, ILanguageService
     {
         private readonly IWebHostEnvironment hostingEnvironment;
 

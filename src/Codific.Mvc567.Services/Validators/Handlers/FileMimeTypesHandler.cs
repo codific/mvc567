@@ -20,7 +20,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace Codific.Mvc567.Services.Validators.Handlers
 {
-    internal class FileMimeTypesHandler : AbstractHandler<IFormFile>
+    internal class FileMimeTypesHandler : Handler<IFormFile>
     {
         private readonly List<string> allowedMimeTypes;
 

@@ -23,7 +23,7 @@ namespace Codific.Mvc567.Controllers.MVC.Admin
     [Route("admin/system/navigation-menus/")]
     [ApiExplorerSettings(IgnoreApi = true)]
     [Authorize(Policy = ApplicationPermissions.AccessAdministrationPolicy)]
-    public class AdminNavigationMenuController : AbstractEntityController<AdminNavigationScheme, AdminNavigationSchemeViewModel>
+    public class AdminNavigationMenuController : AdminEntityController<AdminNavigationScheme, AdminNavigationSchemeViewModel>
     {
         private readonly IAdminMenuService adminMenuService;
 

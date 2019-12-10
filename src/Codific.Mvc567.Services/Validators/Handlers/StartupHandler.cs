@@ -16,7 +16,7 @@
 
 namespace Codific.Mvc567.Services.Validators.Handlers
 {
-    internal class StartupHandler<T> : AbstractHandler<T>
+    internal class StartupHandler<T> : Handler<T>
         where T : class
     {
         protected override string HandleProcessAction()

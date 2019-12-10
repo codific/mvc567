@@ -16,6 +16,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using Codific.Mvc567.Common.Attributes;
 using Codific.Mvc567.Common.Extensions;
@@ -54,6 +55,7 @@ namespace Codific.Mvc567.Dtos.ViewModels.Abstractions
                             Label = propertyAttribute.Name,
                             Name = property.Name,
                             Type = propertyAttribute.Type,
+                            Required = property.HasAttribute<RequiredAttribute>(),
                             EnumType = property.PropertyType.IsEnum ? property.PropertyType : null,
                             Value = property.GetValue(this),
                         };

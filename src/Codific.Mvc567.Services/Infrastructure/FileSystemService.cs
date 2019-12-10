@@ -32,7 +32,7 @@ using Microsoft.AspNetCore.StaticFiles;
 
 namespace Codific.Mvc567.Services.Infrastructure
 {
-    public class FileSystemService : AbstractService, IFileSystemService
+    public class FileSystemService : Service, IFileSystemService
     {
         private readonly IWebHostEnvironment hostingEnvironment;
 

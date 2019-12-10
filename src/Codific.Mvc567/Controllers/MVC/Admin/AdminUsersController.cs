@@ -41,22 +41,25 @@ namespace Codific.Mvc567.Controllers.MVC.Admin
     [Route("admin/users/")]
     [Authorize(Policy = ApplicationPermissions.AccessAdministrationPolicy)]
     [Authorize(Policy = ApplicationPermissions.UsersManagementPolicy)]
-    public class AdminUsersController : AbstractEntityController<User, UserViewModel>
+    public class AdminUsersController : AdminEntityController<User, UserViewModel>
     {
         private readonly IIdentityService identityService;
         private readonly IEmailService emailService;
         private readonly IAuthenticationService authenticationService;
+        private readonly UserManager<User> userManager;
 
         public AdminUsersController(
             IIdentityService identityService,
             IEntityManager entityManager,
             IEmailService emailService,
-            IAuthenticationService authenticationService)
+            IAuthenticationService authenticationService,
+            UserManager<User> userManager)
             : base(entityManager)
         {
             this.identityService = identityService;
             this.emailService = emailService;
             this.authenticationService = authenticationService;
+            this.userManager = userManager;
             this.HasDelete = false;
             this.HasEdit = false;
         }
@@ -142,16 +145,41 @@ namespace Codific.Mvc567.Controllers.MVC.Admin
             return this.NotFound();
         }
 
+        [HttpPost]
+        [Route("{userId}/reset-mfa")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ResetUserMfa(Guid userId)
+        {
+            var user = await this.userManager.FindByIdAsync(userId.ToString());
+
+            await this.userManager.SetTwoFactorEnabledAsync(user, false);
+            var successRefresh = await this.userManager.ResetAuthenticatorKeyAsync(user);
+
+            if (successRefresh.Succeeded)
+            {
+                this.TempData["SuccessStatusMessage"] = "MFA has been reset successfully.";
+            }
+            else
+            {
+                this.TempData["ErrorStatusMessage"] = "MFA reset failed.";
+            }
+
+            return this.RedirectToAction(nameof(this.GetAll));
+        }
+
         protected override void TableViewActionsInit()
         {
             base.TableViewActionsInit();
-            this.TableRowActions.Insert(1, TableMapper.CreateAction("Send Email", MaterialDesignIcons.Email, Color.ForestGreen, TableRowActionMethod.Get, $"/{this.ControllerRoute}{{0}}/send-email", "[Id]"));
+            this.TableRowActions.Insert(1, TableMapper.CreateAction("Reset MFA", MaterialDesignIcons.Qrcode, Color.MediumVioletRed, TableRowActionMethod.Post, $"/{this.ControllerRoute}{{0}}/reset-mfa", "[Id]"));
+            this.TableRowActions.Insert(2, TableMapper.CreateAction("Send Email", MaterialDesignIcons.Email, Color.ForestGreen, TableRowActionMethod.Get, $"/{this.ControllerRoute}{{0}}/send-email", "[Id]"));
+
             var resetPasswordAction = TableMapper.CreateAction("Reset Password", MaterialDesignIcons.Account, Color.Coral, TableRowActionMethod.Post, $"/{this.ControllerRoute}{{0}}/send-reset-password-mail", "[Id]");
             resetPasswordAction.SetConfirmation("Reset Password", "Are you sure you want to reset password of this user?");
-            this.TableRowActions.Insert(2, resetPasswordAction);
+            this.TableRowActions.Insert(3, resetPasswordAction);
+
             var resetRefreshTokenAction = TableMapper.CreateAction("Reset Refresh Token", MaterialDesignIcons.Refresh, Color.PaleVioletRed, TableRowActionMethod.Post, $"/{this.ControllerRoute}{{0}}/reset-refresh-token", "[Id]");
             resetRefreshTokenAction.SetConfirmation("Reset Refresh Token", "Are you sure you want to reset refresh token of this user?");
-            this.TableRowActions.Insert(3, resetRefreshTokenAction);
+            this.TableRowActions.Insert(4, resetRefreshTokenAction);
         }
 
         protected override void InitNavigationActionsIntoListPage()

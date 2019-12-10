@@ -26,6 +26,8 @@ namespace Codific.Mvc567.Dtos.ViewModels.Abstractions
 
         public string Name { get; set; }
 
+        public bool Required { get; set; }
+
         public CreateEntityInputType Type { get; set; }
 
         public Type EnumType { get; set; }

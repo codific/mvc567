@@ -34,7 +34,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Codific.Mvc567.Controllers.Abstractions
 {
     [ApiExplorerSettings(IgnoreApi = true)]
-    public abstract class AbstractEntityController<TEntity, TEntityDto> : Controller
+    public abstract class AdminEntityController<TEntity, TEntityDto> : Controller
         where TEntity : class, IEntityBase, new()
         where TEntityDto : class, new()
     {
@@ -45,7 +45,7 @@ namespace Codific.Mvc567.Controllers.Abstractions
         private string controllerRoute = string.Empty;
         private string controllerName = string.Empty;
 
-        public AbstractEntityController(IEntityManager entityManager)
+        public AdminEntityController(IEntityManager entityManager)
         {
             this.entityManager = entityManager;
             this.controllerRoute = ((RouteAttribute)this.GetType().GetCustomAttributes(typeof(RouteAttribute), false).FirstOrDefault())?.Template;

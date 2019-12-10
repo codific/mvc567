@@ -38,7 +38,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Codific.Mvc567.Services.Infrastructure
 {
-    public class EntityManager : AbstractService, IEntityManager
+    public class EntityManager : Service, IEntityManager
     {
         private readonly IWebHostEnvironment hostingEnvironment;
 
@@ -87,7 +87,7 @@ namespace Codific.Mvc567.Services.Infrastructure
                 else
                 {
                     var searchQueryExpression = this.GetEntitySearchQueryExpression<TEntity>(searchQuery, showDeleted);
-                    result.Count = await standardRepository.CountAsync<TEntity>(searchQueryExpression);
+                    result.Count = standardRepository.EnumerableCount<TEntity>(searchQueryExpression.Compile());
                 }
 
                 result.CurrentPage = page;
@@ -101,7 +101,7 @@ namespace Codific.Mvc567.Services.Infrastructure
                 }
                 else
                 {
-                    entities = await standardRepository.QueryPageAsync<TEntity>(result.StartRow, PaginationPageSize, this.GetEntitySearchQueryExpression<TEntity>(searchQuery, showDeleted), null, firstLevelIncludeQuery);
+                    entities = standardRepository.EnumerableQueryPage<TEntity>(result.StartRow, PaginationPageSize, this.GetEntitySearchQueryExpression<TEntity>(searchQuery, showDeleted).Compile(), null, firstLevelIncludeQuery);
                 }
 
                 var dtoEntities = this.Mapper.Map<IEnumerable<TEntityDto>>(entities);
@@ -297,16 +297,16 @@ namespace Codific.Mvc567.Services.Infrastructure
                     searchQueryExpression = this.GetEntitySearchQueryExpression<TEntity>(filterQuery.SearchQuery);
                 }
 
-                var orderExpression = this.GetOrderExpressionByFilterQueryRequest<TEntity>(filterQuery);
+                Func<IEnumerable<TEntity>, IOrderedEnumerable<TEntity>> orderExpression = null; // this.GetOrderExpressionByFilterQueryRequest<TEntity>(filterQuery);
                 var firstLevelIncludeQuery = this.GetFirstLevelIncludeQuery<TEntity>();
 
-                if (searchQueryExpression == null)
+                if (searchQueryExpression != null)
                 {
-                    result.Count = (await this.StandardRepository.GetAllAsync<TEntity>()).Count();
+                    result.Count = this.StandardRepository.EnumerableCount<TEntity>(searchQueryExpression.Compile());
                 }
                 else
                 {
-                    result.Count = (await this.StandardRepository.QueryAsync<TEntity>(searchQueryExpression)).Count();
+                    result.Count = await this.StandardRepository.CountAsync<TEntity>(null);
                 }
 
                 result.CurrentPage = filterQuery.Page.HasValue ? filterQuery.Page.Value : 1;
@@ -323,11 +323,11 @@ namespace Codific.Mvc567.Services.Infrastructure
 
                 if (searchQueryExpression != null)
                 {
-                    entities = await this.StandardRepository.QueryPageAsync<TEntity>(result.StartRow, result.PageSize, searchQueryExpression, orderExpression, firstLevelIncludeQuery);
+                    entities = this.StandardRepository.EnumerableQueryPage<TEntity>(result.StartRow, result.PageSize, searchQueryExpression.Compile(), orderExpression, firstLevelIncludeQuery);
                 }
                 else
                 {
-                    entities = await this.StandardRepository.GetPageAsync<TEntity>(result.StartRow, result.PageSize, orderExpression, firstLevelIncludeQuery);
+                    entities = this.StandardRepository.EnumerableQueryPage<TEntity>(result.StartRow, result.PageSize, null, orderExpression, firstLevelIncludeQuery);
                 }
 
                 result.Entities = this.Mapper.Map<IEnumerable<TEntityDto>>(entities);
@@ -374,7 +374,6 @@ namespace Codific.Mvc567.Services.Infrastructure
                 return null;
             }
 
-            Type entityType = typeof(TEntity);
             var expressionsList = new List<Expression<Func<TEntity, bool>>>();
             if (filterQuery.FilterQueryStringItems != null && filterQuery.FilterQueryStringItems.Count > 0)
             {
@@ -392,7 +391,7 @@ namespace Codific.Mvc567.Services.Infrastructure
             var resultExpression = expressionsList.FirstOrDefault();
             for (int i = 1; i < expressionsList.Count; i++)
             {
-                resultExpression = ExpressionFunctions.AndAlso<TEntity>(resultExpression, expressionsList[i]);
+                resultExpression = ExpressionFunctions.AndAlso(resultExpression, expressionsList[i]);
             }
 
             return resultExpression;
@@ -415,16 +414,16 @@ namespace Codific.Mvc567.Services.Infrastructure
             return includeQuery;
         }
 
-        private Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> GetOrderExpressionByFilterQueryRequest<TEntity>(FilterQueryRequest filterQuery)
+        private Func<IEnumerable<TEntity>, IOrderedEnumerable<TEntity>> GetOrderExpressionByFilterQueryRequest<TEntity>(FilterQueryRequest filterQuery)
         {
             if (string.IsNullOrEmpty(filterQuery.OrderBy) || filterQuery.FilterQueryOrderItems == null || filterQuery.FilterQueryOrderItems.Count == 0)
             {
                 return null;
             }
 
-            Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> function = (x) =>
+            Func<IEnumerable<TEntity>, IOrderedEnumerable<TEntity>> function = (x) =>
             {
-                IOrderedQueryable<TEntity> mainOrderFunction = null;
+                IOrderedEnumerable<TEntity> mainOrderFunction = null;
                 foreach (var orderItem in filterQuery.FilterQueryOrderItems)
                 {
                     if (mainOrderFunction != null)

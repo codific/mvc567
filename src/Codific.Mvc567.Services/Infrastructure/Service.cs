@@ -29,7 +29,7 @@ using Codific.Mvc567.Entities.Database;
 
 namespace Codific.Mvc567.Services.Infrastructure
 {
-    public abstract class AbstractService
+    public abstract class Service
     {
         protected const int PaginationPageSize = 10;
 
@@ -37,7 +37,7 @@ namespace Codific.Mvc567.Services.Infrastructure
         private readonly IMapper mapper;
         private readonly IStandardRepository standardRepository;
 
-        public AbstractService(IUnitOfWork uow, IMapper mapper)
+        public Service(IUnitOfWork uow, IMapper mapper)
         {
             this.uow = uow;
             this.mapper = mapper;

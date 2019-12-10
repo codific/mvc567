@@ -24,7 +24,7 @@ using Microsoft.AspNetCore.Razor.TagHelpers;
 namespace Codific.Mvc567.Components.TagHelpers
 {
     [HtmlTargetElement("form-checkbox-input", TagStructure = TagStructure.NormalOrSelfClosing)]
-    public class FormCheckboxInputTagHelper : AbstractFormComponentTagHelper
+    public class FormCheckboxInputTagHelper : FormComponentTagHelper
     {
         public FormCheckboxInputTagHelper(IHtmlGenerator htmlGenerator)
             : base(htmlGenerator)

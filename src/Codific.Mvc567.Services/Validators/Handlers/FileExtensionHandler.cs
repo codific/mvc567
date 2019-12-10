@@ -21,7 +21,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace Codific.Mvc567.Services.Validators.Handlers
 {
-    internal class FileExtensionHandler : AbstractHandler<IFormFile>
+    internal class FileExtensionHandler : Handler<IFormFile>
     {
         private readonly List<FileExtensions> allowedFileExtensions;
 

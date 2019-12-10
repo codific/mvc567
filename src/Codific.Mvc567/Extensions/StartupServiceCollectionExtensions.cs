@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using AutoMapper;
 using Codific.Mvc567.Common.Options;
@@ -8,6 +10,8 @@ using Codific.Mvc567.DataAccess.Abstractions.Repositories;
 using Codific.Mvc567.DataAccess.Core;
 using Codific.Mvc567.DataAccess.Identity;
 using Codific.Mvc567.Entities.Database;
+using Codific.Mvc567.FeatureProviders;
+using Codific.Mvc567.Options;
 using Codific.Mvc567.Profiles;
 using Codific.Mvc567.Seed;
 using Codific.Mvc567.Services.Extensions;
@@ -17,6 +21,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
+using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.ViewComponents;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -28,7 +33,7 @@ namespace Codific.Mvc567.Extensions
     public static class StartupServiceCollectionExtensions
     {
         public static IServiceCollection AddMvc567Database<TDatabaseContext, TStandardRepository>(this IServiceCollection services, IConfiguration configuration, string migrationAssembly)
-            where TDatabaseContext : AbstractDatabaseContext<TDatabaseContext>
+            where TDatabaseContext : DatabaseContext<TDatabaseContext>
             where TStandardRepository : class, IStandardRepository
         {
             var connectionString = configuration.GetConnectionString("DatabaseConnection");
@@ -48,7 +53,7 @@ namespace Codific.Mvc567.Extensions
         }
 
         public static IServiceCollection AddMvc567Services<TDatabaseContext>(this IServiceCollection services)
-            where TDatabaseContext : AbstractDatabaseContext<TDatabaseContext>
+            where TDatabaseContext : DatabaseContext<TDatabaseContext>
         {
             services.RegisterValidationProvider();
             services.RegisterServices<TDatabaseContext>();
@@ -124,14 +129,31 @@ namespace Codific.Mvc567.Extensions
             return services;
         }
 
-        public static IServiceCollection AddMvc567FeatureProviders(this IServiceCollection services, ApplicationPartManager applicationPart = null)
+        public static IServiceCollection AddMvc567FeatureProviders(this IServiceCollection services, Action<ApplicationPartManager> applicationPartAction = null)
         {
             services.AddMvc(option => option.EnableEndpointRouting = false)
                 .ConfigureApplicationPartManager(p =>
                 {
-                    if (applicationPart != null)
+                    ApplicationPartManager applicationPartManager = new ApplicationPartManager();
+                    applicationPartAction?.Invoke(applicationPartManager);
+                    if (applicationPartManager != null)
                     {
-                        p = applicationPart;
+                        foreach (var part in applicationPartManager.ApplicationParts)
+                        {
+                            p.ApplicationParts.Add(part);
+                        }
+
+                        var controllersFeatureProviders = p.FeatureProviders.Where(x => x.GetType() == typeof(ControllerFeatureProvider)).ToList();
+                        var applicationFeatureProviders = applicationPartManager.FeatureProviders.Where(x => x.GetType() == typeof(ApplicationControllerFeatureProvider)).ToList();
+                        if (controllersFeatureProviders.Count > 0 && applicationFeatureProviders.Count > 0)
+                        {
+                            controllersFeatureProviders.ForEach(x => p.FeatureProviders.Remove(x));
+                        }
+
+                        foreach (var provider in applicationPartManager.FeatureProviders)
+                        {
+                            p.FeatureProviders.Add(provider);
+                        }
                     }
 
                     p.ApplicationParts.Add(ApplicationAssemblyPart.AssemblyPart);
@@ -142,16 +164,34 @@ namespace Codific.Mvc567.Extensions
             return services;
         }
 
-        public static IServiceCollection AddMvc567Mapping(this IServiceCollection services, string migrationAssembly, Action<IMapperConfigurationExpression> configurationAction)
+        public static ApplicationPartManager DisableMvc567Controllers(this ApplicationPartManager applicationPartManager, params Type[] types)
         {
-            IMapperConfigurationExpression customConfiguration = null;
+            applicationPartManager.FeatureProviders.Add(new ApplicationControllerFeatureProvider(types.ToList()));
+
+            return applicationPartManager;
+        }
+
+        public static IServiceCollection AddMvc567Mapping(this IServiceCollection services, string migrationAssembly, Action<MappingConfigurationOptions> configurationAction)
+        {
+            MappingConfigurationOptions customConfiguration = new MappingConfigurationOptions();
             configurationAction.Invoke(customConfiguration);
 
             services.AddSingleton<IMapper>(new Mapper(new MapperConfiguration(configuration =>
             {
-                if (customConfiguration != null)
+                if (customConfiguration != null && customConfiguration.MappingProfiles != null && customConfiguration.MappingProfiles.Count > 0)
                 {
-                    configuration = customConfiguration;
+                    foreach (var profileType in customConfiguration.MappingProfiles)
+                    {
+                        configuration.AddProfile(profileType);
+                    }
+                }
+
+                if (customConfiguration != null && customConfiguration.MappingAssemblies != null && customConfiguration.MappingAssemblies.Count > 0)
+                {
+                    foreach (var assemblyString in customConfiguration.MappingAssemblies)
+                    {
+                        configuration.AddMaps(assemblyString);
+                    }
                 }
 
                 configuration.AddMaps("Codific.Mvc567.Entities");

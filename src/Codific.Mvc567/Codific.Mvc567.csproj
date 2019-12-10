@@ -11,7 +11,7 @@
     <Copyright>Codific</Copyright>
     <PackageTags>MVC, .NET Core, CMS, ASP.NET Core, Vue.js</PackageTags>
     <PackageIconUrl>https://fix.codific.com/back/img/codific.png</PackageIconUrl>
-    <Version>1.1.11</Version>
+    <Version>1.1.18</Version>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <AssemblyName>Codific.Mvc567</AssemblyName>
     <RootNamespace>Codific.Mvc567</RootNamespace>
@@ -80,9 +80,9 @@
     <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Formatters.Xml" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.SpaServices" Version="3.0.0" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.0.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.0.0" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="3.0.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="3.0.1" />
     <PackageReference Include="Microsoft.VisualStudio.Web.BrowserLink" Version="2.2.0" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
     <PackageReference Include="Microsoft.AspNetCore.Hosting.Abstractions" Version="2.2.0" />
@@ -132,5 +132,7 @@
     <Folder Include="Profiles\" />
     <Folder Include="Middlewares\" />
     <Folder Include="Extensions\" />
+    <Folder Include="Options\" />
+    <Folder Include="FeatureProviders\" />
   </ItemGroup>
 </Project>

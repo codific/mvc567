@@ -36,7 +36,7 @@ namespace Codific.Mvc567.Controllers.MVC.Admin
     [Route("admin/languages/")]
     [Authorize(Policy = ApplicationPermissions.AccessAdministrationPolicy)]
     [Authorize(Policy = ApplicationPermissions.LanguagesManagementPolicy)]
-    public class AdminLanguagesController : AbstractEntityController<Language, LanguageViewModel>
+    public class AdminLanguagesController : AdminEntityController<Language, LanguageViewModel>
     {
         private readonly ILanguageService languageService;
 
