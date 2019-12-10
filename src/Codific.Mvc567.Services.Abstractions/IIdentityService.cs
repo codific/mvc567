@@ -33,5 +33,9 @@ namespace Codific.Mvc567.Services.Abstractions
         Task<Tuple<bool, string[]>> DeleteRoleAsync<TRoleModel>(TRoleModel role);
 
         Task<Tuple<bool, string[]>> DeleteRoleAsync(string roleName);
+
+        Task<string> GeneratePasswordResetTokenAsync<TUserModel>(TUserModel user);
+
+        Task<bool> ResetPasswordAsync(Guid user, string token, string newPassword);
     }
 }

@@ -17,6 +17,7 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Net;
 using System.Threading.Tasks;
 using Codific.Mvc567.Common;
 using Codific.Mvc567.Common.Attributes;
@@ -31,6 +32,7 @@ using Codific.Mvc567.Entities.Database;
 using Codific.Mvc567.Services.Abstractions;
 using Codific.Mvc567.ViewModels;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Codific.Mvc567.Controllers.MVC.Admin
@@ -45,13 +47,16 @@ namespace Codific.Mvc567.Controllers.MVC.Admin
         private readonly IEmailService emailService;
         private readonly IAuthenticationService authenticationService;
 
-        public AdminUsersController(IIdentityService identityService, IEntityManager entityManager, IEmailService emailService, IAuthenticationService authenticationService)
+        public AdminUsersController(
+            IIdentityService identityService,
+            IEntityManager entityManager,
+            IEmailService emailService,
+            IAuthenticationService authenticationService)
             : base(entityManager)
         {
             this.identityService = identityService;
             this.emailService = emailService;
             this.authenticationService = authenticationService;
-
             this.HasDelete = false;
             this.HasEdit = false;
         }
@@ -141,9 +146,12 @@ namespace Codific.Mvc567.Controllers.MVC.Admin
         {
             base.TableViewActionsInit();
             this.TableRowActions.Insert(1, TableMapper.CreateAction("Send Email", MaterialDesignIcons.Email, Color.ForestGreen, TableRowActionMethod.Get, $"/{this.ControllerRoute}{{0}}/send-email", "[Id]"));
+            var resetPasswordAction = TableMapper.CreateAction("Reset Password", MaterialDesignIcons.Account, Color.Coral, TableRowActionMethod.Post, $"/{this.ControllerRoute}{{0}}/send-reset-password-mail", "[Id]");
+            resetPasswordAction.SetConfirmation("Reset Password", "Are you sure you want to reset password of this user?");
+            this.TableRowActions.Insert(2, resetPasswordAction);
             var resetRefreshTokenAction = TableMapper.CreateAction("Reset Refresh Token", MaterialDesignIcons.Refresh, Color.PaleVioletRed, TableRowActionMethod.Post, $"/{this.ControllerRoute}{{0}}/reset-refresh-token", "[Id]");
             resetRefreshTokenAction.SetConfirmation("Reset Refresh Token", "Are you sure you want to reset refresh token of this user?");
-            this.TableRowActions.Insert(2, resetRefreshTokenAction);
+            this.TableRowActions.Insert(3, resetRefreshTokenAction);
         }
 
         protected override void InitNavigationActionsIntoListPage()

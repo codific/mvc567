@@ -34,6 +34,16 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
                             </a>
                         </div>
                         <div class="auto-form-wrapper">
+                            @{
+                                if (TempData["SuccessStatusMessage"] != null)
+                                {
+                                    <div class="alert alert-success" role="alert">@Html.Raw(@TempData["SuccessStatusMessage"])</div>
+                                }
+                                else if (TempData["ErrorStatusMessage"] != null)
+                                {
+                                    <div class="alert alert-danger" role="alert">@Html.Raw(@TempData["ErrorStatusMessage"])</div>
+                                } 
+                            }
                             @RenderBody()
                         </div>
                         <p class="footer-text text-center">Copyright © @DateTime.Now.Year <a class="text-red" href="https://www.codific.com/" target="_blank">Codific</a>. All rights reserved. </p>

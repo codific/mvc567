@@ -15,11 +15,16 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 using System;
+using System.Net;
+using System.Text;
 using System.Threading.Tasks;
-using Codific.Mvc567.CommonCore;
+using Codific.Mvc567.Common.Attributes;
+using Codific.Mvc567.Common.Extensions;
 using Codific.Mvc567.DataAccess.Identity;
+using Codific.Mvc567.Dtos.EmailModels;
 using Codific.Mvc567.Dtos.ViewModels.AdminViewModels;
 using Codific.Mvc567.Entities.Database;
+using Codific.Mvc567.Services.Abstractions;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
@@ -27,6 +32,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Hosting;
+using VisibleReCaptchaValidateAttribute = Codific.Mvc567.CommonCore.VisibleReCaptchaValidateAttribute;
 
 namespace Codific.Mvc567.Controllers.MVC.Admin
 {
@@ -37,15 +43,21 @@ namespace Codific.Mvc567.Controllers.MVC.Admin
         private readonly UserManager<User> userManager;
         private readonly Services.Abstractions.IAuthenticationService authenticationService;
         private readonly IWebHostEnvironment hostingEnvironment;
+        private readonly IIdentityService identityService;
+        private readonly IEmailService emailService;
 
         public AdminAccountController(
             UserManager<User> userManager,
             Services.Abstractions.IAuthenticationService authenticationService,
-            IWebHostEnvironment hostingEnvironment)
+            IWebHostEnvironment hostingEnvironment,
+            IIdentityService identityService,
+            IEmailService emailService)
         {
             this.userManager = userManager;
             this.authenticationService = authenticationService;
             this.hostingEnvironment = hostingEnvironment;
+            this.identityService = identityService;
+            this.emailService = emailService;
         }
 
         private IActionResult AdminDashboardActionResult
@@ -212,6 +224,71 @@ namespace Codific.Mvc567.Controllers.MVC.Admin
             await this.authenticationService.SignOutAsync(this.HttpContext);
 
             return this.RedirectToAction("Index", "Home");
+        }
+
+        [HttpGet]
+        [Route("/admin/reset-password")]
+        public IActionResult ResetPassword([FromQuery]Guid userId, [FromQuery]string resetToken)
+        {
+            return this.View(new AdminResetPasswordViewModel
+            {
+                PasswordResetToken = resetToken,
+                UserId = userId,
+            });
+        }
+
+        [HttpPost]
+        [Route("/admin/reset-password")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ResetPassword([FromForm]AdminResetPasswordViewModel model)
+        {
+            if (this.ModelState.IsValid)
+            {
+                var result = await this.identityService.ResetPasswordAsync(model.UserId, model.PasswordResetToken, model.NewPassword);
+                if (result)
+                {
+                    this.TempData["SuccessStatusMessage"] = "You successfully changed your password!";
+                    return this.Redirect(nameof(this.Login));
+                }
+            }
+
+            return this.View();
+        }
+
+        [HttpPost]
+        [Route("/admin/users/{userId}/send-reset-password-mail")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> SendResetUserPasswordMail(Guid userId)
+        {
+            var user = await this.identityService.GetUserByIdAsync<User>(userId);
+            if (user != null)
+            {
+                var resetToken = await this.identityService.GeneratePasswordResetTokenAsync(user);
+                var resetPasswordUrl = this.Url.Action("ResetPassword", "AdminAccount", new { userId, resetToken }, this.HttpContext.Request.Scheme);
+
+                var mailModel = new UserResetPasswordEmailModel
+                {
+                    Email = user.Email,
+                    Subject = "Password Reset",
+                    GivenName = user.FirstName,
+                    Surname = user.LastName,
+                    resetPasswordUrl = resetPasswordUrl,
+                };
+                var result = await this.emailService.SendEmailAsync("UserResetPasswordEmailView", mailModel);
+                if (result.Success)
+                {
+                    this.TempData["SuccessStatusMessage"] =
+                        $"Password reset email to {mailModel.Email} has been sent successfully.";
+                }
+                else
+                {
+                    this.TempData["ErrorStatusMessage"] = $"An error occured while sending email to {mailModel.Email}.";
+                }
+
+                return this.Redirect("/admin/users/all");
+            }
+
+            return this.NotFound();
         }
     }
 }

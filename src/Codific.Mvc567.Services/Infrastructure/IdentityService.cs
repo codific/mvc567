@@ -18,6 +18,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
+using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
 using Codific.Mvc567.DataAccess.Abstraction;
@@ -25,6 +26,7 @@ using Codific.Mvc567.DataAccess.Identity;
 using Codific.Mvc567.Entities.Database;
 using Codific.Mvc567.Services.Abstractions;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Codific.Mvc567.Services.Infrastructure
 {
@@ -151,6 +153,27 @@ namespace Codific.Mvc567.Services.Infrastructure
 
                 return default(TUserModel);
             }
+        }
+
+        public async Task<string> GeneratePasswordResetTokenAsync<TUserModel>(TUserModel user)
+        {
+            var entityUser = this.Mapper.Map<User>(user);
+            var token = await this.userManager.GeneratePasswordResetTokenAsync(entityUser);
+
+            return token;
+        }
+
+        public async Task<bool> ResetPasswordAsync(Guid userId, string token, string newPassword)
+        {
+            var user = await this.userManager.FindByIdAsync(userId.ToString());
+            if (user == null)
+            {
+                return false;
+            }
+
+            var result = await this.userManager.ResetPasswordAsync(user, token, newPassword);
+
+            return result.Succeeded;
         }
     }
 }
