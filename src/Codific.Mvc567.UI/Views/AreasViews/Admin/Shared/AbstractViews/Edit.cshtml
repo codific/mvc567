@@ -26,6 +26,12 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
     <div class="card">
         <div class="card-body">
             <h4 class="card-title">@($"Edit {Model.EntityName}")</h4>
+            @if (@Model.FormErrorMessage != null)
+            {
+                <div class="alert alert-danger">
+                    @Model.FormErrorMessage
+                </div>
+            }
             <form asp-area="@Model.Area" asp-controller="@Model.Controller" asp-action="@Model.Action">
                 @await Html.PartialAsync(Partials.CreateEditFormItemsPartial, Model.GetModelInputList())
                 <hr />

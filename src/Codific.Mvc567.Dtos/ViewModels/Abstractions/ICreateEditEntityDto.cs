@@ -30,6 +30,8 @@ namespace Codific.Mvc567.Dtos.ViewModels.Abstractions
 
         string Action { get; set; }
 
+        string FormErrorMessage { get; set; }
+
         List<CreateEditInputViewModel> GetModelInputList();
     }
 }

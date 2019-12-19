@@ -38,6 +38,9 @@ namespace Codific.Mvc567.Dtos.ViewModels.Abstractions
         [JsonIgnore]
         public string Action { get; set; }
 
+        [JsonIgnore]
+        public string FormErrorMessage { get; set; }
+
         public List<CreateEditInputViewModel> GetModelInputList()
         {
             var resultList = new List<CreateEditInputViewModel>();
