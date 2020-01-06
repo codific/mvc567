@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using Codific.Mvc567.Services.Abstractions;
 using NPOI.HSSF.UserModel;
@@ -13,56 +14,47 @@ namespace Codific.Mvc567.Services.Infrastructure
     {
         public List<string[]> ExtractLinesOfExcelFile(string path, int rows, int columns, int sheetIndex = 0)
         {
-            ISheet sheet = this.ExtractSheetFromPath(path, sheetIndex);
-
             var resultList = new List<string[]>();
-
-            for (int i = 0; i < rows; i++)
+            try
             {
-                string[] currentRow = new string[columns];
-                IRow row = sheet.GetRow(i);
-                for (int j = 0; j < columns; j++)
-                {
-                    ICell cell = row.GetCell(j);
-                    currentRow[j] = cell?.ToString();
-                }
+                ISheet sheet = this.ExtractSheetFromPath(path, sheetIndex);
 
-                resultList.Add(currentRow);
+                for (int i = 0; i < rows; i++)
+                {
+                    string[] currentRow = new string[columns];
+                    IRow row = sheet.GetRow(i);
+                    for (int j = 0; j < columns; j++)
+                    {
+                        ICell cell = row.GetCell(j);
+                        currentRow[j] = cell?.ToString();
+                    }
+
+                    var currentRowToString = string.Join(" ", currentRow);
+                    if (!string.IsNullOrWhiteSpace(currentRowToString))
+                    {
+                        resultList.Add(currentRow);
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
             }
 
             return resultList;
         }
 
-        public int GetExcelFileRows(string path, int columnsToRead, int tolerance = 1, int sheetIndex = 0)
-        {
-            var sheet = this.ExtractSheetFromPath(path, sheetIndex);
-
-            int totalRows = 0;
-
-            int currentRow = 0;
-            int emptyRows = 0;
-
-            do
-            {
-                var row = sheet.GetRow(currentRow);
-                bool isRowEmpty = this.IsRowEmpty(row, columnsToRead);
-                totalRows += Convert.ToInt32(!isRowEmpty);
-                emptyRows += Convert.ToInt32(isRowEmpty);
-                currentRow++;
-            }
-            while (emptyRows < tolerance);
-
-            return totalRows;
-        }
-
-        public IEnumerable<TModel> MapContentToModel<TModel>(List<string[]> content, Dictionary<string, int> schemeDictionary, bool hasHeader, int rowsToRead)
+        public IEnumerable<TModel> MapContentToModel<TModel>(List<string[]> content, Dictionary<string, int> schemeDictionary, bool hasHeader)
         {
             List<TModel> resultList = new List<TModel>();
             Type modelType = typeof(TModel);
 
-            int correctedRowsToRead = rowsToRead + Convert.ToInt32(hasHeader);
+            if (hasHeader)
+            {
+                content.RemoveAt(0);
+            }
 
-            for (int i = Convert.ToInt32(hasHeader); i < correctedRowsToRead; i++)
+            for (int i = 0; i < content.Count; i++)
             {
                 try
                 {
@@ -112,27 +104,6 @@ namespace Codific.Mvc567.Services.Infrastructure
 
                 return sheet;
             }
-        }
-
-        private bool IsRowEmpty(IRow row, int columnsToRead)
-        {
-            if (row == null)
-            {
-                return true;
-            }
-
-            bool result = true;
-            for (int i = 0; i < columnsToRead; i++)
-            {
-                ICell cell = row.GetCell(i);
-                result = result && (cell is null);
-                if (cell != null)
-                {
-                    break;
-                }
-            }
-
-            return result;
         }
     }
 }
