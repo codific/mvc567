@@ -130,7 +130,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
                         @if (Model.Pagination.PreviousPage != null && Model.Pagination.PreviousPagesCount > 0)
                         {
                             <li class="page-item mx-0">
-                                <a class="page-link btn btn-secondary p-2" href="@Url.Action(Model.Action, Model.Controller, new { Area = Model.Area, p = Model.Pagination.PreviousPage, q = ViewData["searchQuery"] })">⯇</a>
+                                <a class="page-link btn btn-secondary p-2" href="@Url.Action(Model.Action, Model.Controller, new { Area = Model.Area, p = Model.Pagination.PreviousPage, q = ViewData["searchQuery"] })"> < </a>
                             </li>
                         }
                         @if (Model.Pagination.PreviousPagesCount > 0)
@@ -157,7 +157,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
                         @if (Model.Pagination.NextPage != null && Model.Pagination.NextPagesCount > 0)
                         {
                             <li class="page-item mx-0">
-                                <a class="page-link btn btn-secondary p-2" href="@Url.Action(Model.Action, Model.Controller, new { Area = Model.Area, p = Model.Pagination.NextPage, q = ViewData["searchQuery"] })">⯈</a>
+                                <a class="page-link btn btn-secondary p-2" href="@Url.Action(Model.Action, Model.Controller, new { Area = Model.Area, p = Model.Pagination.NextPage, q = ViewData["searchQuery"] })"> > </a>
                             </li>
                         }
                     </ul>
