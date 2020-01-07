@@ -31,8 +31,6 @@ namespace Codific.Mvc567.Services.Infrastructure
 {
     public abstract class Service
     {
-        protected const int PaginationPageSize = 10;
-
         private readonly IUnitOfWork uow;
         private readonly IMapper mapper;
         private readonly IStandardRepository standardRepository;
@@ -42,7 +40,10 @@ namespace Codific.Mvc567.Services.Infrastructure
             this.uow = uow;
             this.mapper = mapper;
             this.standardRepository = this.uow.GetStandardRepository();
+            this.PaginationPageSize = 10;
         }
+
+        public int PaginationPageSize { get; protected set; }
 
         public IUnitOfWork Uow => this.uow;
 

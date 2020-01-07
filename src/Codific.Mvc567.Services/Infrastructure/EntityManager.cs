@@ -91,17 +91,17 @@ namespace Codific.Mvc567.Services.Infrastructure
                 }
 
                 result.CurrentPage = page;
-                result.PageSize = PaginationPageSize;
+                result.PageSize = this.PaginationPageSize;
 
                 IEnumerable<TEntity> entities = null;
                 var firstLevelIncludeQuery = this.GetFirstLevelIncludeQuery<TEntity>();
                 if (string.IsNullOrWhiteSpace(searchQuery))
                 {
-                    entities = await standardRepository.GetPageAsync<TEntity>(result.StartRow, PaginationPageSize, null, firstLevelIncludeQuery, showDeleted);
+                    entities = await standardRepository.GetPageAsync<TEntity>(result.StartRow, this.PaginationPageSize, null, firstLevelIncludeQuery, showDeleted);
                 }
                 else
                 {
-                    entities = standardRepository.EnumerableQueryPage<TEntity>(result.StartRow, PaginationPageSize, this.GetEntitySearchQueryExpression<TEntity>(searchQuery, showDeleted).Compile(), null, firstLevelIncludeQuery);
+                    entities = standardRepository.EnumerableQueryPage<TEntity>(result.StartRow, this.PaginationPageSize, this.GetEntitySearchQueryExpression<TEntity>(searchQuery, showDeleted).Compile(), null, firstLevelIncludeQuery);
                 }
 
                 var dtoEntities = this.Mapper.Map<IEnumerable<TEntityDto>>(entities);
@@ -312,7 +312,7 @@ namespace Codific.Mvc567.Services.Infrastructure
                 result.CurrentPage = filterQuery.Page.HasValue ? filterQuery.Page.Value : 1;
                 if (filterQuery.Page.HasValue)
                 {
-                    result.PageSize = filterQuery.PageSize.HasValue ? filterQuery.PageSize.Value : PaginationPageSize;
+                    result.PageSize = filterQuery.PageSize.HasValue ? filterQuery.PageSize.Value : this.PaginationPageSize;
                 }
                 else
                 {
