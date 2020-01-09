@@ -20,6 +20,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 <html>
 <head>
     @await Html.PartialAsync("_AdminSharedHead")
+    @RenderSection("Head", required: false)
 </head>
 <body>
     <div class="container-scroller">
