@@ -86,6 +86,49 @@ namespace Codific.Mvc567.Services.Infrastructure
             return resultList;
         }
 
+        public int GetExcelFileRows(string path, int columnsToRead, int tolerance = 1, int sheetIndex = 0)
+        {
+            var sheet = this.ExtractSheetFromPath(path, sheetIndex);
+
+            int totalRows = 0;
+
+            int currentRow = 0;
+            int emptyRows = 0;
+
+            do
+            {
+                var row = sheet.GetRow(currentRow);
+                bool isRowEmpty = this.IsRowEmpty(row, columnsToRead);
+                totalRows += Convert.ToInt32(!isRowEmpty);
+                emptyRows += Convert.ToInt32(isRowEmpty);
+                currentRow++;
+            }
+            while (emptyRows < tolerance);
+
+            return totalRows;
+        }
+
+        private bool IsRowEmpty(IRow row, int columnsToRead)
+        {
+            if (row == null)
+            {
+                return true;
+            }
+
+            bool result = true;
+            for (int i = 0; i < columnsToRead; i++)
+            {
+                ICell cell = row.GetCell(i);
+                result = result && (cell is null);
+                if (cell != null)
+                {
+                    break;
+                }
+            }
+
+            return result;
+        }
+
         private ISheet ExtractSheetFromPath(string path, int sheetIndex = 0)
         {
             using (FileStream stream = new FileStream(path, FileMode.Open))
