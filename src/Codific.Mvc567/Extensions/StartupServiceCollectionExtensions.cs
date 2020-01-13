@@ -210,6 +210,8 @@ namespace Codific.Mvc567.Extensions
             services.Configure<GoogleRecaptchaKeys>(configuration.GetSection("GoogleRecaptchaKeys"));
             services.AddScoped<InvisibleReCaptchaValidateAttribute>();
             services.AddScoped<VisibleReCaptchaValidateAttribute>();
+            services.AddScoped<Codific.Mvc567.CommonCore.InvisibleReCaptchaValidateAttribute>();
+            services.AddScoped<Codific.Mvc567.CommonCore.VisibleReCaptchaValidateAttribute>();
             services.Configure<SmtpConfig>(configuration.GetSection("SmtpConfig"));
 
             return services;

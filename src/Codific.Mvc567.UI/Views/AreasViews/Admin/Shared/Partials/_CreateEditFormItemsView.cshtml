@@ -20,7 +20,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 @foreach (var inputItem in Model)
 {
-<div class="form-group">
+<div class="form-group col-6 col-md-6">
     @if (inputItem.Type != CreateEntityInputType.Hidden)
     {
         <label>@inputItem.Label<span class="text-red">@(inputItem.Required ? "*" : string.Empty)</span>:</label>
