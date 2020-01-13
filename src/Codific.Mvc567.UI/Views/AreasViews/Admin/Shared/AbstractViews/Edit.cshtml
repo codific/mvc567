@@ -22,7 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
     ViewData["Title"] = $"Edit {Model.EntityName}";
 }
 
-<div class="col-12 col-md-6 grid-margin stretch-card">
+<div class="col-12 grid-margin stretch-card">
     <div class="card">
         <div class="card-body">
             <h4 class="card-title">@($"Edit {Model.EntityName}")</h4>
@@ -33,7 +33,9 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
                 </div>
             }
             <form asp-area="@Model.Area" asp-controller="@Model.Controller" asp-action="@Model.Action">
-                @await Html.PartialAsync(Partials.CreateEditFormItemsPartial, Model.GetModelInputList())
+                <div class="row">
+                    @await Html.PartialAsync(Partials.CreateEditFormItemsPartial, Model.GetModelInputList())
+                </div>
                 <hr />
                 <div class="form-group mb-0">
                     <button type="submit" class="d-flex btn btn-primary mt-2 ml-auto mr-0">Edit</button>

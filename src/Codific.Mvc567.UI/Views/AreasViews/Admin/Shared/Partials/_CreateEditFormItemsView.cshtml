@@ -20,76 +20,78 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 @foreach (var inputItem in Model)
 {
-<div class="form-group col-6 col-md-6">
+<div class="form-group row w-100">
     @if (inputItem.Type != CreateEntityInputType.Hidden)
     {
-        <label>@inputItem.Label<span class="text-red">@(inputItem.Required ? "*" : string.Empty)</span>:</label>
+        <label class="col-sm-2 col-form-label">@inputItem.Label<span class="text-red">@(inputItem.Required ? "*" : string.Empty)</span>:</label>
     }
-    @switch (inputItem.Type)
-    {
-        case CreateEntityInputType.Text:
-            <input type="text" name="@inputItem.Name" placeholder="Enter @inputItem.Label" class="form-control" value="@inputItem.Value?.ToString()" />
-            break;
-        case CreateEntityInputType.TextArea:
-            <textarea class="form-control" name="@inputItem.Name" placeholder="Enter @inputItem.Label">@inputItem.Value?.ToString()</textarea>
-            break;
-        case CreateEntityInputType.Email:
-            <input type="email" name="@inputItem.Name" placeholder="Enter @inputItem.Label" class="form-control" value="@inputItem.Value?.ToString()" />
-            break;
-        case CreateEntityInputType.Password:
-            <input type="password" name="@inputItem.Name" placeholder="Enter @inputItem.Label" class="form-control" value="" />
-            break;
-        case CreateEntityInputType.Date:
-            <date-picker name="@inputItem.Name" value="@inputItem.Value?.ToString()"></date-picker>
-            break;
-        case CreateEntityInputType.Time:
-            <time-picker name="@inputItem.Name" value="@inputItem.Value?.ToString()"></time-picker>
-            break;
-        case CreateEntityInputType.File:
-            <file-uploader name="@inputItem.Name" value="@inputItem.GuidValue"></file-uploader>
-            break;
-        case CreateEntityInputType.Integer:
-            <input type="number" name="@inputItem.Name" step="1" placeholder="Enter @inputItem.Label" class="form-control" value="@inputItem.Value" />
-            break;
-        case CreateEntityInputType.Double:
-            <input type="number" name="@inputItem.Name" step="any" placeholder="Enter @inputItem.Label" class="form-control" value="@inputItem.Value" />
-            break;
-        case CreateEntityInputType.EnumSelect:
-            <enum-select name="@inputItem.Name" enum="inputItem.EnumType" selected-value="@((int)inputItem.Value)" class="form-control"></enum-select>
-            break;
-        case CreateEntityInputType.EnumCheckbox:
-            <enum-checkbox model-name="@inputItem.Name" enum="inputItem.EnumType" selected-values="@((int[])inputItem.Value)"></enum-checkbox>
-            break;
-        case CreateEntityInputType.EnumRadio:
-            <enum-radio model-name="@inputItem.Name" enum="inputItem.EnumType" selected-value="@((int)inputItem.Value)"></enum-radio>
-            break;
-        case CreateEntityInputType.DatabaseSelect:
-            <database-select name="@inputItem.Name" entity-type="inputItem.DatabaseEntityType" visible-property="@inputItem.DatabaseEntityVisibleProperty" selected-value="@inputItem.GuidValue" has-empty="@inputItem.IsNullable" class="form-control"></database-select>
-            break;
-        case CreateEntityInputType.DatabaseCheckbox:
-            <database-checkbox model-name="@inputItem.Name" entity-type="inputItem.DatabaseEntityType" visible-property="@inputItem.DatabaseEntityVisibleProperty" selected-values="@inputItem.GuidArrayValue"></database-checkbox>
-            break;
-        case CreateEntityInputType.DatabaseRadio:
-            <database-radio model-name="@inputItem.Name" entity-type="inputItem.DatabaseEntityType" visible-property="@inputItem.DatabaseEntityVisibleProperty" selected-value="@inputItem.GuidValue"></database-radio>
-            break;
-        case CreateEntityInputType.BoolSelect:
-            <bool-select name="@inputItem.Name" class="form-control" value="@Convert.ToBoolean(inputItem.Value)"></bool-select>
-            break;
-        case CreateEntityInputType.BoolRadio:
-            <bool-radio name="@inputItem.Name" value="@Convert.ToBoolean(inputItem.Value)"></bool-radio>
-            break;
-        case CreateEntityInputType.DatabaseTablesSelect:
-            <database-tables-select name="@inputItem.Name" selected-value="@inputItem.Value?.ToString()" class="form-control"></database-tables-select>
-            break;
-        case CreateEntityInputType.Hidden:
-            <input type="hidden" name="@inputItem.Name" value="@inputItem.Value?.ToString()"/>
-            break;
-        default:
-            break;
-    }
-    <span class="text-danger text-small">
-        @Html.ValidationMessage(inputItem.Name)
-    </span>
+    <div class="col-sm-10">
+        @switch (inputItem.Type)
+        {
+            case CreateEntityInputType.Text:
+                <input type="text" name="@inputItem.Name" placeholder="Enter @inputItem.Label" class="form-control" value="@inputItem.Value?.ToString()" />
+                break;
+            case CreateEntityInputType.TextArea:
+                <textarea class="form-control" name="@inputItem.Name" placeholder="Enter @inputItem.Label">@inputItem.Value?.ToString()</textarea>
+                break;
+            case CreateEntityInputType.Email:
+                <input type="email" name="@inputItem.Name" placeholder="Enter @inputItem.Label" class="form-control" value="@inputItem.Value?.ToString()" />
+                break;
+            case CreateEntityInputType.Password:
+                <input type="password" name="@inputItem.Name" placeholder="Enter @inputItem.Label" class="form-control" value="" />
+                break;
+            case CreateEntityInputType.Date:
+                <date-picker name="@inputItem.Name" value="@inputItem.Value?.ToString()"></date-picker>
+                break;
+            case CreateEntityInputType.Time:
+                <time-picker name="@inputItem.Name" value="@inputItem.Value?.ToString()"></time-picker>
+                break;
+            case CreateEntityInputType.File:
+                <file-uploader name="@inputItem.Name" value="@inputItem.GuidValue"></file-uploader>
+                break;
+            case CreateEntityInputType.Integer:
+                <input type="number" name="@inputItem.Name" step="1" placeholder="Enter @inputItem.Label" class="form-control" value="@inputItem.Value" />
+                break;
+            case CreateEntityInputType.Double:
+                <input type="number" name="@inputItem.Name" step="any" placeholder="Enter @inputItem.Label" class="form-control" value="@inputItem.Value" />
+                break;
+            case CreateEntityInputType.EnumSelect:
+                <enum-select name="@inputItem.Name" enum="inputItem.EnumType" selected-value="@((int)inputItem.Value)" class="form-control"></enum-select>
+                break;
+            case CreateEntityInputType.EnumCheckbox:
+                <enum-checkbox model-name="@inputItem.Name" enum="inputItem.EnumType" selected-values="@((int[])inputItem.Value)"></enum-checkbox>
+                break;
+            case CreateEntityInputType.EnumRadio:
+                <enum-radio model-name="@inputItem.Name" enum="inputItem.EnumType" selected-value="@((int)inputItem.Value)"></enum-radio>
+                break;
+            case CreateEntityInputType.DatabaseSelect:
+                <database-select name="@inputItem.Name" entity-type="inputItem.DatabaseEntityType" visible-property="@inputItem.DatabaseEntityVisibleProperty" selected-value="@inputItem.GuidValue" has-empty="@inputItem.IsNullable" class="form-control"></database-select>
+                break;
+            case CreateEntityInputType.DatabaseCheckbox:
+                <database-checkbox model-name="@inputItem.Name" entity-type="inputItem.DatabaseEntityType" visible-property="@inputItem.DatabaseEntityVisibleProperty" selected-values="@inputItem.GuidArrayValue"></database-checkbox>
+                break;
+            case CreateEntityInputType.DatabaseRadio:
+                <database-radio model-name="@inputItem.Name" entity-type="inputItem.DatabaseEntityType" visible-property="@inputItem.DatabaseEntityVisibleProperty" selected-value="@inputItem.GuidValue"></database-radio>
+                break;
+            case CreateEntityInputType.BoolSelect:
+                <bool-select name="@inputItem.Name" class="form-control" value="@Convert.ToBoolean(inputItem.Value)"></bool-select>
+                break;
+            case CreateEntityInputType.BoolRadio:
+                <bool-radio name="@inputItem.Name" value="@Convert.ToBoolean(inputItem.Value)"></bool-radio>
+                break;
+            case CreateEntityInputType.DatabaseTablesSelect:
+                <database-tables-select name="@inputItem.Name" selected-value="@inputItem.Value?.ToString()" class="form-control"></database-tables-select>
+                break;
+            case CreateEntityInputType.Hidden:
+                <input type="hidden" name="@inputItem.Name" value="@inputItem.Value?.ToString()"/>
+                break;
+            default:
+                break;
+        }
+        <span class="text-danger text-small">
+            @Html.ValidationMessage(inputItem.Name)
+        </span>
+    </div>
 </div>
 }
 <div class="text-danger text-small">
