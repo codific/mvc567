@@ -34,6 +34,6 @@ namespace Codific.Mvc567.Common.Attributes
 
         public TableCellType Type { get; private set; }
 
-        public bool Editable { get; set; }
+        public bool Editable { get; set; } = true;
     }
 }
