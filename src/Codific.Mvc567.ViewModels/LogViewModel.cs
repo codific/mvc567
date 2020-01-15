@@ -28,31 +28,31 @@ namespace Codific.Mvc567.ViewModels
         [DetailsOrder(0)]
         public string Id { get; set; }
 
-        [TableCell(1, "Message", TableCellType.TextArea)]
+        [TableCell(1, "Message", TableCellType.TextArea, Editable = false)]
         [DetailsOrder(1)]
         public string Message { get; set; }
 
-        [TableCell(2, "Stack Trace", TableCellType.TextArea)]
+        [TableCell(2, "Stack Trace", TableCellType.TextArea, Editable = false)]
         [DetailsOrder(5)]
         public string StackTrace { get; set; }
 
-        [TableCell(3, "Source", TableCellType.Text)]
+        [TableCell(3, "Source", TableCellType.Text, Editable = false)]
         [DetailsOrder(2)]
         public string Source { get; set; }
 
-        [TableCell(4, "Method", TableCellType.Text)]
+        [TableCell(4, "Method", TableCellType.Text, Editable = false)]
         [DetailsOrder(3)]
         public string Method { get; set; }
 
-        [TableCell(5, "Class", TableCellType.Text)]
+        [TableCell(5, "Class", TableCellType.Text, Editable = false)]
         [DetailsOrder(4)]
         public string Class { get; set; }
 
-        [TableCell(6, "Created On", TableCellType.Date)]
+        [TableCell(6, "Created On", TableCellType.Date, Editable = false)]
         [DetailsOrder(6)]
         public DateTime CreatedOn { get; set; }
 
-        [TableCell(7, "Created By", TableCellType.Text)]
+        [TableCell(7, "Created By", TableCellType.Text, Editable = false)]
         [DetailsOrder(7)]
         public string CreatedBy { get; set; }
     }
