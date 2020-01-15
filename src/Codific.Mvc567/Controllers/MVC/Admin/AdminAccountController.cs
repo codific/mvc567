@@ -15,11 +15,16 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 using System;
+using System.Net;
+using System.Text;
 using System.Threading.Tasks;
-using Codific.Mvc567.CommonCore;
+using Codific.Mvc567.Common.Attributes;
+using Codific.Mvc567.Common.Extensions;
 using Codific.Mvc567.DataAccess.Identity;
+using Codific.Mvc567.Dtos.EmailModels;
 using Codific.Mvc567.Dtos.ViewModels.AdminViewModels;
 using Codific.Mvc567.Entities.Database;
+using Codific.Mvc567.Services.Abstractions;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
@@ -27,6 +32,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Hosting;
+using VisibleReCaptchaValidateAttribute = Codific.Mvc567.CommonCore.VisibleReCaptchaValidateAttribute;
 
 namespace Codific.Mvc567.Controllers.MVC.Admin
 {
@@ -37,15 +43,21 @@ namespace Codific.Mvc567.Controllers.MVC.Admin
         private readonly UserManager<User> userManager;
         private readonly Services.Abstractions.IAuthenticationService authenticationService;
         private readonly IWebHostEnvironment hostingEnvironment;
+        private readonly IIdentityService identityService;
+        private readonly IEmailService emailService;
 
         public AdminAccountController(
             UserManager<User> userManager,
             Services.Abstractions.IAuthenticationService authenticationService,
-            IWebHostEnvironment hostingEnvironment)
+            IWebHostEnvironment hostingEnvironment,
+            IIdentityService identityService,
+            IEmailService emailService)
         {
             this.userManager = userManager;
             this.authenticationService = authenticationService;
             this.hostingEnvironment = hostingEnvironment;
+            this.identityService = identityService;
+            this.emailService = emailService;
         }
 
         private IActionResult AdminDashboardActionResult
@@ -212,6 +224,50 @@ namespace Codific.Mvc567.Controllers.MVC.Admin
             await this.authenticationService.SignOutAsync(this.HttpContext);
 
             return this.RedirectToAction("Index", "Home");
+        }
+
+        [HttpGet]
+        [Route("/admin/reset-password")]
+        public IActionResult ResetPassword([FromQuery(Name = "Id")]Guid userId, [FromQuery(Name = "resetToken")]string resetToken)
+        {
+            if (this.User.Identity.IsAuthenticated)
+            {
+                return this.AdminDashboardActionResult;
+            }
+
+            if (userId == Guid.Empty || string.IsNullOrEmpty(resetToken))
+            {
+                return this.NotFound();
+            }
+
+            return this.View(new AdminResetPasswordViewModel
+            {
+                PasswordResetToken = resetToken,
+                UserId = userId,
+            });
+        }
+
+        [HttpPost]
+        [Route("/admin/reset-password")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ResetPassword([FromForm]AdminResetPasswordViewModel model)
+        {
+            if (this.User.Identity.IsAuthenticated)
+            {
+                return this.AdminDashboardActionResult;
+            }
+
+            if (this.ModelState.IsValid)
+            {
+                var result = await this.identityService.ResetPasswordAsync(model.UserId, model.PasswordResetToken, model.NewPassword);
+                if (result)
+                {
+                    this.TempData["SuccessStatusMessage"] = "You successfully changed your password!";
+                    return this.Redirect(nameof(this.Login));
+                }
+            }
+
+            return this.View();
         }
     }
 }

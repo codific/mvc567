@@ -15,7 +15,6 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -61,7 +60,6 @@ namespace Codific.Mvc567.Controllers.MVC.Admin
             this.emailService = emailService;
             this.authenticationService = authenticationService;
             this.userManager = userManager;
-
             this.HasDelete = false;
             this.HasEdit = false;
         }
@@ -199,6 +197,28 @@ namespace Codific.Mvc567.Controllers.MVC.Admin
 
                 if (user != null)
                 {
+                    var resetToken = await this.identityService.GeneratePasswordResetTokenAsync(user);
+                    var resetPasswordUrl = this.Url.Action("ResetPassword", "AdminAccount", new { user.Id, resetToken }, this.HttpContext.Request.Scheme);
+
+                    var mailModel = new UserResetPasswordEmailModel
+                    {
+                        Email = user.Email,
+                        Subject = "Password Reset",
+                        GivenName = user.FirstName,
+                        Surname = user.LastName,
+                        resetPasswordUrl = resetPasswordUrl,
+                    };
+                    var result = await this.emailService.SendEmailAsync("UserResetPasswordEmailView", mailModel);
+                    if (result.Success)
+                    {
+                        this.TempData["SuccessStatusMessage"] =
+                            $"User has been created successfully.";
+                    }
+                    else
+                    {
+                        this.TempData["ErrorStatusMessage"] = $"An error occured while creating user.";
+                    }
+
                     return this.RedirectToAction(nameof(this.GetAll));
                 }
             }
@@ -206,14 +226,55 @@ namespace Codific.Mvc567.Controllers.MVC.Admin
             return this.View(model);
         }
 
+        [HttpPost]
+        [Route("/admin/users/{userId}/send-reset-password-mail")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> SendResetUserPasswordMail(Guid userId)
+        {
+            var user = await this.identityService.GetUserByIdAsync<User>(userId);
+            if (user != null)
+            {
+                var resetToken = await this.identityService.GeneratePasswordResetTokenAsync(user);
+                var resetPasswordUrl = this.Url.Action("ResetPassword", "AdminAccount", new { userId, resetToken }, this.HttpContext.Request.Scheme);
+
+                var mailModel = new UserResetPasswordEmailModel
+                {
+                    Email = user.Email,
+                    Subject = "Password Reset",
+                    GivenName = user.FirstName,
+                    Surname = user.LastName,
+                    resetPasswordUrl = resetPasswordUrl,
+                };
+                var result = await this.emailService.SendEmailAsync("UserResetPasswordEmailView", mailModel);
+                if (result.Success)
+                {
+                    this.TempData["SuccessStatusMessage"] =
+                        $"Password reset email to {mailModel.Email} has been sent successfully.";
+                }
+                else
+                {
+                    this.TempData["ErrorStatusMessage"] = $"An error occured while sending email to {mailModel.Email}.";
+                }
+
+                return this.Redirect("/admin/users/all");
+            }
+
+            return this.NotFound();
+        }
+
         protected override void TableViewActionsInit()
         {
             base.TableViewActionsInit();
             this.TableRowActions.Insert(1, TableMapper.CreateAction("Reset MFA", MaterialDesignIcons.Qrcode, Color.MediumVioletRed, TableRowActionMethod.Post, $"/{this.ControllerRoute}{{0}}/reset-mfa", "[Id]"));
             this.TableRowActions.Insert(2, TableMapper.CreateAction("Send Email", MaterialDesignIcons.Email, Color.ForestGreen, TableRowActionMethod.Get, $"/{this.ControllerRoute}{{0}}/send-email", "[Id]"));
+
+            var resetPasswordAction = TableMapper.CreateAction("Reset Password", MaterialDesignIcons.Account, Color.Coral, TableRowActionMethod.Post, $"/{this.ControllerRoute}{{0}}/send-reset-password-mail", "[Id]");
+            resetPasswordAction.SetConfirmation("Reset Password", "Are you sure you want to reset password of this user?");
+            this.TableRowActions.Insert(3, resetPasswordAction);
+
             var resetRefreshTokenAction = TableMapper.CreateAction("Reset Refresh Token", MaterialDesignIcons.Refresh, Color.PaleVioletRed, TableRowActionMethod.Post, $"/{this.ControllerRoute}{{0}}/reset-refresh-token", "[Id]");
             resetRefreshTokenAction.SetConfirmation("Reset Refresh Token", "Are you sure you want to reset refresh token of this user?");
-            this.TableRowActions.Insert(3, resetRefreshTokenAction);
+            this.TableRowActions.Insert(4, resetRefreshTokenAction);
         }
 
         protected override void InitNavigationActionsIntoListPage()
