@@ -26,10 +26,11 @@ using Codific.Mvc567.DataAccess.Abstraction;
 using Codific.Mvc567.DataAccess.Abstractions.Entities;
 using Codific.Mvc567.DataAccess.Abstractions.Repositories;
 using Codific.Mvc567.Entities.Database;
+using Codific.Mvc567.Services.Abstractions;
 
 namespace Codific.Mvc567.Services.Infrastructure
 {
-    public abstract class Service
+    public abstract class Service : IService
     {
         private readonly IUnitOfWork uow;
         private readonly IMapper mapper;
@@ -43,7 +44,7 @@ namespace Codific.Mvc567.Services.Infrastructure
             this.PaginationPageSize = 10;
         }
 
-        public int PaginationPageSize { get; protected set; }
+        public int PaginationPageSize { get; set; }
 
         public IUnitOfWork Uow => this.uow;
 
