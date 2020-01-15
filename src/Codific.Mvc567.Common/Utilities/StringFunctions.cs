@@ -14,6 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+using System;
 using System.Linq;
 
 namespace Codific.Mvc567.Common.Utilities
@@ -32,6 +33,11 @@ namespace Codific.Mvc567.Common.Utilities
 
                 return result + next;
             });
+        }
+
+        public static string GenerateRandomPassword()
+        {
+            return Guid.NewGuid().ToString().Replace("-", "Q-q1");
         }
     }
 }

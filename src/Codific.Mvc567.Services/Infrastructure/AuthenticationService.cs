@@ -21,6 +21,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using AutoMapper;
 using Codific.Mvc567.DataAccess.Abstraction;
 using Codific.Mvc567.DataAccess.Identity;
 using Codific.Mvc567.Dtos.ServiceResults;
@@ -43,14 +44,22 @@ namespace Codific.Mvc567.Services.Infrastructure
         private readonly SignInManager<User> signInManager;
         private readonly IConfiguration configuration;
         private readonly IUnitOfWork uow;
+        private readonly IMapper mapper;
 
-        public AuthenticationService(UserManager<User> userManager, RoleManager<Role> roleManager, SignInManager<User> signInManager, IConfiguration configuration, IUnitOfWork uow)
+        public AuthenticationService(
+            UserManager<User> userManager,
+            RoleManager<Role> roleManager,
+            SignInManager<User> signInManager,
+            IConfiguration configuration,
+            IUnitOfWork uow,
+            IMapper mapper)
         {
             this.userManager = userManager;
             this.roleManager = roleManager;
             this.signInManager = signInManager;
             this.configuration = configuration;
             this.uow = uow;
+            this.mapper = mapper;
         }
 
         public async Task<IEnumerable<Claim>> GetUserClaimsAsync<TUser>(TUser user)
@@ -266,6 +275,35 @@ namespace Codific.Mvc567.Services.Infrastructure
             catch (Exception)
             {
                 return false;
+            }
+        }
+
+        public async Task<TUser> CreateUserAsync<TUser>(string email, string password, string firstName, string lastName, string[] roles)
+        {
+            try
+            {
+                User user = new User
+                {
+                    UserName = email,
+                    Email = email,
+                    FirstName = firstName,
+                    LastName = lastName,
+                    EmailConfirmed = true,
+                    RegistrationDate = DateTime.Now,
+                };
+
+                var result = await this.userManager.CreateAsync(user, password);
+                if (result.Succeeded)
+                {
+                    await this.userManager.AddToRolesAsync(user, roles);
+                    return this.mapper.Map<TUser>(user);
+                }
+
+                return default(TUser);
+            }
+            catch (Exception)
+            {
+                return default(TUser);
             }
         }
 

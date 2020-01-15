@@ -1,0 +1,47 @@
+﻿@model AdminCreateNewUserViewModel
+@{
+    ViewData["Title"] = "Create New User";
+}
+
+<div class="col-12 grid-margin stretch-card">
+    <div class="card">
+        <div class="card-body">
+            <h4 class="card-title mb-1">Create New User</h4>
+            <form asp-area="Admin" asp-controller="AdminUsers" asp-action="CreateNewUser">
+                <div class="form-group row w-100">
+                    <label class="col-sm-2 col-form-label">Email:</label>
+                    <div class="col-sm-10">
+                        <input class="form-control" placeholder="Email" asp-for="Email"/>
+                        <span class="text-danger text-small" asp-validation-for="Email"></span>
+                    </div>
+                </div>
+                <div class="form-group row w-100">
+                    <label class="col-sm-2 col-form-label">First Name:</label>
+                    <div class="col-sm-10">
+                        <input class="form-control" placeholder="First Name" asp-for="FirstName"/>
+                        <span class="text-danger text-small" asp-validation-for="FirstName"></span>
+                    </div>
+                </div>
+                <div class="form-group row w-100">
+                    <label class="col-sm-2 col-form-label">Last Name:</label>
+                    <div class="col-sm-10">
+                        <input class="form-control" placeholder="Last Name" asp-for="LastName"/>
+                        <span class="text-danger text-small" asp-validation-for="LastName"></span>
+                    </div>
+                </div>
+                <div class="form-group row w-100">
+                    <label class="col-sm-2 col-form-label">Role:</label>
+                    <div class="col-sm-10">
+                        <database-select name="Role" entity-type="@Model.RoleType" visible-property="Name" selected-value="@Model.Role" has-empty="false" class="form-control"></database-select>
+                        <span class="text-danger text-small" asp-validation-for="Role"></span>
+                    </div>
+                </div>
+                <div asp-validation-summary="ModelOnly" class="text-danger text-small"></div>
+                <hr />
+                <div class="form-group mb-0">
+                    <button type="submit" class="d-flex btn btn-primary mt-2 ml-auto mr-0">Create</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

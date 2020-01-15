@@ -46,5 +46,7 @@ namespace Codific.Mvc567.Services.Abstractions
         Task<BearerAuthResponse> RefreshTokenAsync(Guid? userId, string refreshToken);
 
         Task<bool> ResetUserRefreshTokensAsync(Guid userId);
+
+        Task<TUser> CreateUserAsync<TUser>(string email, string password, string firstName, string lastName, string[] roles);
     }
 }

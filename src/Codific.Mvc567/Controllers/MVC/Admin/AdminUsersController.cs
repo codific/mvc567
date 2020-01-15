@@ -17,9 +17,11 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Net.Http;
 using System.Threading.Tasks;
 using Codific.Mvc567.Common;
 using Codific.Mvc567.Common.Attributes;
+using Codific.Mvc567.Common.Utilities;
 using Codific.Mvc567.Controllers.Abstractions;
 using Codific.Mvc567.DataAccess.Identity;
 using Codific.Mvc567.Dtos.EmailModels;
@@ -167,6 +169,43 @@ namespace Codific.Mvc567.Controllers.MVC.Admin
             return this.RedirectToAction(nameof(this.GetAll));
         }
 
+        [HttpGet]
+        [Route("create-new")]
+        [Breadcrumb("Users", true, 0, nameof(GetAll))]
+        [Breadcrumb("Create New User", false, 1)]
+        public IActionResult CreateNewUser()
+        {
+            var model = new AdminCreateNewUserViewModel();
+            model.RoleType = typeof(Role);
+
+            return this.View(model);
+        }
+
+        [HttpPost]
+        [Route("create-new")]
+        [Breadcrumb("Users", true, 0, nameof(GetAll))]
+        [Breadcrumb("Create New User", false, 1)]
+        public async Task<IActionResult> CreateNewUser(AdminCreateNewUserViewModel model)
+        {
+            if (this.ModelState.IsValid)
+            {
+                var selectedRole = await this.EntityManager.GetEntityAsync<Role, Role>(model.Role);
+                var user = await this.authenticationService.CreateUserAsync<User>(
+                    model.Email,
+                    StringFunctions.GenerateRandomPassword(),
+                    model.FirstName,
+                    model.LastName,
+                    new string[] { selectedRole.Name });
+
+                if (user != null)
+                {
+                    return this.RedirectToAction(nameof(this.GetAll));
+                }
+            }
+
+            return this.View(model);
+        }
+
         protected override void TableViewActionsInit()
         {
             base.TableViewActionsInit();
@@ -180,6 +219,13 @@ namespace Codific.Mvc567.Controllers.MVC.Admin
         protected override void InitNavigationActionsIntoListPage()
         {
             this.NavigationActions.Clear();
+            this.NavigationActions.Add(new NavigationActionViewModel
+            {
+                Name = "Create New User",
+                Method = HttpMethod.Get,
+                ActionUrl = $"/{this.ControllerRoute}create-new",
+                Icon = MaterialDesignIcons.Plus,
+            });
         }
     }
 }
