@@ -34,7 +34,6 @@ namespace Codific.Mvc567.DataAccess.Core
             where TUser : IdentityUser<Guid>
             where TRole : IdentityRole<Guid>
         {
-            services.AddSingleton<IUowProvider, UowProvider>();
             services.AddTransient<IDatabaseContext, TContext>();
             services.AddTransient<IUnitOfWork, TUnitOfWork>();
             services.AddScoped<IStandardRepository, StandardRepository<TContext>>();

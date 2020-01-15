@@ -17,6 +17,7 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Net;
 using System.Threading.Tasks;
 using Codific.Mvc567.Common;
 using Codific.Mvc567.Common.Attributes;
@@ -59,7 +60,6 @@ namespace Codific.Mvc567.Controllers.MVC.Admin
             this.emailService = emailService;
             this.authenticationService = authenticationService;
             this.userManager = userManager;
-
             this.HasDelete = false;
             this.HasEdit = false;
         }
@@ -172,9 +172,14 @@ namespace Codific.Mvc567.Controllers.MVC.Admin
             base.TableViewActionsInit();
             this.TableRowActions.Insert(1, TableMapper.CreateAction("Reset MFA", MaterialDesignIcons.Qrcode, Color.MediumVioletRed, TableRowActionMethod.Post, $"/{this.ControllerRoute}{{0}}/reset-mfa", "[Id]"));
             this.TableRowActions.Insert(2, TableMapper.CreateAction("Send Email", MaterialDesignIcons.Email, Color.ForestGreen, TableRowActionMethod.Get, $"/{this.ControllerRoute}{{0}}/send-email", "[Id]"));
+
+            var resetPasswordAction = TableMapper.CreateAction("Reset Password", MaterialDesignIcons.Account, Color.Coral, TableRowActionMethod.Post, $"/{this.ControllerRoute}{{0}}/send-reset-password-mail", "[Id]");
+            resetPasswordAction.SetConfirmation("Reset Password", "Are you sure you want to reset password of this user?");
+            this.TableRowActions.Insert(3, resetPasswordAction);
+
             var resetRefreshTokenAction = TableMapper.CreateAction("Reset Refresh Token", MaterialDesignIcons.Refresh, Color.PaleVioletRed, TableRowActionMethod.Post, $"/{this.ControllerRoute}{{0}}/reset-refresh-token", "[Id]");
             resetRefreshTokenAction.SetConfirmation("Reset Refresh Token", "Are you sure you want to reset refresh token of this user?");
-            this.TableRowActions.Insert(3, resetRefreshTokenAction);
+            this.TableRowActions.Insert(4, resetRefreshTokenAction);
         }
 
         protected override void InitNavigationActionsIntoListPage()
