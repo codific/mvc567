@@ -1,5 +1,4 @@
-﻿using System;
-namespace Codific.Mvc567.Services.Abstractions
+﻿namespace Codific.Mvc567.Services.Abstractions
 {
     public interface IService
     {
