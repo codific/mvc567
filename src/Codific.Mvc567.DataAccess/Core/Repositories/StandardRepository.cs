@@ -68,7 +68,7 @@ namespace Codific.Mvc567.DataAccess.Core.Repositories
         {
             if (orderBy == null)
             {
-                orderBy = new Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>>(x => { return x.AsQueryable().OrderByDescending(y => y.Id); });
+                orderBy = this.GetDefaultOrderFunc<TEntity>();
             }
 
             var result = this.QueryDb(x => x.Deleted == showDeleted, orderBy, includes, startRow, pageLength);
@@ -80,7 +80,7 @@ namespace Codific.Mvc567.DataAccess.Core.Repositories
         {
             if (orderBy == null)
             {
-                orderBy = new Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>>(x => { return x.AsQueryable().OrderByDescending(y => y.Id); });
+                orderBy = this.GetDefaultOrderFunc<TEntity>();
             }
 
             var result = this.QueryDb(x => x.Deleted == showDeleted, orderBy, includes, startRow, pageLength);
@@ -146,7 +146,7 @@ namespace Codific.Mvc567.DataAccess.Core.Repositories
         {
             if (orderBy == null)
             {
-                orderBy = new Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>>(x => { return x.AsQueryable().OrderByDescending(y => y.Id); });
+                orderBy = this.GetDefaultOrderFunc<TEntity>();
             }
 
             var result = this.QueryDb(filter, orderBy, includes, startRow, pageLength);
@@ -158,7 +158,7 @@ namespace Codific.Mvc567.DataAccess.Core.Repositories
         {
             if (orderBy == null)
             {
-                orderBy = new Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>>(x => { return x.AsQueryable().OrderByDescending(y => y.Id); });
+                orderBy = this.GetDefaultOrderFunc<TEntity>();
             }
 
             var result = this.QueryDb(filter, orderBy, includes, startRow, pageLength);
@@ -170,7 +170,7 @@ namespace Codific.Mvc567.DataAccess.Core.Repositories
         {
             if (orderBy == null)
             {
-                orderBy = new Func<IEnumerable<TEntity>, IOrderedEnumerable<TEntity>>(x => { return x.OrderByDescending(y => y.Id); });
+                orderBy = this.GetDefaultEnumerableOrderFunc<TEntity>();
             }
 
             var result = this.EnumerableQueryDb(filter, orderBy, includes, startRow, pageLength);
@@ -373,6 +373,34 @@ namespace Codific.Mvc567.DataAccess.Core.Repositories
             }
 
             return list.AsEnumerable();
+        }
+
+        private Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> GetDefaultOrderFunc<TEntity>()
+            where TEntity : class, IEntityBase, new()
+        {
+            bool hasAuditableType = typeof(TEntity).GetInterfaces().Any(x => x == typeof(IAuditableEntityBase));
+            if (hasAuditableType)
+            {
+                return new Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>>(x => { return x.AsQueryable().OrderByDescending(y => ((IAuditableEntityBase)y).CreatedOn); });
+            }
+            else
+            {
+                return new Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>>(x => { return x.AsQueryable().OrderByDescending(y => y.Id); });
+            }
+        }
+
+        private Func<IEnumerable<TEntity>, IOrderedEnumerable<TEntity>> GetDefaultEnumerableOrderFunc<TEntity>()
+            where TEntity : class, IEntityBase, new()
+        {
+            bool hasAuditableType = typeof(TEntity).GetInterfaces().Any(x => x == typeof(IAuditableEntityBase));
+            if (hasAuditableType)
+            {
+                return new Func<IEnumerable<TEntity>, IOrderedEnumerable<TEntity>>(x => { return x.OrderByDescending(y => ((IAuditableEntityBase)y).CreatedOn); });
+            }
+            else
+            {
+                return new Func<IEnumerable<TEntity>, IOrderedEnumerable<TEntity>>(x => { return x.OrderByDescending(y => y.Id); });
+            }
         }
     }
 }
