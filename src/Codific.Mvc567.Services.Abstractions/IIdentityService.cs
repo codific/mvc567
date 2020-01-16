@@ -37,5 +37,7 @@ namespace Codific.Mvc567.Services.Abstractions
         Task<string> GeneratePasswordResetTokenAsync<TUserModel>(TUserModel user);
 
         Task<bool> ResetPasswordAsync(Guid user, string token, string newPassword);
+
+        Task<bool> EditUserAsync(Guid userId, string email, string firstName, string lastName);
     }
 }

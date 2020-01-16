@@ -28,7 +28,7 @@ namespace Codific.Mvc567.ViewModels
         [DetailsOrder(0)]
         public string Id { get; set; }
 
-        [TableCell(1, "Email", TableCellType.Text)]
+        [TableCell(1, "Email", TableCellType.Text, Editable = false)]
         [DetailsOrder(1)]
         public string Email { get; set; }
 
@@ -38,7 +38,7 @@ namespace Codific.Mvc567.ViewModels
         [DetailsOrder(3)]
         public string LastName { get; set; }
 
-        [TableCell(2, "Name", TableCellType.Text)]
+        [TableCell(2, "Name", TableCellType.Text, Editable = false)]
         public string Name
         {
             get

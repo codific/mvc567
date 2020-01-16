@@ -163,6 +163,28 @@ namespace Codific.Mvc567.Services.Infrastructure
             return token;
         }
 
+        public async Task<bool> EditUserAsync(Guid userId, string email, string firstName, string lastName)
+        {
+            try
+            {
+                var user = await this.userManager.FindByIdAsync(userId.ToString());
+                user.FirstName = firstName;
+                user.LastName = lastName;
+                this.StandardRepository.Update<User>(user);
+                await this.Uow.SaveChangesAsync();
+
+                var changeEmailToken = await this.userManager.GenerateChangeEmailTokenAsync(user, email);
+                var result = await this.userManager.ChangeEmailAsync(user, email, changeEmailToken);
+
+                return result.Succeeded;
+            }
+            catch (Exception ex)
+            {
+                await this.LogErrorAsync(ex, nameof(this.EditUserAsync));
+                return false;
+            }
+        }
+
         public async Task<bool> ResetPasswordAsync(Guid userId, string token, string newPassword)
         {
             var user = await this.userManager.FindByIdAsync(userId.ToString());

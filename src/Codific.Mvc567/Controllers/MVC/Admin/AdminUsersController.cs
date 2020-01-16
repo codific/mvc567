@@ -89,7 +89,7 @@ namespace Codific.Mvc567.Controllers.MVC.Admin
         [HttpPost]
         [Route("{userId}/reset-refresh-token")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> ResetUserRefreshToken(Guid userId)
+        public virtual async Task<IActionResult> ResetUserRefreshToken(Guid userId)
         {
             bool successRefresh = await this.authenticationService.ResetUserRefreshTokensAsync(userId);
             if (successRefresh)
@@ -109,7 +109,7 @@ namespace Codific.Mvc567.Controllers.MVC.Admin
         [ValidateAntiForgeryToken]
         [Breadcrumb("Users", true, 0, nameof(GetAll))]
         [Breadcrumb("Send Email", false, 1)]
-        public async Task<IActionResult> SendEmailMessageToUser(Guid userId, AdminSendEmailMessageToUserViewModel model)
+        public virtual async Task<IActionResult> SendEmailMessageToUser(Guid userId, AdminSendEmailMessageToUserViewModel model)
         {
             var user = await this.identityService.GetUserByIdAsync<User>(userId);
             if (user != null)
@@ -148,7 +148,7 @@ namespace Codific.Mvc567.Controllers.MVC.Admin
         [HttpPost]
         [Route("{userId}/reset-mfa")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> ResetUserMfa(Guid userId)
+        public virtual async Task<IActionResult> ResetUserMfa(Guid userId)
         {
             var user = await this.userManager.FindByIdAsync(userId.ToString());
 
@@ -171,7 +171,7 @@ namespace Codific.Mvc567.Controllers.MVC.Admin
         [Route("create-new")]
         [Breadcrumb("Users", true, 0, nameof(GetAll))]
         [Breadcrumb("Create New User", false, 1)]
-        public IActionResult CreateNewUser()
+        public virtual IActionResult CreateNewUser()
         {
             var model = new AdminCreateNewUserViewModel();
             model.RoleType = typeof(Role);
@@ -183,7 +183,7 @@ namespace Codific.Mvc567.Controllers.MVC.Admin
         [Route("create-new")]
         [Breadcrumb("Users", true, 0, nameof(GetAll))]
         [Breadcrumb("Create New User", false, 1)]
-        public async Task<IActionResult> CreateNewUser(AdminCreateNewUserViewModel model)
+        public virtual async Task<IActionResult> CreateNewUser(AdminCreateNewUserViewModel model)
         {
             if (this.ModelState.IsValid)
             {
@@ -226,10 +226,56 @@ namespace Codific.Mvc567.Controllers.MVC.Admin
             return this.View(model);
         }
 
+        [HttpGet]
+        [Route("{id}/edit-user")]
+        [Breadcrumb(BreadcrumbEntityNamePluralPlaceholder, true, 0, nameof(GetAll))]
+        [Breadcrumb("Edit", false, 1)]
+        public virtual async Task<IActionResult> EditUser(Guid id)
+        {
+            ICreateEditEntityDto model = (ICreateEditEntityDto)(await this.EntityManager.GetEntityAsync<User, AdminEditUserViewModel>(id));
+            model.Area = "Admin";
+            model.Controller = this.GetType().Name.Replace("Controller", string.Empty);
+            model.Action = "EditUser";
+            model.EntityName = "User";
+            this.ViewData[BreadcrumbEntityNamePluralPlaceholder] = "Users";
+
+            return this.View("AbstractViews/Edit", model);
+        }
+
+        [HttpPost]
+        [Route("{id}/edit-user")]
+        [ValidateAntiForgeryToken]
+        [Breadcrumb(BreadcrumbEntityNamePluralPlaceholder, true, 0, nameof(GetAll))]
+        [Breadcrumb("Edit", false, 1)]
+        public async Task<IActionResult> EditUser(Guid id, AdminEditUserViewModel model)
+        {
+            ICreateEditEntityDto castedModel = (ICreateEditEntityDto)model;
+            castedModel.Area = "Admin";
+            castedModel.Controller = this.GetType().Name.Replace("Controller", string.Empty);
+            castedModel.Action = "Edit";
+            castedModel.EntityName = "User";
+            this.ViewData[BreadcrumbEntityNamePluralPlaceholder] = "Users";
+            this.ModelState.Remove("Area");
+            this.ModelState.Remove("Controller");
+            this.ModelState.Remove("Action");
+            this.ModelState.Remove("EntityName");
+
+            if (this.ModelState.IsValid)
+            {
+                if (await this.identityService.EditUserAsync(model.Id, model.Email, model.FirstName, model.LastName))
+                {
+                    this.TempData["SuccessStatusMessage"] = "User data has been successfully edited.";
+                    return this.RedirectToAction("GetAll", this.ControllerName);
+                }
+            }
+
+            return this.View("AbstractViews/Edit", castedModel);
+        }
+
         [HttpPost]
         [Route("/admin/users/{userId}/send-reset-password-mail")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> SendResetUserPasswordMail(Guid userId)
+        public virtual async Task<IActionResult> SendResetUserPasswordMail(Guid userId)
         {
             var user = await this.identityService.GetUserByIdAsync<User>(userId);
             if (user != null)
@@ -266,15 +312,16 @@ namespace Codific.Mvc567.Controllers.MVC.Admin
         {
             base.TableViewActionsInit();
             this.TableRowActions.Insert(1, TableMapper.CreateAction("Reset MFA", MaterialDesignIcons.Qrcode, Color.MediumVioletRed, TableRowActionMethod.Post, $"/{this.ControllerRoute}{{0}}/reset-mfa", "[Id]"));
-            this.TableRowActions.Insert(2, TableMapper.CreateAction("Send Email", MaterialDesignIcons.Email, Color.ForestGreen, TableRowActionMethod.Get, $"/{this.ControllerRoute}{{0}}/send-email", "[Id]"));
+            this.TableRowActions.Insert(2, TableMapper.EditAction($"/{this.ControllerRoute}{{0}}/edit-user", "[Id]"));
+            this.TableRowActions.Insert(3, TableMapper.CreateAction("Send Email", MaterialDesignIcons.Email, Color.ForestGreen, TableRowActionMethod.Get, $"/{this.ControllerRoute}{{0}}/send-email", "[Id]"));
 
             var resetPasswordAction = TableMapper.CreateAction("Reset Password", MaterialDesignIcons.Account, Color.Coral, TableRowActionMethod.Post, $"/{this.ControllerRoute}{{0}}/send-reset-password-mail", "[Id]");
             resetPasswordAction.SetConfirmation("Reset Password", "Are you sure you want to reset password of this user?");
-            this.TableRowActions.Insert(3, resetPasswordAction);
+            this.TableRowActions.Insert(4, resetPasswordAction);
 
             var resetRefreshTokenAction = TableMapper.CreateAction("Reset Refresh Token", MaterialDesignIcons.Refresh, Color.PaleVioletRed, TableRowActionMethod.Post, $"/{this.ControllerRoute}{{0}}/reset-refresh-token", "[Id]");
             resetRefreshTokenAction.SetConfirmation("Reset Refresh Token", "Are you sure you want to reset refresh token of this user?");
-            this.TableRowActions.Insert(4, resetRefreshTokenAction);
+            this.TableRowActions.Insert(5, resetRefreshTokenAction);
         }
 
         protected override void InitNavigationActionsIntoListPage()
