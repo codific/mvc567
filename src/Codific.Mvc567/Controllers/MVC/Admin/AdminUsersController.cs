@@ -302,7 +302,7 @@ namespace Codific.Mvc567.Controllers.MVC.Admin
                     this.TempData["ErrorStatusMessage"] = $"An error occured while sending email to {mailModel.Email}.";
                 }
 
-                return this.Redirect("/admin/users/all");
+                return this.RedirectToAction(nameof(this.GetAll));
             }
 
             return this.NotFound();
