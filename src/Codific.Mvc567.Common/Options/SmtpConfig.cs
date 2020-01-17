@@ -31,5 +31,13 @@ namespace Codific.Mvc567.Common.Options
         public string Username { get; set; }
 
         public string Password { get; set; }
+
+        public bool HasCredentialsData
+        {
+            get
+            {
+                return !string.IsNullOrWhiteSpace(this.Username) && !string.IsNullOrWhiteSpace(this.Password);
+            }
+        }
     }
 }

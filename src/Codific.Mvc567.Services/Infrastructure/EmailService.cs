@@ -132,10 +132,10 @@ namespace Codific.Mvc567.Services.Infrastructure
         private SmtpClient GetSmtpClient()
         {
             SmtpClient client = new SmtpClient(this.smtpConfiguration.Host);
-            if (!string.IsNullOrEmpty(this.smtpConfiguration.Username) && !string.IsNullOrEmpty(this.smtpConfiguration.Password))
+            if (this.smtpConfiguration.HasCredentialsData)
             {
-                client.Credentials = new NetworkCredential(this.smtpConfiguration.Username, this.smtpConfiguration.Password);
                 client.UseDefaultCredentials = false;
+                client.Credentials = new NetworkCredential(this.smtpConfiguration.Username, this.smtpConfiguration.Password);
             }
 
             client.Port = this.smtpConfiguration.Port;
