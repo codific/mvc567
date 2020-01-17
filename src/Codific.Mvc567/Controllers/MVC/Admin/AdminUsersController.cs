@@ -273,7 +273,7 @@ namespace Codific.Mvc567.Controllers.MVC.Admin
         }
 
         [HttpPost]
-        [Route("/admin/users/{userId}/send-reset-password-mail")]
+        [Route("{userId}/send-reset-password-mail")]
         [ValidateAntiForgeryToken]
         public virtual async Task<IActionResult> SendResetUserPasswordMail(Guid userId)
         {
