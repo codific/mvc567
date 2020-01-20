@@ -228,7 +228,7 @@ namespace Codific.Mvc567.Controllers.MVC.Admin
 
         [HttpGet]
         [Route("/admin/reset-password")]
-        public IActionResult ResetPassword([FromQuery(Name = "Id")]Guid userId, [FromQuery(Name = "resetToken")]string resetToken)
+        public IActionResult ResetPassword([FromQuery(Name = "userId")]Guid userId, [FromQuery(Name = "resetToken")]string resetToken)
         {
             if (this.User.Identity.IsAuthenticated)
             {
@@ -250,7 +250,7 @@ namespace Codific.Mvc567.Controllers.MVC.Admin
         [HttpPost]
         [Route("/admin/reset-password")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> ResetPassword([FromForm]AdminResetPasswordViewModel model)
+        public async Task<IActionResult> ResetPassword(AdminResetPasswordViewModel model)
         {
             if (this.User.Identity.IsAuthenticated)
             {
@@ -267,7 +267,7 @@ namespace Codific.Mvc567.Controllers.MVC.Admin
                 }
             }
 
-            return this.View();
+            return this.View(model);
         }
     }
 }

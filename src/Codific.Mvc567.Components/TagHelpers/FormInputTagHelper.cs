@@ -72,10 +72,18 @@ namespace Codific.Mvc567.Components.TagHelpers
             inputTagHelper.ViewContext = this.ViewContext;
 
             TagHelperAttributeList attributes = new TagHelperAttributeList();
-            attributes.Add(new TagHelperAttribute("class", new HtmlString("form-control")));
-            attributes.Add(new TagHelperAttribute("type", new HtmlString(inputTagHelper.InputTypeName)));
-            attributes.Add(new TagHelperAttribute("value", new HtmlString(inputTagHelper.Value)));
-            attributes.Add(new TagHelperAttribute("placeholder", new HtmlString(this.Placeholder)));
+            attributes.Add(new TagHelperAttribute("class", "form-control"));
+            attributes.Add(new TagHelperAttribute("type", inputTagHelper.InputTypeName));
+            if (this.Type != "password")
+            {
+                attributes.Add(new TagHelperAttribute("value", inputTagHelper.Value));
+            }
+            else
+            {
+                attributes.Add(new TagHelperAttribute("value", string.Empty));
+            }
+
+            attributes.Add(new TagHelperAttribute("placeholder", this.Placeholder));
 
             return await this.RenderTagHelperAsync("input", TagMode.SelfClosing, inputTagHelper, attributes);
         }

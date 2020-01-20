@@ -198,7 +198,7 @@ namespace Codific.Mvc567.Controllers.MVC.Admin
                 if (user != null)
                 {
                     var resetToken = await this.identityService.GeneratePasswordResetTokenAsync(user);
-                    var resetPasswordUrl = this.Url.Action("ResetPassword", "AdminAccount", new { user.Id, resetToken }, this.HttpContext.Request.Scheme);
+                    var resetPasswordUrl = this.Url.Action("ResetPassword", "AdminAccount", new { userId = user.Id, resetToken = resetToken }, this.HttpContext.Request.Scheme);
 
                     var mailModel = new UserResetPasswordEmailModel
                     {
@@ -281,7 +281,7 @@ namespace Codific.Mvc567.Controllers.MVC.Admin
             if (user != null)
             {
                 var resetToken = await this.identityService.GeneratePasswordResetTokenAsync(user);
-                var resetPasswordUrl = this.Url.Action("ResetPassword", "AdminAccount", new { userId, resetToken }, this.HttpContext.Request.Scheme);
+                var resetPasswordUrl = this.Url.Action("ResetPassword", "AdminAccount", new { userId = userId, resetToken = resetToken }, this.HttpContext.Request.Scheme);
 
                 var mailModel = new UserResetPasswordEmailModel
                 {
