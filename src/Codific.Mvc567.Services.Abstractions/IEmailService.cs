@@ -26,5 +26,7 @@ namespace Codific.Mvc567.Services.Abstractions
         Task<EmailServiceResult> SendEmailAsync(string viewName, EmailModel model);
 
         Task<bool> ResendEmailAsync(Guid emailId);
+
+        Task<EmailServiceResult> SendRawHtmlEmailAsync(string email, string firstName, string lastName, string subject, string htmlBody);
     }
 }

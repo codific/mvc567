@@ -1,0 +1,7 @@
+@model RawHtmlEmailModel
+@{ 
+    Layout = "_EmailLayout";
+}
+<div>
+    @Html.Raw(Model.HtmlBody)
+</div>

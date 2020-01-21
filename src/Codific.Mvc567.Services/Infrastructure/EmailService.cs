@@ -21,6 +21,7 @@ using System.Net.Mail;
 using System.Threading.Tasks;
 using Codific.Mvc567.Common.Options;
 using Codific.Mvc567.DataAccess.Abstraction;
+using Codific.Mvc567.Dtos.EmailModels;
 using Codific.Mvc567.Dtos.EmailModels.Abstraction;
 using Codific.Mvc567.Dtos.ServiceResults;
 using Codific.Mvc567.Entities.Database;
@@ -113,6 +114,20 @@ namespace Codific.Mvc567.Services.Infrastructure
             {
                 return new EmailServiceResult { Success = false };
             }
+        }
+
+        public async Task<EmailServiceResult> SendRawHtmlEmailAsync(string email, string firstName, string lastName, string subject, string htmlBody)
+        {
+            return await this.SendEmailAsync(
+                    "RawHtmlEmailView",
+                    new RawHtmlEmailModel
+                    {
+                        Email = email,
+                        GivenName = firstName,
+                        Surname = lastName,
+                        Subject = subject,
+                        HtmlBody = htmlBody,
+                    });
         }
 
         private void SendEmail(Email email)
