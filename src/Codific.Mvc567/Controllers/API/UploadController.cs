@@ -30,9 +30,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Codific.Mvc567.Controllers.API
 {
     [Route("api/upload")]
-#if !DEBUG
     [Authorize(Policy = Policies.AuthorizedUploadPolicy)]
-#endif
     public class UploadController : Controller
     {
         private readonly IValidationProvider validationProvider;
