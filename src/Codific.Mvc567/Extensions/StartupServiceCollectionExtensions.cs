@@ -64,7 +64,7 @@ namespace Codific.Mvc567.Extensions
             return services;
         }
 
-        public static IServiceCollection AddMvc567Identity(this IServiceCollection services, IConfiguration configuration)
+        public static IServiceCollection AddMvc567Identity(this IServiceCollection services, IConfiguration configuration, string clientAuthenticationScheme = null)
         {
             services.Configure<IdentityOptions>(options =>
             {
@@ -122,7 +122,17 @@ namespace Codific.Mvc567.Extensions
                 options.AddPolicy(Policies.AuthorizedUploadPolicy, policy =>
                 {
                     policy.RequireAuthenticatedUser();
-                    policy.AddAuthenticationSchemes(CookieAuthenticationDefaults.AuthenticationScheme, JwtBearerDefaults.AuthenticationScheme);
+                    List<string> authenticationSchemes = new List<string>
+                    {
+                        CookieAuthenticationDefaults.AuthenticationScheme,
+                        JwtBearerDefaults.AuthenticationScheme,
+                    };
+                    if (!string.IsNullOrEmpty(clientAuthenticationScheme))
+                    {
+                        authenticationSchemes.Add(clientAuthenticationScheme);
+                    }
+
+                    policy.AddAuthenticationSchemes(authenticationSchemes.ToArray());
                 });
             });
 
