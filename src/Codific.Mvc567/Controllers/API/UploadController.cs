@@ -66,20 +66,38 @@ namespace Codific.Mvc567.Controllers.API
 
         [HttpPost]
         [Route("image")]
-        public IActionResult Image([FromForm]IFormCollection formCollection)
+        public async Task<IActionResult> Image([FromForm]IFormCollection formCollection)
         {
-            var result = this.validationProvider.ValidateFormImageFile(this.GetFormFileFromFormCollection(formCollection));
+            var formFile = this.GetFormFileFromFormCollection(formCollection);
+            var validationResult = this.validationProvider.ValidateFormImageFile(formFile);
+            if (validationResult.Success)
+            {
+                var file = await this.fileSystemService.UploadFileAsync<FileViewModel>(formFile);
+                if (file != null)
+                {
+                    return this.Ok(file);
+                }
+            }
 
-            return this.Json(result);
+            return this.StatusCode(StatusCodes.Status415UnsupportedMediaType, validationResult);
         }
 
         [HttpPost]
         [Route("video")]
-        public IActionResult Video([FromForm]IFormCollection formCollection)
+        public async Task<IActionResult> Video([FromForm]IFormCollection formCollection)
         {
-            var result = this.validationProvider.ValidateFormVideoFile(this.GetFormFileFromFormCollection(formCollection));
+            var formFile = this.GetFormFileFromFormCollection(formCollection);
+            var validationResult = this.validationProvider.ValidateFormVideoFile(formFile);
+            if (validationResult.Success)
+            {
+                var file = await this.fileSystemService.UploadFileAsync<FileViewModel>(formFile);
+                if (file != null)
+                {
+                    return this.Ok(file);
+                }
+            }
 
-            return this.Json(result);
+            return this.StatusCode(StatusCodes.Status415UnsupportedMediaType, validationResult);
         }
 
         [HttpPost]
