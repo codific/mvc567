@@ -163,3 +163,15 @@ textarea {
 .editable-container.editable-inline {
     margin: auto !important;
 }
+
+.select2-container--default {
+    .select2-selection--single {
+        padding: 3px 0px;
+        .select2-selection__rendered {
+            font-size: .9rem;
+            padding: .4375rem .75rem;
+            line-height: 14px;
+            font-weight: 300;
+        }
+    }
+}

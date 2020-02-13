@@ -60,6 +60,7 @@ gulp.task('styles:vendors', () =>
             './node_modules/jquery-tags-input/dist/jquery.tagsinput.min.css',
             './Styles/vendors/bootstrap-editable.css',
             './Scripts/js/vendors/bootstrap-datepicker/bootstrap-datepicker.min.css',
+            './Scripts/js/vendors/select2/select2.min.css',
         ])
         .pipe(cssmin({ keepSpecialComments: 0 }))
         .pipe(concat('style.vendors.min.css'))
@@ -83,6 +84,7 @@ gulp.task('scripts', () =>
         "./Scripts/js/shared/obfuscator.js",
         "./Scripts/js/shared/static-page-form.js",
         "./Scripts/js/shared/x-editable.js",
+        "./Scripts/js/shared/select2.js",
     ])
         .pipe(uglify())
         .pipe(concat("scripts.min.js"))
@@ -101,6 +103,7 @@ gulp.task('scripts:vendors', () =>
         './node_modules/sweetalert/dist/sweetalert.min.js',
         './Scripts/js/vendors/bootstrap-editable.min.js',
         './Scripts/js/vendors/bootstrap-datepicker/bootstrap-datepicker.min.js',
+        './Scripts/js/vendors/select2/select2.min.js',
     ])
         .pipe(uglify())
         .pipe(concat("scripts.vendors.min.js"))

@@ -56,7 +56,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
                 <input type="number" name="@inputItem.Name" step="any" placeholder="Enter @inputItem.Label" class="form-control" value="@inputItem.Value" />
                 break;
             case CreateEntityInputType.EnumSelect:
-                <enum-select name="@inputItem.Name" enum="inputItem.EnumType" selected-value="@((int)inputItem.Value)" class="form-control"></enum-select>
+                <enum-select name="@inputItem.Name" enum="inputItem.EnumType" selected-value="@((int)inputItem.Value)" class="form-control select-2-input w-100"></enum-select>
                 break;
             case CreateEntityInputType.EnumCheckbox:
                 <enum-checkbox model-name="@inputItem.Name" enum="inputItem.EnumType" selected-values="@((int[])inputItem.Value)"></enum-checkbox>
@@ -65,7 +65,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
                 <enum-radio model-name="@inputItem.Name" enum="inputItem.EnumType" selected-value="@((int)inputItem.Value)"></enum-radio>
                 break;
             case CreateEntityInputType.DatabaseSelect:
-                <database-select name="@inputItem.Name" entity-type="inputItem.DatabaseEntityType" visible-property="@inputItem.DatabaseEntityVisibleProperty" selected-value="@inputItem.GuidValue" has-empty="@inputItem.IsNullable" class="form-control"></database-select>
+                <database-select name="@inputItem.Name" entity-type="inputItem.DatabaseEntityType" visible-property="@inputItem.DatabaseEntityVisibleProperty" selected-value="@inputItem.GuidValue" has-empty="@inputItem.IsNullable" class="form-control select-2-input w-100"></database-select>
                 break;
             case CreateEntityInputType.DatabaseCheckbox:
                 <database-checkbox model-name="@inputItem.Name" entity-type="inputItem.DatabaseEntityType" visible-property="@inputItem.DatabaseEntityVisibleProperty" selected-values="@inputItem.GuidArrayValue"></database-checkbox>
