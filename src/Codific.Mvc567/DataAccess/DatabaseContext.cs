@@ -15,11 +15,15 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 using System;
+using System.Linq;
+using System.Linq.Expressions;
+using Codific.Mvc567.DataAccess.Abstractions.Entities;
 using Codific.Mvc567.DataAccess.Core.Context;
 using Codific.Mvc567.Entities.Database;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Codific.Mvc567.DataAccess
 {
@@ -54,6 +58,7 @@ namespace Codific.Mvc567.DataAccess
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
+            builder = this.ApplyDeletedQueryFilter(builder);
 
             // builder.Entity<Language>().HasIndex(x => x.Code).IsUnique();
             builder.Entity<Language>().HasOne(x => x.Image).WithOne().OnDelete(DeleteBehavior.Restrict);
@@ -65,6 +70,24 @@ namespace Codific.Mvc567.DataAccess
             builder.Entity<IdentityUserLogin<Guid>>().ToTable("UserLogins");
             builder.Entity<IdentityUserRole<Guid>>().ToTable("UserRoles");
             builder.Entity<IdentityUserToken<Guid>>().ToTable("UserTokens");
+        }
+
+        protected virtual ModelBuilder ApplyDeletedQueryFilter(ModelBuilder builder)
+        {
+            var dbSetTypes = builder.Model.GetEntityTypes();
+
+            foreach (var dbSetType in dbSetTypes)
+            {
+                var deletedProperty = dbSetType.FindProperty("Deleted");
+                if (deletedProperty != null && deletedProperty.ClrType == typeof(bool))
+                {
+                    var parameter = Expression.Parameter(dbSetType.ClrType, "x");
+                    var filter = Expression.Lambda(Expression.Equal(Expression.Property(parameter, deletedProperty.PropertyInfo), Expression.Constant(false)), parameter);
+                    dbSetType.SetQueryFilter(filter);
+                }
+            }
+
+            return builder;
         }
     }
 }

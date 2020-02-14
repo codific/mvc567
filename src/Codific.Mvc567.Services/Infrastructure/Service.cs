@@ -96,7 +96,7 @@ namespace Codific.Mvc567.Services.Infrastructure
             }
         }
 
-        protected virtual Expression<Func<TEntity, bool>> GetEntitySearchQueryExpression<TEntity>(string searchQuery, bool showDeleted = false)
+        protected virtual Expression<Func<TEntity, bool>> GetEntitySearchQueryExpression<TEntity>(string searchQuery)
             where TEntity : class, IEntityBase
         {
             var searchQueryArray = searchQuery.ToLower().Split(' ', ',', ';');
@@ -123,9 +123,7 @@ namespace Codific.Mvc567.Services.Infrastructure
                 propertyExpression = ExpressionFunctions.OrElse<TEntity>(propertyExpression, expressionsList[i]);
             }
 
-            var resultExpression = ExpressionFunctions.AndAlso<TEntity>(x => x.Deleted == showDeleted, propertyExpression);
-
-            return resultExpression;
+            return propertyExpression;
         }
     }
 }

@@ -68,7 +68,7 @@ namespace Codific.Mvc567.Services.Infrastructure
             return resultList;
         }
 
-        public async Task<PaginatedEntitiesResult<TEntityDto>> GetAllEntitiesPaginatedAsync<TEntity, TEntityDto>(int page, string searchQuery = null, bool showDeleted = false)
+        public async Task<PaginatedEntitiesResult<TEntityDto>> GetAllEntitiesPaginatedAsync<TEntity, TEntityDto>(int page, string searchQuery = null)
             where TEntity : class, IEntityBase, new()
         {
             PaginatedEntitiesResult<TEntityDto> result = new PaginatedEntitiesResult<TEntityDto>();
@@ -82,11 +82,11 @@ namespace Codific.Mvc567.Services.Infrastructure
                 var standardRepository = this.Uow.GetStandardRepository();
                 if (string.IsNullOrWhiteSpace(searchQuery))
                 {
-                    result.Count = await standardRepository.CountAsync<TEntity>(x => x.Deleted == showDeleted);
+                    result.Count = await standardRepository.CountAsync<TEntity>(null);
                 }
                 else
                 {
-                    var searchQueryExpression = this.GetEntitySearchQueryExpression<TEntity>(searchQuery, showDeleted);
+                    var searchQueryExpression = this.GetEntitySearchQueryExpression<TEntity>(searchQuery);
                     result.Count = standardRepository.EnumerableCount<TEntity>(searchQueryExpression.Compile());
                 }
 
@@ -97,11 +97,11 @@ namespace Codific.Mvc567.Services.Infrastructure
                 var firstLevelIncludeQuery = this.GetFirstLevelIncludeQuery<TEntity>();
                 if (string.IsNullOrWhiteSpace(searchQuery))
                 {
-                    entities = await standardRepository.GetPageAsync<TEntity>(result.StartRow, this.PaginationPageSize, null, firstLevelIncludeQuery, showDeleted);
+                    entities = await standardRepository.GetPageAsync<TEntity>(result.StartRow, this.PaginationPageSize, null, firstLevelIncludeQuery);
                 }
                 else
                 {
-                    entities = standardRepository.EnumerableQueryPage<TEntity>(result.StartRow, this.PaginationPageSize, this.GetEntitySearchQueryExpression<TEntity>(searchQuery, showDeleted).Compile(), null, firstLevelIncludeQuery);
+                    entities = standardRepository.EnumerableQueryPage<TEntity>(result.StartRow, this.PaginationPageSize, this.GetEntitySearchQueryExpression<TEntity>(searchQuery).Compile(), null, firstLevelIncludeQuery);
                 }
 
                 var dtoEntities = this.Mapper.Map<IEnumerable<TEntityDto>>(entities);

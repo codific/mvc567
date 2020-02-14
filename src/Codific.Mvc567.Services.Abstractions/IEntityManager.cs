@@ -31,7 +31,7 @@ namespace Codific.Mvc567.Services.Abstractions
         Task<TEntityDto> GetEntityAsync<TEntity, TEntityDto>(Guid id)
             where TEntity : class, IEntityBase, new();
 
-        Task<PaginatedEntitiesResult<TEntityDto>> GetAllEntitiesPaginatedAsync<TEntity, TEntityDto>(int page, string searchQuery = null, bool showDeleted = false)
+        Task<PaginatedEntitiesResult<TEntityDto>> GetAllEntitiesPaginatedAsync<TEntity, TEntityDto>(int page, string searchQuery = null)
             where TEntity : class, IEntityBase, new();
 
         Task<Guid?> CreateEntityAsync<TEntity, TEntityDto>(TEntityDto entity)

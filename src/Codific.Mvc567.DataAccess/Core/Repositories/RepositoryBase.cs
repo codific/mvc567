@@ -14,7 +14,9 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+using System.Net.NetworkInformation;
 using Codific.Mvc567.DataAccess.Abstractions.Repositories;
+using Codific.Mvc567.Entities.Database;
 using Microsoft.EntityFrameworkCore;
 
 namespace Codific.Mvc567.DataAccess.Core.Repositories

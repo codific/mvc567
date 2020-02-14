@@ -20,11 +20,13 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Codific.Mvc567.DataAccess.Abstractions.Context;
+using Codific.Mvc567.DataAccess.Abstractions.Entities;
 using Codific.Mvc567.Entities.Database;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Codific.Mvc567.DataAccess.Core.Context
 {

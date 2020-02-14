@@ -34,7 +34,7 @@ namespace Codific.Mvc567.Controllers.MVC.Admin
             };
         }
 
-        public async override Task<IActionResult> GetAll([FromQuery(Name = "p")] int page = 1, [FromQuery(Name = "q")] string query = null, [FromQuery(Name = "d")] bool showDeleted = false)
+        public async override Task<IActionResult> GetAll([FromQuery(Name = "p")] int page = 1, [FromQuery(Name = "q")] string query = null)
         {
             await Task.Run(() => { });
             return this.NotFound();

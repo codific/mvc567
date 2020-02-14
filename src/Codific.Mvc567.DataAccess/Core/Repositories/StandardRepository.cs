@@ -33,19 +33,18 @@ namespace Codific.Mvc567.DataAccess.Core.Repositories
         {
         }
 
-        public virtual IEnumerable<TEntity> GetAll<TEntity>(Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null, Func<IQueryable<TEntity>, IQueryable<TEntity>> includes = null, bool showDeleted = false)
+        public virtual IEnumerable<TEntity> GetAll<TEntity>(Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null, Func<IQueryable<TEntity>, IQueryable<TEntity>> includes = null)
             where TEntity : class, IEntityBase, new()
         {
-            var result = this.QueryDb(x => x.Deleted == showDeleted, orderBy, includes);
+            var result = this.QueryDb(null, orderBy, includes);
             return result.ToList();
         }
 
-        public virtual async Task<IEnumerable<TEntity>> GetAllAsync<TEntity>(Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null, Func<IQueryable<TEntity>, IQueryable<TEntity>> includes = null, bool
-            showDeleted = false)
+        public virtual async Task<IEnumerable<TEntity>> GetAllAsync<TEntity>(Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null, Func<IQueryable<TEntity>, IQueryable<TEntity>> includes = null)
             where TEntity : class, IEntityBase,
             new()
         {
-            var result = this.QueryDb(x => x.Deleted == showDeleted, orderBy, includes);
+            var result = this.QueryDb(null, orderBy, includes);
             return await result.ToListAsync();
         }
 
@@ -63,7 +62,7 @@ namespace Codific.Mvc567.DataAccess.Core.Repositories
             await result.LoadAsync();
         }
 
-        public virtual IEnumerable<TEntity> GetPage<TEntity>(int startRow, int pageLength, Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null, Func<IQueryable<TEntity>, IQueryable<TEntity>> includes = null, bool showDeleted = false)
+        public virtual IEnumerable<TEntity> GetPage<TEntity>(int startRow, int pageLength, Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null, Func<IQueryable<TEntity>, IQueryable<TEntity>> includes = null)
             where TEntity : class, IEntityBase, new()
         {
             if (orderBy == null)
@@ -71,11 +70,11 @@ namespace Codific.Mvc567.DataAccess.Core.Repositories
                 orderBy = this.GetDefaultOrderFunc<TEntity>();
             }
 
-            var result = this.QueryDb(x => x.Deleted == showDeleted, orderBy, includes, startRow, pageLength);
+            var result = this.QueryDb(null, orderBy, includes, startRow, pageLength);
             return result.ToList();
         }
 
-        public virtual async Task<IEnumerable<TEntity>> GetPageAsync<TEntity>(int startRow, int pageLength, Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null, Func<IQueryable<TEntity>, IQueryable<TEntity>> includes = null, bool showDeleted = false)
+        public virtual async Task<IEnumerable<TEntity>> GetPageAsync<TEntity>(int startRow, int pageLength, Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null, Func<IQueryable<TEntity>, IQueryable<TEntity>> includes = null)
             where TEntity : class, IEntityBase, new()
         {
             if (orderBy == null)
@@ -83,7 +82,7 @@ namespace Codific.Mvc567.DataAccess.Core.Repositories
                 orderBy = this.GetDefaultOrderFunc<TEntity>();
             }
 
-            var result = this.QueryDb(x => x.Deleted == showDeleted, orderBy, includes, startRow, pageLength);
+            var result = this.QueryDb(null, orderBy, includes, startRow, pageLength);
             return await result.ToListAsync();
         }
 

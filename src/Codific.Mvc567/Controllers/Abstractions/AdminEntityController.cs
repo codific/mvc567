@@ -82,8 +82,6 @@ namespace Codific.Mvc567.Controllers.Abstractions
 
         protected bool HasDelete { get; set; } = true;
 
-        protected bool HasRestore { get; set; } = true;
-
         protected bool SoftDelete { get; set; } = true;
 
         protected List<TableRowActionViewModel> TableRowActions { get; }
@@ -95,23 +93,13 @@ namespace Codific.Mvc567.Controllers.Abstractions
         [HttpGet]
         [Route("all")]
         [Breadcrumb(BreadcrumbPageTitlePlaceholder, false, 0)]
-        public virtual async Task<IActionResult> GetAll([FromQuery(Name = "p")] int page = 1, [FromQuery(Name = "q")] string query = null, [FromQuery(Name = "d")] bool showDeleted = false)
+        public virtual async Task<IActionResult> GetAll([FromQuery(Name = "p")] int page = 1, [FromQuery(Name = "q")] string query = null)
         {
-            PaginatedEntitiesResult<TEntityDto> entitiesResult = await this.entityManager.GetAllEntitiesPaginatedAsync<TEntity, TEntityDto>(page, query, showDeleted);
+            PaginatedEntitiesResult<TEntityDto> entitiesResult = await this.entityManager.GetAllEntitiesPaginatedAsync<TEntity, TEntityDto>(page, query);
             AllEntitiesViewModel model = new AllEntitiesViewModel();
             model.SingleEntityName = StringFunctions.SplitWordsByCapitalLetters(typeof(TEntity).Name);
             model.Title = typeof(TEntity).Name.ToLower().EndsWith("s", StringComparison.Ordinal) ? $"{model.SingleEntityName}es" : $"{model.SingleEntityName}s";
             this.ViewData[BreadcrumbPageTitlePlaceholder] = model.Title;
-
-            if (showDeleted)
-            {
-                this.HasDelete = false;
-            }
-
-            if (!showDeleted)
-            {
-                this.HasRestore = false;
-            }
 
             this.TableViewActionsInit();
 
@@ -303,22 +291,6 @@ namespace Codific.Mvc567.Controllers.Abstractions
             return deleteRedirect;
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        [Route("{id}/restore")]
-        public virtual async Task<IActionResult> Restore(Guid id)
-        {
-            if (!this.HasRestore)
-            {
-                return this.NotFound();
-            }
-
-            bool isEntityDeleted = await this.entityManager.RestoreEntityAsync<TEntity>(id);
-            this.TempData["EntityRestoredStatus"] = !isEntityDeleted;
-
-            return this.RedirectToAction("GetAll");
-        }
-
         /// <summary>
         /// Initialize the default table view navigation actions. To add new action add new item to NavigationActions collection.
         /// </summary>
@@ -363,11 +335,6 @@ namespace Codific.Mvc567.Controllers.Abstractions
             if (this.HasDelete)
             {
                 this.TableRowActions.Add(TableMapper.DeleteAction($"/{this.ControllerRoute}{{0}}/delete", "[Id]"));
-            }
-
-            if (this.HasRestore)
-            {
-                this.TableRowActions.Add(TableMapper.RestoreAction($"/{this.ControllerRoute}{{0}}/restore", "[Id]"));
             }
         }
     }
