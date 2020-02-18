@@ -101,6 +101,7 @@ gulp.task('scripts:vendors', () =>
         './node_modules/clipboard/dist/clipboard.min.js',
         './node_modules/jquery-tags-input/dist/jquery.tagsinput.min.js',
         './node_modules/sweetalert/dist/sweetalert.min.js',
+        './node_modules/moment/min/moment-with-locales.min.js',
         './Scripts/js/vendors/bootstrap-editable.min.js',
         './Scripts/js/vendors/bootstrap-datepicker/bootstrap-datepicker.min.js',
         './Scripts/js/vendors/select2/select2.min.js',

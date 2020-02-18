@@ -350,7 +350,13 @@ namespace Codific.Mvc567.Services.Infrastructure
                 var entityCanBeModified = propertyForEdit != null && propertyForEdit.HasAttribute<CreateEditEntityInputAttribute>();
                 if (entity != null && entityCanBeModified && !string.IsNullOrEmpty(value))
                 {
-                    propertyForEdit.SetValue(entity, value);
+                    object parsedValue = value?.ToString();
+                    if (propertyForEdit.PropertyType == typeof(DateTime) || (propertyForEdit.PropertyType == typeof(DateTime?) && !string.IsNullOrEmpty(value)))
+                    {
+                        parsedValue = DateTime.Parse(value);
+                    }
+
+                    propertyForEdit.SetValue(entity, parsedValue);
                     var editedId = await this.ModifyEntityAsync<TEntity, TEntityDto>(entityId, entity);
                     if (editedId.HasValue)
                     {

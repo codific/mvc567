@@ -40,7 +40,16 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
                                         {
                                             case TableCellType.Text:
                                             case TableCellType.TextArea:
-                                                <span>@property.Value?.ToString()</span>
+                                                @if (!property.IsHtml)
+                                                {
+                                                    <span>@property.Value?.ToString()</span>
+                                                }
+                                                else
+                                                {
+                                                    <div>
+                                                        @Html.Raw(property.Value?.ToString())
+                                                    </div>
+                                                }
                                                 break;
                                             case TableCellType.Date:
                                                 <span>@(((DateTime?)property.Value)?.ToString(Constants.DateFormat))</span>

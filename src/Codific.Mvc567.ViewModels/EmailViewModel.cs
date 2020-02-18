@@ -12,8 +12,8 @@ namespace Codific.Mvc567.ViewModels
         [DetailsOrder(0)]
         public string Id { get; set; }
 
-        [TableCell(6, "Body", TableCellType.TextArea)]
         [DetailsOrder(6)]
+        [HtmlContent]
         public string EmailBody { get; set; }
 
         [TableCell(2, "Sent", TableCellType.Flag)]

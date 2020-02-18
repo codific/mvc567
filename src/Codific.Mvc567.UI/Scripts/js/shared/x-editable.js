@@ -21,6 +21,21 @@
                     console.log(errors);
                 }
             });
+
+            $('.application-editable-form-input-date').editable({
+                format: 'yyyy-mm-dd',
+                viewformat: 'dd/mm/yyyy',
+                datetimepicker: {
+                    todayBtn: 'linked',
+                    weekStart: 1
+                },
+                success: function (data, config) {
+                    console.log(data);
+                },
+                error: function (errors) {
+                    console.log(errors);
+                }
+            });
         }
     });
 })(jQuery);

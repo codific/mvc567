@@ -42,6 +42,7 @@ namespace Codific.Mvc567.Dtos.ViewModels.Mapping
                     detailsProperty.Value = property.GetValue(entity);
                     detailsProperty.Type = TableCellType.Text;
                     detailsProperty.Order = order;
+                    detailsProperty.IsHtml = property.HasAttribute<HtmlContentAttribute>();
                     if (property.GetCustomAttributes(typeof(TableCellAttribute), false).Length > 0)
                     {
                         detailsProperty.Type = ((TableCellAttribute)property.GetCustomAttributes(typeof(TableCellAttribute), false).FirstOrDefault()).Type;

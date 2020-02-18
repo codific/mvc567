@@ -27,5 +27,7 @@ namespace Codific.Mvc567.Dtos.ViewModels.Abstractions.Details
         public TableCellType Type { get; set; }
 
         public int Order { get; set; }
+
+        public bool IsHtml { get; set; }
     }
 }

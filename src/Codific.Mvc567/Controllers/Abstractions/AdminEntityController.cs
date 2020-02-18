@@ -224,7 +224,8 @@ namespace Codific.Mvc567.Controllers.Abstractions
                 var modifiedEntityId = await this.entityManager.ModifyEntityAsync<TEntity, TEntityDto>(id, model);
                 if (modifiedEntityId.HasValue)
                 {
-                    return this.RedirectToAction("Details", this.ControllerName, new { id = modifiedEntityId });
+                    this.TempData["SuccessStatusMessage"] = $"The {castedModel.EntityName} has been edited successfully.";
+                    return this.RedirectToAction("GetAll", this.ControllerName);
                 }
             }
 

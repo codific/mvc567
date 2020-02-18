@@ -66,7 +66,15 @@ namespace Codific.Mvc567.Dtos.ViewModels.Abstractions.Table
                         resultContent = !string.IsNullOrEmpty(this.content?.ToString()) ? ((DateTime)this.content).ToString(Constants.DateTimeFormat) : string.Empty;
                         break;
                     case TableCellType.Number:
-                        resultContent = string.Format(new NumberFormatInfo() { NumberDecimalDigits = this.NumberDecimalDigits }, "{0:F}", (float)this.content);
+                        try
+                        {
+                            resultContent = string.Format(new NumberFormatInfo() { NumberDecimalDigits = this.NumberDecimalDigits }, "{0:F}", (float)this.content);
+                        }
+                        catch (Exception)
+                        {
+                            resultContent = this.content?.ToString() ?? string.Empty;
+                        }
+
                         break;
                     case TableCellType.File:
                         resultContent = this.content?.ToString();

@@ -73,12 +73,37 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
                                                 }
                                                 break;
                                             case TableCellType.Date:
-                                            case TableCellType.Time:
                                             case TableCellType.DateTime:
-                                                <span>@cell?.Content</span>
+                                                @if (cell.Editable)
+                                                {
+                                                    <form>
+                                                        <div class="d-flex">
+                                                            <a href="#"
+                                                               data-type="combodate"
+                                                               data-value="@cell?.Content"
+                                                               data-format="D/MMM/YYYY"
+                                                               data-viewformat="D/MMM/YYYY"
+                                                               data-template="D/MMM/YYYY"
+                                                               data-url="@Url.Action("XEdit", Model.Controller, new { Area = Model.Area })"
+                                                               data-pk="@row.Identifier"
+                                                               data-name="@cell?.RelatedProperty"
+                                                               data-title="Select Date of birth"
+                                                               class="application-editable-form-input-date m-auto text-black">
+                                                                @cell?.Content
+                                                            </a>
+                                                        </div>
+                                                    </form>
+                                                }
+                                                else
+                                                {
+                                                    <span>@cell?.Content</span>
+                                                }
                                                 break;
                                             case TableCellType.File:
                                                 <root-file-link id="@cell?.Content"></root-file-link>
+                                                break;
+                                            case TableCellType.Time:
+                                                <span>@cell?.Content</span>
                                                 break;
                                             case TableCellType.Flag:
                                                 if (cell?.Content?.ToLower() == "true")
