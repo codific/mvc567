@@ -13,6 +13,7 @@ using Codific.Mvc567.Entities.Database;
 using Codific.Mvc567.FeatureProviders;
 using Codific.Mvc567.Options;
 using Codific.Mvc567.Profiles;
+using Codific.Mvc567.Providers;
 using Codific.Mvc567.Seed;
 using Codific.Mvc567.Services.Extensions;
 using Codific.Mvc567.UI;
@@ -42,9 +43,13 @@ namespace Codific.Mvc567.Extensions
                 .AddDbContext<TDatabaseContext>(options => { options.UseNpgsql(connectionString, b => b.MigrationsAssembly(migrationAssembly)); })
                 .BuildServiceProvider();
 
-            services.AddIdentity<User, Role>()
+            services.AddIdentity<User, Role>(options =>
+                    {
+                        options.Tokens.PasswordResetTokenProvider = ResetPasswordTokenProviderOptions.TokenProviderName;
+                    })
                 .AddEntityFrameworkStores<TDatabaseContext>()
-                .AddDefaultTokenProviders();
+                .AddDefaultTokenProviders()
+                .AddDefaultResetPasswordTokenProvider();
 
             services.RegisterDataAccessProviders<ApplicationUnitOfWork<TDatabaseContext>, TDatabaseContext, User, Role>();
             services.AddScoped<IStandardRepository, TStandardRepository>();
@@ -232,6 +237,13 @@ namespace Codific.Mvc567.Extensions
             services.ConfigureRazorViews();
 
             return services;
+        }
+
+        private static IdentityBuilder AddDefaultResetPasswordTokenProvider(this IdentityBuilder builder)
+        {
+            var userType = builder.UserType;
+            var provider = typeof(ResetPasswordTokenProvider<>).MakeGenericType(userType);
+            return builder.AddTokenProvider(ResetPasswordTokenProviderOptions.TokenProviderName, provider);
         }
     }
 }
