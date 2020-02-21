@@ -32,7 +32,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
                     @foreach (var property in Model.Details.Properties)
                     {
                         <tr>
-                            <td><strong>@property.Name:</strong></td>
+                            <td class="entity-details-property-name"><strong>@property.Name:</strong></td>
                             <td class="white-space-normal">
                                 <span id="property-@property.Name.Replace(" ", string.Empty).ToLower()-id">
                                     @{
