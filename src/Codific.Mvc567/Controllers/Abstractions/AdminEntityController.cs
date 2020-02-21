@@ -168,7 +168,8 @@ namespace Codific.Mvc567.Controllers.Abstractions
                 var createdEntityId = await this.entityManager.CreateEntityAsync<TEntity, TEntityDto>(model);
                 if (createdEntityId.HasValue)
                 {
-                    return this.RedirectToAction("Details", this.ControllerName, new { id = createdEntityId });
+                    this.TempData["SuccessStatusMessage"] = $"The {castedModel.EntityName} has been created successfully.";
+                    return this.RedirectToAction("GetAll", this.ControllerName);
                 }
             }
 
