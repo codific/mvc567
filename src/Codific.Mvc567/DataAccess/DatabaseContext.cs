@@ -28,7 +28,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 namespace Codific.Mvc567.DataAccess
 {
     public abstract class DatabaseContext<TContext> : DatabaseContextBase<TContext, User, Role>
-        where TContext : IdentityDbContext<User, Role, Guid>
+        where TContext : IdentityDbContext<User, Role, Guid, UserClaim, UserRole, UserLogin, RoleClaim, UserToken>
     {
         public DatabaseContext(DbContextOptions<TContext> options)
             : base(options)
@@ -63,13 +63,18 @@ namespace Codific.Mvc567.DataAccess
             // builder.Entity<Language>().HasIndex(x => x.Code).IsUnique();
             builder.Entity<Language>().HasOne(x => x.Image).WithOne().OnDelete(DeleteBehavior.Restrict);
 
+            builder.Entity<User>()
+                .HasMany(x => x.UserClaims)
+                .WithOne()
+                .HasForeignKey(x => x.UserId);
+
             builder.Entity<User>().ToTable("Users");
             builder.Entity<Role>().ToTable("Roles");
-            builder.Entity<IdentityRoleClaim<Guid>>().ToTable("RoleClaims");
-            builder.Entity<IdentityUserClaim<Guid>>().ToTable("UserClaims");
-            builder.Entity<IdentityUserLogin<Guid>>().ToTable("UserLogins");
-            builder.Entity<IdentityUserRole<Guid>>().ToTable("UserRoles");
-            builder.Entity<IdentityUserToken<Guid>>().ToTable("UserTokens");
+            builder.Entity<RoleClaim>().ToTable("RoleClaims");
+            builder.Entity<UserClaim>().ToTable("UserClaims");
+            builder.Entity<UserLogin>().ToTable("UserLogins");
+            builder.Entity<UserRole>().ToTable("UserRoles");
+            builder.Entity<UserToken>().ToTable("UserTokens");
         }
 
         protected virtual ModelBuilder ApplyDeletedQueryFilter(ModelBuilder builder)

@@ -15,6 +15,8 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using Codific.Mvc567.Common.Attributes;
 using Codific.Mvc567.DataAccess.Abstractions.Entities;
 using Microsoft.AspNetCore.Identity;
@@ -64,5 +66,7 @@ namespace Codific.Mvc567.Entities.Database
         public DateTime? DeletedOn { get; set; }
 
         public string DeletedBy { get; set; }
+
+        public virtual ICollection<UserClaim> UserClaims { get; set; }
     }
 }
