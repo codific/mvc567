@@ -93,7 +93,6 @@ gulp.task('scripts', () =>
 
 gulp.task('scripts:vendors', () =>
     gulp.src([
-        './Scripts/js/vendors/vendor.bundle.base.js',
         './node_modules/jquery/dist/jquery.min.js',
         './node_modules/popper.js/dist/umd/popper.min.js',
         './node_modules/bootstrap/dist/js/bootstrap.min.js',

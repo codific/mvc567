@@ -9,7 +9,7 @@ namespace Codific.Mvc567.Dtos.ViewModels.AdminViewModels
 
         public Guid UserId { get; set; }
 
-        [RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[#$^+=!*()@%&]).{8,}$", ErrorMessage = "Password should has: at least 8 characters, uppercase character, lowercase character, special symbol, numeric character!")]
+        [RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[-!""#$%&'()*+,.\/:;<=>?@\[\]^_`{|}~]).{8,}$", ErrorMessage = "Password should has: at least 8 characters, uppercase character, lowercase character, special symbol, numeric character!")]
         [Required(ErrorMessage = "New Password field is required.")]
         [DataType(DataType.Password)]
         public string NewPassword { get; set; }

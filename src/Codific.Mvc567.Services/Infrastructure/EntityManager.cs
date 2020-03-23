@@ -35,6 +35,7 @@ using Codific.Mvc567.Entities.Database;
 using Codific.Mvc567.Services.Abstractions;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
+using NPOI.SS.Formula.Functions;
 
 namespace Codific.Mvc567.Services.Infrastructure
 {
@@ -354,6 +355,14 @@ namespace Codific.Mvc567.Services.Infrastructure
                     if (propertyForEdit.PropertyType == typeof(DateTime) || (propertyForEdit.PropertyType == typeof(DateTime?) && !string.IsNullOrEmpty(value)))
                     {
                         parsedValue = DateTime.Parse(value);
+                    }
+                    else if (propertyForEdit.PropertyType == typeof(int))
+                    {
+                        parsedValue = int.Parse(value);
+                    }
+                    else if (propertyForEdit.PropertyType == typeof(double))
+                    {
+                        parsedValue = double.Parse(value);
                     }
 
                     propertyForEdit.SetValue(entity, parsedValue);
