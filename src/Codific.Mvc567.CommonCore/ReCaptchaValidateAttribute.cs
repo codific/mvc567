@@ -72,26 +72,27 @@ namespace Codific.Mvc567.CommonCore
 
         private async Task DoReCaptchaValidation(ActionExecutingContext context)
         {
-            if (this.hostingEnvironment.IsDevelopment())
-            {
-                return;
-            }
-
-            if (!context.HttpContext.Request.HasFormContentType)
-            {
-                AddModelError(context, "No reCaptcha Token Found");
-                return;
-            }
-
-            string token = context.HttpContext.Request.Form[RecaptchaResponseTokenKey];
-            if (string.IsNullOrWhiteSpace(token))
-            {
-                AddModelError(context, "No reCaptcha Token Found");
-            }
-            else
-            {
-                await this.ValidateRecaptcha(context, token);
-            }
+            await Task.Run(() => { });
+            // if (this.hostingEnvironment.IsDevelopment())
+            // {
+            //     return;
+            // }
+            //
+            // if (!context.HttpContext.Request.HasFormContentType)
+            // {
+            //     AddModelError(context, "No reCaptcha Token Found");
+            //     return;
+            // }
+            //
+            // string token = context.HttpContext.Request.Form[RecaptchaResponseTokenKey];
+            // if (string.IsNullOrWhiteSpace(token))
+            // {
+            //     AddModelError(context, "No reCaptcha Token Found");
+            // }
+            // else
+            // {
+            //     await this.ValidateRecaptcha(context, token);
+            // }
         }
 
         private async Task ValidateRecaptcha(ActionExecutingContext context, string token)
