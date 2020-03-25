@@ -24,6 +24,7 @@ using System.Threading.Tasks;
 using Codific.Mvc567.DataAccess.Abstraction;
 using Codific.Mvc567.DataAccess.Abstractions.Repositories;
 using Codific.Mvc567.DataAccess.Core.Context;
+using Codific.Mvc567.Entities.Database;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 

@@ -30,8 +30,8 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Codific.Mvc567.DataAccess.Core.Context
 {
-    public abstract class DatabaseContextBase<TContext, TUser, TRole> : IdentityDbContext<TUser, TRole, Guid>, IDatabaseContext
-        where TContext : IdentityDbContext<TUser, TRole, Guid>
+    public abstract class DatabaseContextBase<TContext, TUser, TRole> : IdentityDbContext<TUser, TRole, Guid, UserClaim, UserRole, UserLogin, RoleClaim, UserToken>, IDatabaseContext
+        where TContext : IdentityDbContext<TUser, TRole, Guid, UserClaim, UserRole, UserLogin, RoleClaim, UserToken>
         where TUser : IdentityUser<Guid>
         where TRole : IdentityRole<Guid>
     {

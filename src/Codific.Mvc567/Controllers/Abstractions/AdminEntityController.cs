@@ -25,9 +25,11 @@ using Codific.Mvc567.Common.Extensions;
 using Codific.Mvc567.Common.Utilities;
 using Codific.Mvc567.DataAccess.Abstractions.Entities;
 using Codific.Mvc567.Dtos.ServiceResults;
+using Codific.Mvc567.Dtos.ViewModels;
 using Codific.Mvc567.Dtos.ViewModels.Abstractions;
 using Codific.Mvc567.Dtos.ViewModels.Abstractions.Table;
 using Codific.Mvc567.Dtos.ViewModels.Mapping;
+using Codific.Mvc567.Entities.Database;
 using Codific.Mvc567.Services.Abstractions;
 using Microsoft.AspNetCore.Mvc;
 
@@ -169,7 +171,16 @@ namespace Codific.Mvc567.Controllers.Abstractions
                 if (createdEntityId.HasValue)
                 {
                     this.TempData["SuccessStatusMessage"] = $"The {castedModel.EntityName} has been created successfully.";
-                    return this.RedirectToAction("GetAll", this.ControllerName);
+
+                    IActionResult redirect = this.RedirectToAction("GetAll");
+
+                    if (this.DeleteRedirectUrlFunction != null)
+                    {
+                        string redirectUrl = this.DeleteRedirectUrlFunction.Invoke((Guid)createdEntityId);
+                        redirect = this.Redirect(redirectUrl);
+                    }
+
+                    return redirect;
                 }
             }
 
@@ -226,7 +237,16 @@ namespace Codific.Mvc567.Controllers.Abstractions
                 if (modifiedEntityId.HasValue)
                 {
                     this.TempData["SuccessStatusMessage"] = $"The {castedModel.EntityName} has been edited successfully.";
-                    return this.RedirectToAction("GetAll", this.ControllerName);
+
+                    IActionResult redirect = this.RedirectToAction("GetAll");
+
+                    if (this.DeleteRedirectUrlFunction != null)
+                    {
+                        string redirectUrl = this.DeleteRedirectUrlFunction.Invoke(id);
+                        redirect = this.Redirect(redirectUrl);
+                    }
+
+                    return redirect;
                 }
             }
 
