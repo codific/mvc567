@@ -22,6 +22,7 @@ namespace Codific.Mvc567.Common
 {
     public static class MaterialDesignIcons
     {
+        public const string Doctor = "mdi-doctor";
         public const string AccessPoint = "mdi-access-point";
         public const string AccessPointNetwork = "mdi-access-point-network";
         public const string Account = "mdi-account";
