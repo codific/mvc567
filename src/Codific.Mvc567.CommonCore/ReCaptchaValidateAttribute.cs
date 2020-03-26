@@ -73,6 +73,7 @@ namespace Codific.Mvc567.CommonCore
         private async Task DoReCaptchaValidation(ActionExecutingContext context)
         {
             await Task.Run(() => { });
+
             // if (this.hostingEnvironment.IsDevelopment())
             // {
             //     return;
