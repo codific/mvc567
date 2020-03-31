@@ -346,7 +346,8 @@ namespace Codific.Mvc567.Services.Infrastructure
         {
             try
             {
-                var entity = await this.GetEntityAsync<TEntity, TEntityDto>(entityId);
+                var dbEntity = await this.Uow.GetStandardRepository().GetAsync<TEntity>(entityId);
+                var entity = this.Mapper.Map<TEntityDto>(dbEntity);
                 var propertyForEdit = typeof(TEntityDto).GetProperty(property);
                 var entityCanBeModified = propertyForEdit != null && propertyForEdit.HasAttribute<CreateEditEntityInputAttribute>();
                 if (entity != null && entityCanBeModified && !string.IsNullOrEmpty(value))

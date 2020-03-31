@@ -40,25 +40,24 @@ namespace Codific.Mvc567.Components.TagHelpers
 
         public override Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
         {
-            output.TagName = "div";
-            output.TagMode = TagMode.StartTagAndEndTag;
-            output.Attributes.Add(new TagHelperAttribute("class", $"form-group"));
-
-            StringBuilder outputStringBuilder = new StringBuilder();
-
-            outputStringBuilder.Append($"<div class=\"g-recaptcha\" data-sitekey=\"{this.configuration["GoogleRecaptchaKeys:VisibleRecaptcha:SiteKey"]}\"></div>");
-            if (this.ViewContext.ModelState.ContainsKey("ReCaptcha") && this.ViewContext.ModelState["ReCaptcha"].Errors != null && this.ViewContext.ModelState["ReCaptcha"].Errors.Count > 0)
-            {
-                foreach (var error in this.ViewContext.ModelState["ReCaptcha"].Errors)
-                {
-                    outputStringBuilder.Append($"<span class=\"text-danger text-small\">{error.ErrorMessage}</span>");
-                }
-            }
-
-            output.Content.SetHtmlContent(new HtmlString(outputStringBuilder.ToString()));
-
-            this.ViewContext.AppendIntoTheHead("<script src=\"https://www.google.com/recaptcha/api.js\" async defer></script>");
-
+            // output.TagName = "div";
+            // output.TagMode = TagMode.StartTagAndEndTag;
+            // output.Attributes.Add(new TagHelperAttribute("class", $"form-group"));
+            //
+            // StringBuilder outputStringBuilder = new StringBuilder();
+            //
+            // outputStringBuilder.Append($"<div class=\"g-recaptcha\" data-sitekey=\"{this.configuration["GoogleRecaptchaKeys:VisibleRecaptcha:SiteKey"]}\"></div>");
+            // if (this.ViewContext.ModelState.ContainsKey("ReCaptcha") && this.ViewContext.ModelState["ReCaptcha"].Errors != null && this.ViewContext.ModelState["ReCaptcha"].Errors.Count > 0)
+            // {
+            //     foreach (var error in this.ViewContext.ModelState["ReCaptcha"].Errors)
+            //     {
+            //         outputStringBuilder.Append($"<span class=\"text-danger text-small\">{error.ErrorMessage}</span>");
+            //     }
+            // }
+            //
+            // output.Content.SetHtmlContent(new HtmlString(outputStringBuilder.ToString()));
+            //
+            // this.ViewContext.AppendIntoTheHead("<script src=\"https://www.google.com/recaptcha/api.js\" async defer></script>");
             return base.ProcessAsync(context, output);
         }
     }
