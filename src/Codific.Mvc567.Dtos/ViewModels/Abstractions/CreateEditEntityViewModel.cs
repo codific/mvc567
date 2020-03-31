@@ -45,7 +45,7 @@ namespace Codific.Mvc567.Dtos.ViewModels.Abstractions
         {
             var resultList = new List<CreateEditInputViewModel>();
             Type modelType = this.GetType();
-            var modelProperties = modelType.GetProperties();
+            var modelProperties = modelType.GetProperties().ToList();
             foreach (var property in modelProperties)
             {
                 if (property.GetCustomAttributes(typeof(CreateEditEntityInputAttribute), false).Any())
@@ -61,6 +61,7 @@ namespace Codific.Mvc567.Dtos.ViewModels.Abstractions
                             Required = property.HasAttribute<RequiredAttribute>(),
                             EnumType = property.PropertyType.IsEnum ? property.PropertyType : null,
                             Value = property.GetValue(this),
+                            Order = propertyAttribute.Order,
                         };
 
                         if (inputViewModel.EnumType == null && property.PropertyType.IsArray && property.PropertyType.GetElementType().IsEnum)
@@ -79,7 +80,7 @@ namespace Codific.Mvc567.Dtos.ViewModels.Abstractions
                 }
             }
 
-            return resultList;
+            return resultList.OrderBy(x => x.Order).ToList();
         }
     }
 }
