@@ -21,11 +21,11 @@ namespace Codific.Mvc567.Common.Attributes
 {
     public class CreateEditEntityInputAttribute : Attribute
     {
-        public CreateEditEntityInputAttribute(string name, CreateEntityInputType type)
+        public CreateEditEntityInputAttribute(string name, CreateEntityInputType type, int order = 10000)
         {
             this.Name = name;
             this.Type = type;
-            this.Order = 10000;
+            this.Order = order;
         }
 
         public CreateEntityInputType Type { get; set; }
