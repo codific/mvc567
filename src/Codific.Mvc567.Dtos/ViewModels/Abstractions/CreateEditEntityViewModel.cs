@@ -61,7 +61,8 @@ namespace Codific.Mvc567.Dtos.ViewModels.Abstractions
                             Required = property.HasAttribute<RequiredAttribute>(),
                             EnumType = property.PropertyType.IsEnum ? property.PropertyType : null,
                             Value = property.GetValue(this),
-                            Order = propertyAttribute.Order,
+
+                            // Order = propertyAttribute.Order,
                         };
 
                         if (inputViewModel.EnumType == null && property.PropertyType.IsArray && property.PropertyType.GetElementType().IsEnum)
@@ -80,7 +81,7 @@ namespace Codific.Mvc567.Dtos.ViewModels.Abstractions
                 }
             }
 
-            return resultList.OrderBy(x => x.Order).ToList();
+            return resultList; // .OrderBy(x => x.Order).ToList();
         }
     }
 }
