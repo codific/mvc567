@@ -14,6 +14,8 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -40,6 +42,9 @@ namespace Codific.Mvc567.Components.TagHelpers
         [HtmlAttributeName("single")]
         public bool Single { get; set; }
 
+        [HtmlAttributeName("nested-items-controllers")]
+        public ICollection<string> NestedItemsControllers { get; set; }
+
         [ViewContext]
         [HtmlAttributeNotBound]
         public ViewContext ViewContext { get; set; }
@@ -55,7 +60,14 @@ namespace Codific.Mvc567.Components.TagHelpers
         {
             output.TagName = "li";
             output.TagMode = TagMode.StartTagAndEndTag;
+
             bool collapsed = this.ViewContext.RouteData.Values["controller"].ToString().ToLower() != this.Controller.ToLower();
+            if (this.NestedItemsControllers != null)
+            {
+                this.NestedItemsControllers.Add(this.Controller);
+                collapsed = !this.NestedItemsControllers.Select(x => x.ToLower()).Contains(this.ViewContext.RouteData.Values["controller"].ToString().ToLower());
+            }
+
             string activeClass = (!collapsed) ? "active" : string.Empty;
             output.Attributes.Add(new TagHelperAttribute("class", $"nav-item main-nav-item {activeClass}", HtmlAttributeValueStyle.DoubleQuotes));
 
