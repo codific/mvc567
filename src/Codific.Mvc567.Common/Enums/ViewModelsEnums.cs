@@ -50,4 +50,16 @@ namespace Codific.Mvc567.Common.Enums
         DatabaseTablesSelect = 18,
         Hidden = 19,
     }
+
+    public enum DetailsFiledType
+    {
+        Text = 1,
+        Date = 2,
+        Time = 3,
+        DateTime = 4,
+        Number = 5,
+        File = 6,
+        Flag = 7,
+        TextArea = 8,
+    }
 }

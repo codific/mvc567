@@ -40,12 +40,16 @@ namespace Codific.Mvc567.Dtos.ViewModels.Mapping
                     DetailsPropertyViewModel detailsProperty = new DetailsPropertyViewModel();
                     detailsProperty.Name = string.IsNullOrEmpty(attribute.Title) ? StringFunctions.SplitWordsByCapitalLetters(property.Name) : attribute.Title;
                     detailsProperty.Value = property.GetValue(entity);
-                    detailsProperty.Type = TableCellType.Text;
+                    detailsProperty.Type = DetailsFiledType.Text;
                     detailsProperty.Order = order;
                     detailsProperty.IsHtml = property.HasAttribute<HtmlContentAttribute>();
-                    if (property.GetCustomAttributes(typeof(TableCellAttribute), false).Length > 0)
+                    if (property.GetCustomAttributes(typeof(DetailsFieldAttribute), false).Length > 0)
                     {
-                        detailsProperty.Type = ((TableCellAttribute)property.GetCustomAttributes(typeof(TableCellAttribute), false).FirstOrDefault()).Type;
+                        detailsProperty.Type = ((DetailsFieldAttribute)property.GetCustomAttributes(typeof(DetailsFieldAttribute), false).FirstOrDefault()).Type;
+                    }
+                    else if (property.GetCustomAttributes(typeof(TableCellAttribute), false).Length > 0)
+                    {
+                        detailsProperty.Type = (DetailsFiledType)((TableCellAttribute)property.GetCustomAttributes(typeof(TableCellAttribute), false).FirstOrDefault()).Type;
                     }
 
                     detailsViewModel.AddProperty(detailsProperty);

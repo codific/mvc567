@@ -24,7 +24,7 @@ namespace Codific.Mvc567.Dtos.ViewModels.Abstractions.Details
 
         public object Value { get; set; }
 
-        public TableCellType Type { get; set; }
+        public DetailsFiledType Type { get; set; }
 
         public int Order { get; set; }
 
