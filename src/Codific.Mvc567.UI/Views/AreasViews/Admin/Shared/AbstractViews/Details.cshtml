@@ -38,8 +38,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
                                     @{
                                         switch (property.Type)
                                         {
-                                            case TableCellType.Text:
-                                            case TableCellType.TextArea:
+                                            case DetailsFiledType.Text:
+                                            case DetailsFiledType.TextArea:
                                                 @if (!property.IsHtml)
                                                 {
                                                     <span>@property.Value?.ToString()</span>
@@ -51,21 +51,21 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
                                                     </div>
                                                 }
                                                 break;
-                                            case TableCellType.Date:
+                                            case DetailsFiledType.Date:
                                                 <span>@(((DateTime?)property.Value)?.ToString(Constants.DateFormat))</span>
                                                 break;
-                                            case TableCellType.Time:
+                                            case DetailsFiledType.Time:
                                                 <span>@(((TimeSpan?)property.Value)?.ToString(Constants.TimeFormat))</span>
                                                 break;
-                                            case TableCellType.DateTime:
+                                            case DetailsFiledType.DateTime:
                                                 <span>@(((DateTime?)property.Value)?.ToString(Constants.DateTimeFormat))</span>
                                                 break;
-                                            case TableCellType.Number:
+                                            case DetailsFiledType.Number:
                                                 break;
-                                            case TableCellType.File:
+                                            case DetailsFiledType.File:
                                                 <root-file-link id="@property?.Value?.ToString()"></root-file-link>
                                                 break;
-                                            case TableCellType.Flag:
+                                            case DetailsFiledType.Flag:
                                                 if ((bool)(property.Value))
                                                 {
                                                     <div class="badge badge-success badge-pill p-1 font-size-12"><i class="mdi mdi-check"></i></div>
@@ -86,12 +86,12 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
                                 @{
                                     switch (property.Type)
                                     {
-                                        case TableCellType.Text:
-                                        case TableCellType.TextArea:
-                                        case TableCellType.Date:
-                                        case TableCellType.Time:
-                                        case TableCellType.DateTime:
-                                        case TableCellType.Number:
+                                        case DetailsFiledType.Text:
+                                        case DetailsFiledType.TextArea:
+                                        case DetailsFiledType.Date:
+                                        case DetailsFiledType.Time:
+                                        case DetailsFiledType.DateTime:
+                                        case DetailsFiledType.Number:
                                             <span>
                                                 <button type="button" class="btn btn-clipboard p-1" data-clipboard-action="copy" data-clipboard-target="#property-@property.Name.Replace(" ", string.Empty).ToLower()-id">
                                                     <i class="m-0 mdi mdi-clipboard-text"></i>
