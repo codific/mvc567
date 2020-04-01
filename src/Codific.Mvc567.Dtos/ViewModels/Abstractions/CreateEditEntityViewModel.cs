@@ -80,7 +80,7 @@ namespace Codific.Mvc567.Dtos.ViewModels.Abstractions
                 }
             }
 
-            return resultList.OrderByDescending(x => x.Order).ToList();
+            return resultList.OrderBy(x => x.Order).ToList();
         }
     }
 }
