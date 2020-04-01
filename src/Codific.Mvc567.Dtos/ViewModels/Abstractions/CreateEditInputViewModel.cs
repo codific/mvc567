@@ -34,7 +34,8 @@ namespace Codific.Mvc567.Dtos.ViewModels.Abstractions
 
         public object Value { get; set; }
 
-        // public int Order { get; set; }
+        public int Order { get; set; }
+
         public Guid GuidValue
         {
             get

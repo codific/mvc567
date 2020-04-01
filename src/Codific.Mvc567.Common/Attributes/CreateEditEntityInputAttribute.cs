@@ -28,6 +28,12 @@ namespace Codific.Mvc567.Common.Attributes
             this.Order = order;
         }
 
+        public CreateEditEntityInputAttribute(string name, CreateEntityInputType type)
+        {
+            this.Name = name;
+            this.Type = type;
+        }
+
         public CreateEntityInputType Type { get; set; }
 
         public string Name { get; set; }
