@@ -41,7 +41,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
                 <input type="password" name="@inputItem.Name" placeholder="Enter @inputItem.Label" class="form-control" value="" />
                 break;
             case CreateEntityInputType.Date:
-                <date-picker name="@inputItem.Name" value="@inputItem.Value?.ToString()"></date-picker>
+                <date-picker name="@inputItem.Name" value="@(inputItem.Value != null ? ((DateTime)inputItem.Value).ToString(Constants.DateFormat) : inputItem.Value?.ToString())"></date-picker>
                 break;
             case CreateEntityInputType.Time:
                 <time-picker name="@inputItem.Name" value="@inputItem.Value?.ToString()"></time-picker>
