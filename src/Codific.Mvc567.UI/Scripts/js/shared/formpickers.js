@@ -61,6 +61,10 @@ $(document).ready(function () {
 
 function switchDateToBackendFormat(date) {
   var dateItems = date.split('/');
+  if (dateItems && dateItems.length < 3) {
+    return '';
+  }
+  
   var days = dateItems[0];
   dateItems[0] = dateItems[1];
   dateItems[1] = days;
