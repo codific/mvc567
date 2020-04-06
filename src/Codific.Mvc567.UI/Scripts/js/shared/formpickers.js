@@ -53,7 +53,7 @@ $(document).ready(function () {
     var propertyName = $(this).attr('data-copy-field-name');
     var query = '.date-input-filed-copy[name="' + propertyName + '"]';
     $(query).first().val(switchDateToBackendFormat($(this).val()));
-    $(this).on('change', function ($event) {
+    $(this).on('blur', function ($event) {
       $(query).first().val(switchDateToBackendFormat($event.target.value));
     });
   });
