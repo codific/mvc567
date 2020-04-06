@@ -28,7 +28,7 @@ namespace Codific.Mvc567.Common
         public const string ImagesFolderName = "images";
         public const string LanguagesFolderName = "locales";
 
-        public const string DateFormat = "dddd, dd MMMM yyyy";
+        public const string DateFormat = "dd/MM/yyyy";
         public const string TimeFormat = "HH:mm";
         public const string DateTimeFormat = "dddd, dd MMMM yyyy HH:mm";
 

@@ -10,6 +10,7 @@
   }
   if ($(".datepicker-popup").length) {
     $('.datepicker-popup').datepicker({
+        format: 'dd/mm/yyyy',
         enableOnReadonly: true,
         todayHighlight: true,
         weekStart: 1
@@ -17,6 +18,7 @@
   }
   if ($("#inline-datepicker").length) {
     $('#inline-datepicker').datepicker({
+      format: 'dd/mm/yyyy',
       enableOnReadonly: true,
       todayHighlight: true,
       weekStart: 1
@@ -45,3 +47,23 @@
     });
   }
 })(jQuery);
+
+$(document).ready(function () {
+  $('.date-input-field').each(function() {
+    var propertyName = $(this).attr('data-copy-field-name');
+    var query = '.date-input-filed-copy[name="' + propertyName + '"]';
+    $(query).first().val(switchDateToBackendFormat($(this).val()));
+    $(this).on('change', function ($event) {
+      $(query).first().val(switchDateToBackendFormat($event.target.value));
+    });
+  });
+});
+
+function switchDateToBackendFormat(date) {
+  var dateItems = date.split('/');
+  var days = dateItems[0];
+  dateItems[0] = dateItems[1];
+  dateItems[1] = days;
+  
+  return dateItems.join('/');
+}

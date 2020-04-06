@@ -52,12 +52,12 @@ namespace Codific.Mvc567.Components.TagHelpers
             Guid itemId = Guid.NewGuid();
 
             contentStringBuilder.Append($"<div id=\"datepicker-popup-{itemId}\" class=\"input-group date datepicker datepicker-popup\">");
-            contentStringBuilder.Append($"<input type=\"text\" class=\"form-control\" name=\"{this.ModelName}\" value=\"{this.Value}\">");
+            contentStringBuilder.Append($"<input type=\"text\" class=\"form-control date-input-field\" data-copy-field-name=\"{this.ModelName}\" value=\"{this.Value}\">");
             contentStringBuilder.Append("<span class=\"input-group-addon input-group-append border-left\">");
             contentStringBuilder.Append("<span class=\"mdi mdi-calendar input-group-text\"></span>");
             contentStringBuilder.Append("</span>");
             contentStringBuilder.Append("</div>");
-
+            contentStringBuilder.Append($"<input type=\"text\" class=\"form-control date-input-filed-copy\" style=\"display: none\" name=\"{this.ModelName}\" />");
             return contentStringBuilder.ToString();
         }
     }
