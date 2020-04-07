@@ -109,6 +109,11 @@ namespace Codific.Mvc567.Dtos.ViewModels.Mapping
             return new TableRowActionViewModel(title, icon, color, urlStringFormat, parameters.Select(x => x.ToString()).ToList(), method);
         }
 
+        public static TableRowActionViewModel CreateAction(string title, string icon, Color color, TableRowActionMethod method, string urlStringFormat, bool isToBeOpenedInNewTab, params object[] parameters)
+        {
+            return new TableRowActionViewModel(title, icon, color, urlStringFormat, parameters.Select(x => x.ToString()).ToList(), method, isToBeOpenedInNewTab);
+        }
+
         public static TableRowActionViewModel DetailsAction(string urlStringFormat, params object[] parameters)
         {
             return CreateAction("Details", MaterialDesignIcons.Details, Color.DodgerBlue, TableRowActionMethod.Get, urlStringFormat, parameters);

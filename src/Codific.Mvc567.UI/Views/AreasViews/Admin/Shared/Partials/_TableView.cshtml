@@ -81,9 +81,9 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
                                                             <a href="#"
                                                                data-type="combodate"
                                                                data-value="@cell?.Content"
-                                                               data-format="D/MMM/YYYY"
+                                                               data-format="D/MM/YYYY"
                                                                data-viewformat="D/MM/YYYY"
-                                                               data-template="D/MMM/YYYY"
+                                                               data-template="D/MM/YYYY"
                                                                data-url="@Url.Action("XEdit", Model.Controller, new { Area = Model.Area })"
                                                                data-pk="@row.Identifier"
                                                                data-name="@cell?.RelatedProperty"
@@ -131,7 +131,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
                                         {
                                             if (action.Method == TableRowActionMethod.Get)
                                             {
-                                                <a class="btn btn-icons action-btn btn-@action.Color.Name" title="@action.Title" href="@action.Url"><i class="mdi @action.Icon"></i></a>
+                                                <a target="@(action.IsToBeOpenedInNewTab ? "_blank" : "_self")" class="btn btn-icons action-btn btn-@action.Color.Name" title="@action.Title" href="@action.Url"><i class="mdi @action.Icon"></i></a>
                                             }
                                             else if (action.Method == TableRowActionMethod.Post)
                                             {

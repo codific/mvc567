@@ -67,7 +67,8 @@ namespace Codific.Mvc567.Dtos.ViewModels.Abstractions.Table
                 action.Color,
                 action.UrlStringFormat,
                 action.Parameters,
-                action.Method) { HasConfirmation = action.HasConfirmation, ConfirmationTitle = action.ConfirmationTitle, ConfirmationMessage = action.ConfirmationMessage, Parameters = parameters };
+                action.Method,
+                action.IsToBeOpenedInNewTab) { HasConfirmation = action.HasConfirmation, ConfirmationTitle = action.ConfirmationTitle, ConfirmationMessage = action.ConfirmationMessage, Parameters = parameters };
 
             this.actions.Add(newAction);
         }

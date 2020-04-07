@@ -21,7 +21,14 @@ namespace Codific.Mvc567.Dtos.ViewModels.Abstractions.Table
 {
     public class TableRowActionViewModel
     {
-        public TableRowActionViewModel(string title, string icon, Color color, string urlStringFormat, List<string> rawParameters, TableRowActionMethod method = TableRowActionMethod.Get)
+        public TableRowActionViewModel(
+            string title,
+            string icon,
+            Color color,
+            string urlStringFormat,
+            List<string> rawParameters,
+            TableRowActionMethod method = TableRowActionMethod.Get,
+            bool isToBeOpenedInNewTab = false)
         {
             this.Title = title;
             this.Icon = icon;
@@ -29,6 +36,7 @@ namespace Codific.Mvc567.Dtos.ViewModels.Abstractions.Table
             this.UrlStringFormat = urlStringFormat;
             this.RawParameters = rawParameters;
             this.Method = method;
+            this.IsToBeOpenedInNewTab = isToBeOpenedInNewTab;
         }
 
         public string Title { get; set; }
@@ -44,6 +52,8 @@ namespace Codific.Mvc567.Dtos.ViewModels.Abstractions.Table
         public string ConfirmationTitle { get; set; }
 
         public string ConfirmationMessage { get; set; }
+
+        public bool IsToBeOpenedInNewTab { get; set; }
 
         public string Url
         {
