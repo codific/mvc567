@@ -17,10 +17,12 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Globalization;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using AutoMapper;
+using Codific.Mvc567.Common;
 using Codific.Mvc567.Common.Attributes;
 using Codific.Mvc567.Common.Enums;
 using Codific.Mvc567.Common.Extensions;
@@ -355,7 +357,7 @@ namespace Codific.Mvc567.Services.Infrastructure
                     object parsedValue = value?.ToString();
                     if (propertyForEdit.PropertyType == typeof(DateTime) || (propertyForEdit.PropertyType == typeof(DateTime?) && !string.IsNullOrEmpty(value)))
                     {
-                        parsedValue = DateTime.Parse(value);
+                        parsedValue = DateTime.ParseExact(value, Constants.DateFormat, CultureInfo.InvariantCulture);
                     }
                     else if (propertyForEdit.PropertyType == typeof(int))
                     {
