@@ -380,9 +380,9 @@ namespace Codific.Mvc567.Services.Infrastructure
                             return new InlineEditResult(false, attribute.ErrorMessage);
                         }
                     }
-                    else if (property.Any(x => x.GetType() == typeof(EmailAddressAttribute)))
+                    else if (propertyAttributes.Any(x => x.GetType() == typeof(EmailAddressAttribute)))
                     {
-                        var attribute = (PhoneAttribute)propertyAttributes.First(x => x.GetType() == typeof(EmailAddressAttribute));
+                        var attribute = (EmailAddressAttribute)propertyAttributes.First(x => x.GetType() == typeof(EmailAddressAttribute));
                         if (!attribute.IsValid(value))
                         {
                             return new InlineEditResult(false, attribute.ErrorMessage);
