@@ -65,11 +65,6 @@ namespace Codific.Mvc567.Services.Infrastructure
             try
             {
                 var email = await this.uow.GetStandardRepository().GetAsync<Email>(emailId);
-                if (email.Sent)
-                {
-                    return false;
-                }
-
                 this.SendEmail(email);
 
                 email.Sent = true;
