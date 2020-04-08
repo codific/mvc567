@@ -45,6 +45,9 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
     {
         <div class="alert alert-danger" role="alert"> @TempData["ErrorStatusMessage"] </div>
     }
+    <div class="inline-edit-errors-container text-center">
+        <p class="text-danger"></p>
+    </div>
 </div>
 
 @await Html.PartialAsync(Partials.TablePartial, Model.Table)

@@ -4,6 +4,7 @@
         if ($('.application-editable-form').length) {
             $.fn.editable.defaults.mode = "inline";
             $.fn.editable.defaults.send = "always";
+            $.fn.editable.defaults.onblur = "submit";
             $.fn.editable.defaults.ajaxOptions = { type: "POST" };
             $.fn.editableform.buttons =
                 '<button type="submit" class="btn btn-primary editable-submit p-0 ml-2">' +
