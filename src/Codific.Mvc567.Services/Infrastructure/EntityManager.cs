@@ -345,7 +345,7 @@ namespace Codific.Mvc567.Services.Infrastructure
             return result;
         }
 
-        public async Task<bool> ModifyEntityPropertyAsync<TEntity, TEntityDto>(Guid entityId, string property, string value)
+        public async Task<InlineEditResult> ModifyEntityPropertyAsync<TEntity, TEntityDto>(Guid entityId, string property, string value)
             where TEntity : class, IEntityBase, new()
         {
             try
@@ -371,12 +371,13 @@ namespace Codific.Mvc567.Services.Infrastructure
                     {
                         parsedValue = double.Parse(value);
                     }
-                    else if (propertyAttributes.Any(x => x.GetType() == typeof(PhoneAttribute)))
+
+                    if (propertyAttributes.Any(x => x.GetType() == typeof(PhoneAttribute)))
                     {
                         var attribute = (PhoneAttribute)propertyAttributes.First(x => x.GetType() == typeof(PhoneAttribute));
                         if (!attribute.IsValid(value))
                         {
-                            return false;
+                            return new InlineEditResult(false, attribute.ErrorMessage);
                         }
                     }
                     else if (property.Any(x => x.GetType() == typeof(EmailAddressAttribute)))
@@ -384,7 +385,7 @@ namespace Codific.Mvc567.Services.Infrastructure
                         var attribute = (PhoneAttribute)propertyAttributes.First(x => x.GetType() == typeof(EmailAddressAttribute));
                         if (!attribute.IsValid(value))
                         {
-                            return false;
+                            return new InlineEditResult(false, attribute.ErrorMessage);
                         }
                     }
 
@@ -392,16 +393,16 @@ namespace Codific.Mvc567.Services.Infrastructure
                     var editedId = await this.ModifyEntityAsync<TEntity, TEntityDto>(entityId, entity);
                     if (editedId.HasValue)
                     {
-                        return true;
+                        return new InlineEditResult(true);
                     }
                 }
 
-                return false;
+                return new InlineEditResult(false);
             }
             catch (Exception ex)
             {
                 await this.LogErrorAsync(ex, nameof(this.ModifyEntityPropertyAsync));
-                return false;
+                return new InlineEditResult(false);
             }
         }
 

@@ -15,11 +15,13 @@
 
             $('.application-editable-form-input-text').editable({
                 success: function (data, config) {
-                    console.log(data);
+                    $('.inline-edit-errors-container p').html('');
                 },
-                error: function (errors) {
-                    console.log(errors);
+                error: function (xhr) {
+                    $('.inline-edit-errors-container p').html(xhr.responseText);
                 }
+            }).on('hidden', function() {
+                $('.inline-edit-errors-container p').html('');
             });
 
             $('.application-editable-form-input-date').editable({

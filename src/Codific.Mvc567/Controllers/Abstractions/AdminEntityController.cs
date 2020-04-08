@@ -258,12 +258,12 @@ namespace Codific.Mvc567.Controllers.Abstractions
         public virtual async Task<IActionResult> XEdit([FromForm(Name = "pk")] Guid id, [FromForm(Name = "name")] string name, [FromForm(Name = "value")] string value)
         {
             var edited = await this.entityManager.ModifyEntityPropertyAsync<TEntity, TEntityDto>(id, name, value);
-            if (edited)
+            if (edited.Succeeded)
             {
                 return this.Ok();
             }
 
-            return this.BadRequest();
+            return this.BadRequest(edited.Error);
         }
 
         [HttpGet]
