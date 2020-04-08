@@ -16,6 +16,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Globalization;
 using System.Linq;
@@ -38,6 +39,7 @@ using Codific.Mvc567.Services.Abstractions;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using NPOI.SS.Formula.Functions;
+using PhoneAttribute = System.ComponentModel.DataAnnotations.PhoneAttribute;
 
 namespace Codific.Mvc567.Services.Infrastructure
 {
@@ -351,7 +353,9 @@ namespace Codific.Mvc567.Services.Infrastructure
                 var dbEntity = await this.Uow.GetStandardRepository().GetAsync<TEntity>(entityId);
                 var entity = this.Mapper.Map<TEntityDto>(dbEntity);
                 var propertyForEdit = typeof(TEntityDto).GetProperty(property);
+                var propertyAttributes = propertyForEdit.GetCustomAttributes(false);
                 var entityCanBeModified = propertyForEdit != null && propertyForEdit.HasAttribute<CreateEditEntityInputAttribute>();
+
                 if (entity != null && entityCanBeModified && !string.IsNullOrEmpty(value))
                 {
                     object parsedValue = value?.ToString();
@@ -366,6 +370,22 @@ namespace Codific.Mvc567.Services.Infrastructure
                     else if (propertyForEdit.PropertyType == typeof(double))
                     {
                         parsedValue = double.Parse(value);
+                    }
+                    else if (propertyAttributes.Any(x => x.GetType() == typeof(PhoneAttribute)))
+                    {
+                        var attribute = (PhoneAttribute)propertyAttributes.First(x => x.GetType() == typeof(PhoneAttribute));
+                        if (!attribute.IsValid(value))
+                        {
+                            return false;
+                        }
+                    }
+                    else if (property.Any(x => x.GetType() == typeof(EmailAddressAttribute)))
+                    {
+                        var attribute = (PhoneAttribute)propertyAttributes.First(x => x.GetType() == typeof(EmailAddressAttribute));
+                        if (!attribute.IsValid(value))
+                        {
+                            return false;
+                        }
                     }
 
                     propertyForEdit.SetValue(entity, parsedValue);
