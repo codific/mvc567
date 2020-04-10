@@ -12,7 +12,7 @@
     <Copyright>Codific</Copyright>
     <PackageTags>MVC, .NET Core, CMS, ASP.NET Core, Vue.js</PackageTags>
     <PackageIconUrl>https://fix.codific.com/back/img/codific.png</PackageIconUrl>
-    <Version>2.0.1</Version>
+    <Version>2.1.0</Version>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <AssemblyName>Codific.Mvc567.CommonCore</AssemblyName>
     <RootNamespace>Codific.Mvc567.CommonCore</RootNamespace>
