@@ -26,6 +26,7 @@ namespace Codific.Mvc567.Common.Enums
         File = 6,
         Flag = 7,
         TextArea = 8,
+        Enumeration = 9,
     }
 
     public enum CreateEntityInputType

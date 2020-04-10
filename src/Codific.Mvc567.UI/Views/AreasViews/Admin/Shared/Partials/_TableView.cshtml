@@ -52,6 +52,35 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
                                         switch (cell.Type)
                                         {
                                             
+                                            case TableCellType.Enumeration:
+                                                var enumValuesForJs = "";
+                                                var selectedEnumValue = 0;
+                                                foreach (var enumValue in Enum.GetValues(cell.EnumType))
+                                                {
+                                                    if (enumValue.ToString() == cell?.Content)
+                                                    {
+                                                        selectedEnumValue = (int) enumValue;
+                                                    }
+                                                    enumValuesForJs += $"{{ \"value\": { (int)enumValue }, \"text\": \"{ enumValue }\"}}, ";
+                                                }
+                                                @if (cell.Editable)
+                                                {
+                                                    <a href="#"
+                                                         class="x-edit-select text-black"
+                                                         data-type="select"
+                                                         data-pk="@row.Identifier"
+                                                         data-url="@Url.Action("XEdit", Model.Controller, new {Area = Model.Area})"
+                                                         data-name="@cell?.RelatedProperty"
+                                                         data-value="@selectedEnumValue"
+                                                         data-source="[@enumValuesForJs]">
+                                                        @(cell?.Content != "0" ? cell?.Content : "")
+                                                    </a>
+                                                }
+                                                else
+                                                {   
+                                                    <span>@cell?.Content != null ? @cell?.Content : "";</span>
+                                                }
+                                                break;
                                             case TableCellType.Text:
                                             case TableCellType.Number:
                                                 @if (cell.Editable)
@@ -106,13 +135,33 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
                                                 <span>@cell?.Content</span>
                                                 break;
                                             case TableCellType.Flag:
-                                                if (cell?.Content?.ToLower() == "true")
+                                                if (cell.Editable)
                                                 {
-                                                    <div class="badge badge-success badge-pill p-1 font-size-12"><i class="mdi mdi-check"></i></div>
+                                                    <div class="@(cell?.Content?.ToLower() == "true" ? "selected-bool-value selected-bool-value-semantic" : "d-none") bool-cell-editable-value bool-cell-editable-value-true badge badge-success badge-pill p-1 font-size-12"><i class="mdi mdi-check"></i></div>
+                                                    <div class="@(cell?.Content?.ToLower() == "false" ? "selected-bool-value selected-bool-value-semantic" : "d-none") bool-cell-editable-value bool-cell-editable-value-false badge badge-danger badge-pill p-1 font-size-12"><i class="mdi mdi-close"></i></div>
+                                                
+                                                    var booleanJsValues = $"{{ \"value\": 0, \"text\": \"{cell.TextForFalseValue}\"}}, {{ \"value\": 1, \"text\": \"{cell.TextForTrueValue}\" }} ";
+                                                    <a href="#"
+                                                       class="x-edit-bool d-none"
+                                                       data-type="select"
+                                                       data-pk="@row.Identifier"
+                                                       data-url="@Url.Action("XEdit", Model.Controller, new {Area = Model.Area})"
+                                                       data-name="@cell?.RelatedProperty"
+                                                       data-value="@(cell?.Content?.ToLower() == "true" ? 1 : 0)"
+                                                       data-source="[@booleanJsValues]">
+                                                        @cell.Content
+                                                    </a>   
                                                 }
                                                 else
                                                 {
-                                                    <div class="badge badge-danger badge-pill p-1 font-size-12"><i class="mdi mdi-close"></i></div>
+                                                    if (cell?.Content?.ToLower() == "true")
+                                                    {
+                                                        <div class="badge badge-success badge-pill p-1 font-size-12"><i class="mdi mdi-check"></i></div>
+                                                    }
+                                                    else
+                                                    {
+                                                        <div class="badge badge-danger badge-pill p-1 font-size-12"><i class="mdi mdi-close"></i></div>   
+                                                    }
                                                 }
                                                 break;
                                             case TableCellType.TextArea:

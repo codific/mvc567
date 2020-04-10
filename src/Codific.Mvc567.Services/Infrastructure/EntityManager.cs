@@ -371,6 +371,21 @@ namespace Codific.Mvc567.Services.Infrastructure
                     {
                         parsedValue = double.Parse(value);
                     }
+                    else if (propertyForEdit.PropertyType.IsEnum)
+                    {
+                        parsedValue = int.Parse(value);
+                    }
+                    else if (propertyForEdit.PropertyType == typeof(bool))
+                    {
+                        if (value == "0")
+                        {
+                            parsedValue = false;
+                        }
+                        else if (value == "1")
+                        {
+                            parsedValue = true;
+                        }
+                    }
 
                     if (propertyAttributes.Any(x => x.GetType() == typeof(PhoneAttribute)))
                     {

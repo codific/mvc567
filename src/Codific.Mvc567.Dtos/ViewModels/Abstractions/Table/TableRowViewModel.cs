@@ -14,6 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Codific.Mvc567.Common.Enums;
@@ -43,9 +44,23 @@ namespace Codific.Mvc567.Dtos.ViewModels.Abstractions.Table
 
         public string Identifier { get; set; }
 
-        public void AddCell(int order, object content, TableCellType type, bool editable, string relatedProperty)
+        public void AddCell(int order, object content, TableCellType type, bool editable, string relatedProperty, Type enumType)
         {
-            TableCellViewModel tableCell = new TableCellViewModel(order, content, type, editable, relatedProperty);
+            TableCellViewModel tableCell = new TableCellViewModel(order, content, type, editable, relatedProperty, enumType);
+            this.cells.Add(tableCell);
+        }
+
+        public void AddCell(
+            int order,
+            object content,
+            TableCellType type,
+            bool editable,
+            string relatedProperty,
+            string textForTrueValue,
+            string textForFalseValue)
+        {
+            TableCellViewModel tableCell =
+                new TableCellViewModel(order, content, type, editable, relatedProperty, textForTrueValue, textForFalseValue);
             this.cells.Add(tableCell);
         }
 

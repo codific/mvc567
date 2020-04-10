@@ -7,4 +7,13 @@
   .entity-details-property-name {
     width: 15%;
   }
+  .bool-cell-editable-value:hover {
+    cursor: pointer;
+  }
+  .display-none {
+    display: none;
+  }
+  .selected-bool-value {
+    display: inline-block;
+  }
 }

@@ -25,14 +25,37 @@ namespace Codific.Mvc567.Dtos.ViewModels.Abstractions.Table
     {
         private object content = string.Empty;
 
-        public TableCellViewModel(int order, object content, TableCellType type, bool editable, string relatedProperty)
+        public TableCellViewModel(int order, object content, TableCellType type, bool editable, string relatedProperty, Type enumType = null)
         {
             this.Order = order;
             this.Type = type;
             this.content = content;
             this.Editable = editable;
             this.RelatedProperty = relatedProperty;
+            this.EnumType = enumType;
         }
+
+        public TableCellViewModel(
+            int order,
+            object content,
+            TableCellType type,
+            bool editable,
+            string relatedProperty,
+            string textForTrueValue,
+            string textForFalseValue)
+        {
+            this.Order = order;
+            this.Type = type;
+            this.content = content;
+            this.Editable = editable;
+            this.RelatedProperty = relatedProperty;
+            this.TextForFalseValue = textForFalseValue;
+            this.TextForTrueValue = textForTrueValue;
+        }
+
+        public string TextForFalseValue { get; set; }
+
+        public string TextForTrueValue { get; set; }
 
         public int Order { get; private set; }
 
@@ -46,6 +69,8 @@ namespace Codific.Mvc567.Dtos.ViewModels.Abstractions.Table
 
         public bool Editable { get; set; } = true;
 
+        public Type EnumType { get; set; }
+
         public string Content
         {
             get
@@ -53,6 +78,9 @@ namespace Codific.Mvc567.Dtos.ViewModels.Abstractions.Table
                 string resultContent = string.Empty;
                 switch (this.Type)
                 {
+                    case TableCellType.Enumeration:
+                        resultContent = this.content?.ToString();
+                        break;
                     case TableCellType.Text:
                         resultContent = this.content?.ToString();
                         break;

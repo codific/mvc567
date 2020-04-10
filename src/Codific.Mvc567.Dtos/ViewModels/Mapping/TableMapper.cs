@@ -20,6 +20,7 @@ using System.Drawing;
 using System.Linq;
 using Codific.Mvc567.Common;
 using Codific.Mvc567.Common.Attributes;
+using Codific.Mvc567.Common.Enums;
 using Codific.Mvc567.Dtos.ServiceResults;
 using Codific.Mvc567.Dtos.ViewModels.Abstractions.Table;
 
@@ -59,12 +60,28 @@ namespace Codific.Mvc567.Dtos.ViewModels.Mapping
                         if (property.GetCustomAttributes(typeof(TableCellAttribute), false).Length > 0)
                         {
                             TableCellAttribute propertyAttribute = (TableCellAttribute)property.GetCustomAttributes(typeof(TableCellAttribute), false).FirstOrDefault();
-                            tableRow.AddCell(
-                                propertyAttribute.Order,
-                                property.GetValue(entity),
-                                propertyAttribute.Type,
-                                propertyAttribute.Editable,
-                                property.Name);
+
+                            if (propertyAttribute?.Type == TableCellType.Flag)
+                            {
+                                tableRow.AddCell(
+                                    propertyAttribute.Order,
+                                    property.GetValue(entity),
+                                    propertyAttribute.Type,
+                                    propertyAttribute.Editable,
+                                    property.Name,
+                                    propertyAttribute.TextForTrueValue,
+                                    propertyAttribute.TextForFalseValue);
+                            }
+                            else
+                            {
+                                tableRow.AddCell(
+                                    propertyAttribute.Order,
+                                    property.GetValue(entity),
+                                    propertyAttribute.Type,
+                                    propertyAttribute.Editable,
+                                    property.Name,
+                                    property.PropertyType.IsEnum ? property.PropertyType : null);
+                            }
                         }
                     }
 

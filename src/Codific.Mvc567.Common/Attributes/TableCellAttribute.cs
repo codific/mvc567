@@ -28,6 +28,24 @@ namespace Codific.Mvc567.Common.Attributes
             this.Type = type;
         }
 
+        public TableCellAttribute(
+            int order,
+            string name,
+            TableCellType type,
+            string textForTrueValue,
+            string textForFalseValue)
+        {
+            this.Order = order;
+            this.Name = name;
+            this.Type = type;
+            this.TextForFalseValue = textForFalseValue;
+            this.TextForTrueValue = textForTrueValue;
+        }
+
+        public string TextForTrueValue { get; private set; }
+
+        public string TextForFalseValue { get; private set; }
+
         public int Order { get; private set; }
 
         public string Name { get; private set; }

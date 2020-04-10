@@ -39,6 +39,40 @@
                     console.log(errors);
                 }
             });
+            $('.x-edit-select').editable({
+                success: function (data, config) {
+                    $('.inline-edit-errors-container p').html('');
+                },
+                error: function (xhr) {
+                    $('.inline-edit-errors-container p').html(xhr.responseText);
+                }
+            }).on('hidden', function() {
+                $('.inline-edit-errors-container p').html('');
+            });
+
+            $('.x-edit-bool').editable({
+                success: function (data, newValue) {
+                    $('.inline-edit-errors-container p').html('');
+                    if (newValue === '0') {
+                        $(this).siblings('.bool-cell-editable-value-true').removeClass('selected-bool-value').addClass('d-none');
+                        $(this).siblings('.bool-cell-editable-value-false').addClass('selected-bool-value').removeClass('d-none');
+                    } else {
+                        $(this).siblings('.bool-cell-editable-value-false').removeClass('selected-bool-value').addClass('d-none');
+                        $(this).siblings('.bool-cell-editable-value-true').removeClass('d-none').addClass('selected-bool-value');
+                    }
+                },
+                error: function (xhr) {
+                    $('.inline-edit-errors-container p').html(xhr.responseText);
+                }
+            }).on('hidden', function($event, reason) {
+                $('.inline-edit-errors-container p').html('');
+                $(this).siblings('.bool-cell-editable-value.selected-bool-value').css('display', 'inline-block');   
+            });
+            $('.bool-cell-editable-value').on('click', function ($event) {
+                $event.stopPropagation();
+                $(this).css('display', 'none');
+                $(this).siblings('.x-edit-bool').click();
+            })
         }
     });
 })(jQuery);
