@@ -16,4 +16,14 @@
   .selected-bool-value {
     display: inline-block;
   }
+  .sortable-column:hover {
+    cursor: pointer;
+  }
+  .arrow-inactive {
+    color: #c1c1c1;
+  }
+  .sortable-column-link, .sortable-column-link:hover {
+    text-decoration: none;
+    color: black;
+  }
 }

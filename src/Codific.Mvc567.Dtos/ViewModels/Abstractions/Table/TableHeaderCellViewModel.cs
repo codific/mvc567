@@ -14,6 +14,8 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+using Codific.Mvc567.Common.Enums;
+
 namespace Codific.Mvc567.Dtos.ViewModels.Abstractions.Table
 {
     public class TableHeaderCellViewModel
@@ -21,5 +23,11 @@ namespace Codific.Mvc567.Dtos.ViewModels.Abstractions.Table
         public int Order { get; set; }
 
         public string Name { get; set; }
+
+        public string PropertyName { get; set; }
+
+        public bool IsDefaultOrderProperty { get; set; }
+
+        public FilterOrderType? DefaultPropertyOrderType { get; set; }
     }
 }

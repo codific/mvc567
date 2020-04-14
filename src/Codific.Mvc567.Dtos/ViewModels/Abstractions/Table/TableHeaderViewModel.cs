@@ -16,6 +16,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using Codific.Mvc567.Common.Enums;
 
 namespace Codific.Mvc567.Dtos.ViewModels.Abstractions.Table
 {
@@ -36,12 +37,19 @@ namespace Codific.Mvc567.Dtos.ViewModels.Abstractions.Table
             }
         }
 
-        public void AddCell(string name)
+        public void AddCell(
+            string name,
+            string propertyName,
+            bool isDefaultOrderColumn,
+            FilterOrderType? defaultPropertyOrderType = null)
         {
             this.cells.Add(new TableHeaderCellViewModel
             {
                 Order = this.currentCellIndex,
                 Name = name,
+                PropertyName = propertyName,
+                IsDefaultOrderProperty = isDefaultOrderColumn,
+                DefaultPropertyOrderType = defaultPropertyOrderType,
             });
 
             this.currentCellIndex++;

@@ -17,10 +17,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Dynamic.Core;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using AutoMapper;
 using Codific.Mvc567.Common.Attributes;
+using Codific.Mvc567.Common.Enums;
 using Codific.Mvc567.Common.Utilities;
 using Codific.Mvc567.DataAccess.Abstraction;
 using Codific.Mvc567.DataAccess.Abstractions.Entities;
@@ -124,6 +126,41 @@ namespace Codific.Mvc567.Services.Infrastructure
             }
 
             return propertyExpression;
+        }
+
+        protected Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> GetOrderExpressionByFilterQueryRequest<TEntity, TEntityDto>(string propertyName)
+        {
+            var orderString = propertyName;
+            if (propertyName == null)
+            {
+                orderString = this.GetDefaultOrderParameter<TEntityDto>();
+            }
+
+            Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderFunction = (x) => x.OrderBy(orderString);
+
+            return orderFunction;
+        }
+
+        protected string GetDefaultOrderParameter<TEntityDto>()
+        {
+            TableDefaultOrderPropertyAttribute defaultOrderAttribute = null;
+            typeof(TEntityDto)
+                .GetProperties()
+                .ToList()
+                .ForEach(x =>
+                {
+                    var orderAttribute = (TableDefaultOrderPropertyAttribute)x.GetCustomAttributes(typeof(TableDefaultOrderPropertyAttribute), false).FirstOrDefault();
+                    if (orderAttribute != null)
+                    {
+                        defaultOrderAttribute = orderAttribute;
+                    }
+                });
+            if (defaultOrderAttribute != null)
+            {
+                return defaultOrderAttribute.PropertyName + " " + (defaultOrderAttribute.OrderType == FilterOrderType.Descending ? "DESC" : "ASC");
+            }
+
+            return null;
         }
     }
 }

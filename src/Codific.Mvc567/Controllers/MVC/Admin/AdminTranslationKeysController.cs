@@ -43,9 +43,12 @@ namespace Codific.Mvc567.Controllers.MVC.Admin
 
         [Breadcrumb("Languages", true, 0, "GetAll", "AdminLanguages")]
         [Breadcrumb(BreadcrumbPageTitlePlaceholder, false, 1)]
-        public override Task<IActionResult> GetAll([FromQuery(Name = "p")] int page = 1, [FromQuery(Name = "q")] string query = null)
+        public override Task<IActionResult> GetAll(
+            [FromQuery(Name = "p")] int page = 1,
+            [FromQuery(Name = "q")] string query = null,
+            [FromQuery(Name = "sortBy")] string sortBy = null)
         {
-            return base.GetAll(page, query);
+            return base.GetAll(page, query, sortBy);
         }
 
         [Breadcrumb("Languages", true, 0, "GetAll", "AdminLanguages")]

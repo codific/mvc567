@@ -95,9 +95,12 @@ namespace Codific.Mvc567.Controllers.Abstractions
         [HttpGet]
         [Route("all")]
         [Breadcrumb(BreadcrumbPageTitlePlaceholder, false, 0)]
-        public virtual async Task<IActionResult> GetAll([FromQuery(Name = "p")] int page = 1, [FromQuery(Name = "q")] string query = null)
+        public virtual async Task<IActionResult> GetAll(
+            [FromQuery(Name = "p")] int page = 1,
+            [FromQuery(Name = "q")] string query = null,
+            [FromQuery(Name = "sortBy")] string sortBy = null)
         {
-            PaginatedEntitiesResult<TEntityDto> entitiesResult = await this.entityManager.GetAllEntitiesPaginatedAsync<TEntity, TEntityDto>(page, query);
+            PaginatedEntitiesResult<TEntityDto> entitiesResult = await this.entityManager.GetAllEntitiesPaginatedAsync<TEntity, TEntityDto>(page, query, sortBy);
             AllEntitiesViewModel model = new AllEntitiesViewModel();
             model.SingleEntityName = StringFunctions.SplitWordsByCapitalLetters(typeof(TEntity).Name);
             model.Title = typeof(TEntity).Name.ToLower().EndsWith("s", StringComparison.Ordinal) ? $"{model.SingleEntityName}es" : $"{model.SingleEntityName}s";

@@ -28,12 +28,45 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
                 </div>
             </form>
             <div class="responsive-table">
-                <table class="table table-hover table-striped table-bordered">
+                <table class="table table-hover table-striped table-bordered sortable-table">
                     <thead class="text-center">
                         <tr>
                             @foreach (TableHeaderCellViewModel cell in Model.Header.Cells)
                             {
-                                <th class="p-2 h-auto">@cell.Name</th>
+                                var isSortArrowActive = false;
+                                var sortArrow = "mdi-chevron-down";
+                                var sortDirection = "ASC";
+                                if (Context.Request.Query["sortBy"].Count > 0)
+                                {
+                                    if (((string)Context.Request.Query["sortBy"]).Contains(cell.PropertyName))
+                                    {
+                                        isSortArrowActive = true;
+                                        if (!((string)Context.Request.Query["sortBy"]).ToLower().Contains("desc"))
+                                        {
+                                            sortDirection = "DESC";
+                                            sortArrow = "mdi-chevron-up";
+                                        }
+                                    }
+                                }
+                                else if (cell.IsDefaultOrderProperty) 
+                                {
+                                    isSortArrowActive = true;
+                                    if (cell.DefaultPropertyOrderType == FilterOrderType.Ascending)
+                                    {
+                                        sortArrow = "mdi-chevron-up";
+                                        sortDirection = "DESC";
+                                    }
+                                    else
+                                    {
+                                        sortDirection = "ASC";
+                                        sortArrow = "mdi-chevron-down";
+                                    }
+                                }
+                                <th class="p-2 h-auto sortable-column">
+                                    <a class="sortable-column-link" href="@(Context.Request.Scheme + "://" + Context.Request.Host + Context.Request.Path + $"?sortBy={cell.PropertyName} {sortDirection}")">
+                                        @cell.Name <i class="mdi @(isSortArrowActive ? "" : "arrow-inactive") @sortArrow"></i>
+                                    </a>
+                                </th>
                             }
                             @if (Model.HasActions)
                             {

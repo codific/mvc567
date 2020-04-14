@@ -34,16 +34,38 @@ namespace Codific.Mvc567.Dtos.ViewModels.Mapping
             TableViewModel tableViewModel = new TableViewModel();
             var properties = dtoType.GetProperties();
             List<TableCellAttribute> dtoAttributes = new List<TableCellAttribute>();
+            string defaultOrderPropertyName = null;
+            FilterOrderType? defaultOrderType = null;
             foreach (var property in properties)
             {
+                var defaultOrderAttribute = (TableDefaultOrderPropertyAttribute)property.GetCustomAttributes(typeof(TableDefaultOrderPropertyAttribute), false).FirstOrDefault();
+                if (defaultOrderAttribute != null)
+                {
+                    defaultOrderPropertyName = property.Name;
+                    defaultOrderType = defaultOrderAttribute.OrderType;
+                }
+
                 if (property.GetCustomAttributes(typeof(TableCellAttribute), false).Length > 0)
                 {
                     dtoAttributes.Add((TableCellAttribute)property.GetCustomAttributes(typeof(TableCellAttribute), false).FirstOrDefault());
                 }
             }
 
-            List<string> tableHeaders = dtoAttributes.OrderBy(x => x.Order).Select(x => x.Name).Distinct().ToList();
-            tableHeaders.ForEach(x => { tableViewModel.Header.AddCell(x); });
+            dtoAttributes
+                .OrderBy(x => x.Order)
+                .Distinct()
+                .ToList()
+                .ForEach(x =>
+                {
+                    if (x.PropertyName == defaultOrderPropertyName)
+                    {
+                        tableViewModel.Header.AddCell(x.Name, x.PropertyName, true, defaultOrderType);
+                    }
+                    else
+                    {
+                        tableViewModel.Header.AddCell(x.Name, x.PropertyName, false);
+                    }
+                });
 
             if (entitiesResult.EntitiesCount > 0)
             {

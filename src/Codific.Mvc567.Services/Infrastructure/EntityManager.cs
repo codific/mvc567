@@ -20,7 +20,9 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Globalization;
 using System.Linq;
+using System.Linq.Dynamic.Core;
 using System.Linq.Expressions;
+using System.Reflection;
 using System.Threading.Tasks;
 using AutoMapper;
 using Codific.Mvc567.Common;
@@ -73,7 +75,10 @@ namespace Codific.Mvc567.Services.Infrastructure
             return resultList;
         }
 
-        public async Task<PaginatedEntitiesResult<TEntityDto>> GetAllEntitiesPaginatedAsync<TEntity, TEntityDto>(int page, string searchQuery = null)
+        public async Task<PaginatedEntitiesResult<TEntityDto>> GetAllEntitiesPaginatedAsync<TEntity, TEntityDto>(
+            int page,
+            string searchQuery = null,
+            string sortProperty = null)
             where TEntity : class, IEntityBase, new()
         {
             PaginatedEntitiesResult<TEntityDto> result = new PaginatedEntitiesResult<TEntityDto>();
@@ -98,15 +103,16 @@ namespace Codific.Mvc567.Services.Infrastructure
                 result.CurrentPage = page;
                 result.PageSize = this.PaginationPageSize;
 
+                var orderByExpression = this.GetOrderExpressionByFilterQueryRequest<TEntity, TEntityDto>(sortProperty);
                 IEnumerable<TEntity> entities = null;
                 var firstLevelIncludeQuery = this.GetFirstLevelIncludeQuery<TEntity>();
                 if (string.IsNullOrWhiteSpace(searchQuery))
                 {
-                    entities = await standardRepository.GetPageAsync<TEntity>(result.StartRow, this.PaginationPageSize, null, firstLevelIncludeQuery);
+                    entities = await standardRepository.GetPageAsync<TEntity>(result.StartRow, this.PaginationPageSize, orderByExpression, firstLevelIncludeQuery);
                 }
                 else
                 {
-                    entities = standardRepository.EnumerableQueryPage<TEntity>(result.StartRow, this.PaginationPageSize, this.GetEntitySearchQueryExpression<TEntity>(searchQuery).Compile(), null, firstLevelIncludeQuery);
+                    entities = await standardRepository.QueryPageAsync<TEntity>(result.StartRow, this.PaginationPageSize, this.GetEntitySearchQueryExpression<TEntity>(searchQuery), orderByExpression, firstLevelIncludeQuery);
                 }
 
                 var dtoEntities = this.Mapper.Map<IEnumerable<TEntityDto>>(entities);

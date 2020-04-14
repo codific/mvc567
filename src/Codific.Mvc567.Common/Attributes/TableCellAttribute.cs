@@ -15,14 +15,16 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 using System;
+using System.Runtime.CompilerServices;
 using Codific.Mvc567.Common.Enums;
 
 namespace Codific.Mvc567.Common.Attributes
 {
     public class TableCellAttribute : Attribute
     {
-        public TableCellAttribute(int order, string name, TableCellType type)
+        public TableCellAttribute(int order, string name, TableCellType type, [CallerMemberName] string propertyName = null)
         {
+            this.PropertyName = propertyName;
             this.Order = order;
             this.Name = name;
             this.Type = type;
@@ -33,8 +35,10 @@ namespace Codific.Mvc567.Common.Attributes
             string name,
             TableCellType type,
             string textForTrueValue,
-            string textForFalseValue)
+            string textForFalseValue,
+            [CallerMemberName] string propertyName = null)
         {
+            this.PropertyName = propertyName;
             this.Order = order;
             this.Name = name;
             this.Type = type;
@@ -53,5 +57,7 @@ namespace Codific.Mvc567.Common.Attributes
         public TableCellType Type { get; private set; }
 
         public bool Editable { get; set; } = true;
+
+        public string PropertyName { get; set; }
     }
 }
