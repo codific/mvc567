@@ -29,21 +29,13 @@ namespace Codific.Mvc567.Common.Attributes
             this.Type = type;
         }
 
-        // public TableCellAttribute(int order, string name, TableCellType type, [CallerMemberName] string propertyName = null)
-//        {
-//            this.PropertyName = propertyName;
-//            this.Order = order;
-//            this.Name = name;
-//            this.Type = type;
-//        }
         public TableCellAttribute(
             int order,
             string name,
             TableCellType type,
             string textForTrueValue,
-            string textForFalseValue) // [CallerMemberName] string propertyName = null)
+            string textForFalseValue)
         {
-            // this.PropertyName = propertyName;
             this.Order = order;
             this.Name = name;
             this.Type = type;

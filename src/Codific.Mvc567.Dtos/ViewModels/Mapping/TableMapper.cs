@@ -53,37 +53,24 @@ namespace Codific.Mvc567.Dtos.ViewModels.Mapping
                 }
             }
 
-            // dtoAttributes
-//                .OrderBy(x => x.Order)
-//                .Distinct()
-//                .ToList()
-//                .ForEach(x =>
-//                {
-//                    if (x.PropertyName == defaultOrderPropertyName)
-//                    {
-//                        tableViewModel.Header.AddCell(x.Name, x.PropertyName, true, defaultOrderType);
-//                    }
-//                    else
-//                    {
-//                        tableViewModel.Header.AddCell(x.Name, x.PropertyName, false);
-//                    }
-//                });
-            var tableCellAttributes = dtoAttributes
-                .OrderBy(x => x.Order)
+            SortTableCellAttributesAndPropertyNamesByOrderWeight(dtoAttributes, tableCellAttributePropertyNames);
+
+            var tableCellNames = dtoAttributes
+                .Select(x => x.Name)
                 .Distinct()
                 .ToList();
 
-            for (var i = 0; i < tableCellAttributes.Count; i++)
+            for (var i = 0; i < tableCellNames.Count; i++)
             {
                 var propertyName = tableCellAttributePropertyNames[i];
-                var tableCellAttribute = tableCellAttributes[i];
+                var tableCellName = tableCellNames[i];
                 if (propertyName == defaultOrderPropertyName)
                 {
-                    tableViewModel.Header.AddCell(tableCellAttribute.Name, propertyName, true, defaultOrderType);
+                    tableViewModel.Header.AddCell(tableCellName, propertyName, true, defaultOrderType);
                 }
                 else
                 {
-                    tableViewModel.Header.AddCell(tableCellAttribute.Name, propertyName, false);
+                    tableViewModel.Header.AddCell(tableCellName, propertyName, false);
                 }
             }
 
@@ -197,6 +184,26 @@ namespace Codific.Mvc567.Dtos.ViewModels.Mapping
             action.SetConfirmation("Restore Entity", "Are you sure you want to restore this deleted entity?");
 
             return action;
+        }
+
+        private static void SortTableCellAttributesAndPropertyNamesByOrderWeight(IList<TableCellAttribute> dtoAttributes, IList<string> tableCellAttributePropertyNames)
+        {
+            for (int i = 0; i < dtoAttributes.Count; i++)
+            {
+                for (int j = 0; j < dtoAttributes.Count - i - 1; j++)
+                {
+                    if (dtoAttributes[j].Order > dtoAttributes[j + 1].Order)
+                    {
+                        var tempTableCellAttribute = dtoAttributes[j];
+                        dtoAttributes[j] = dtoAttributes[j + 1];
+                        dtoAttributes[j + 1] = tempTableCellAttribute;
+
+                        var tempPropertyName = tableCellAttributePropertyNames[j];
+                        tableCellAttributePropertyNames[j] = tableCellAttributePropertyNames[j + 1];
+                        tableCellAttributePropertyNames[j + 1] = tempPropertyName;
+                    }
+                }
+            }
         }
     }
 }
