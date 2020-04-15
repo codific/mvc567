@@ -22,22 +22,28 @@ namespace Codific.Mvc567.Common.Attributes
 {
     public class TableCellAttribute : Attribute
     {
-        public TableCellAttribute(int order, string name, TableCellType type, string test)
+        public TableCellAttribute(int order, string name, TableCellType type)
         {
             this.Order = order;
             this.Name = name;
             this.Type = type;
         }
 
+        // public TableCellAttribute(int order, string name, TableCellType type, [CallerMemberName] string propertyName = null)
+//        {
+//            this.PropertyName = propertyName;
+//            this.Order = order;
+//            this.Name = name;
+//            this.Type = type;
+//        }
         public TableCellAttribute(
             int order,
             string name,
             TableCellType type,
             string textForTrueValue,
-            string textForFalseValue,
-            [CallerMemberName] string propertyName = null)
+            string textForFalseValue) // [CallerMemberName] string propertyName = null)
         {
-            this.PropertyName = propertyName;
+            // this.PropertyName = propertyName;
             this.Order = order;
             this.Name = name;
             this.Type = type;
@@ -57,6 +63,6 @@ namespace Codific.Mvc567.Common.Attributes
 
         public bool Editable { get; set; } = true;
 
-        public string PropertyName { get; set; }
+        // public string PropertyName { get; set; }
     }
 }

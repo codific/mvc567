@@ -36,6 +36,7 @@ namespace Codific.Mvc567.Dtos.ViewModels.Mapping
             List<TableCellAttribute> dtoAttributes = new List<TableCellAttribute>();
             string defaultOrderPropertyName = null;
             FilterOrderType? defaultOrderType = null;
+            var tableCellAttributePropertyNames = new List<string>();
             foreach (var property in properties)
             {
                 var defaultOrderAttribute = (TableDefaultOrderPropertyAttribute)property.GetCustomAttributes(typeof(TableDefaultOrderPropertyAttribute), false).FirstOrDefault();
@@ -47,25 +48,44 @@ namespace Codific.Mvc567.Dtos.ViewModels.Mapping
 
                 if (property.GetCustomAttributes(typeof(TableCellAttribute), false).Length > 0)
                 {
+                    tableCellAttributePropertyNames.Add(property.Name);
                     dtoAttributes.Add((TableCellAttribute)property.GetCustomAttributes(typeof(TableCellAttribute), false).FirstOrDefault());
                 }
             }
 
-            dtoAttributes
+            // dtoAttributes
+//                .OrderBy(x => x.Order)
+//                .Distinct()
+//                .ToList()
+//                .ForEach(x =>
+//                {
+//                    if (x.PropertyName == defaultOrderPropertyName)
+//                    {
+//                        tableViewModel.Header.AddCell(x.Name, x.PropertyName, true, defaultOrderType);
+//                    }
+//                    else
+//                    {
+//                        tableViewModel.Header.AddCell(x.Name, x.PropertyName, false);
+//                    }
+//                });
+            var tableCellAttributes = dtoAttributes
                 .OrderBy(x => x.Order)
                 .Distinct()
-                .ToList()
-                .ForEach(x =>
+                .ToList();
+
+            for (var i = 0; i < tableCellAttributes.Count; i++)
+            {
+                var propertyName = tableCellAttributePropertyNames[i];
+                var tableCellAttribute = tableCellAttributes[i];
+                if (propertyName == defaultOrderPropertyName)
                 {
-                    if (x.PropertyName == defaultOrderPropertyName)
-                    {
-                        tableViewModel.Header.AddCell(x.Name, x.PropertyName, true, defaultOrderType);
-                    }
-                    else
-                    {
-                        tableViewModel.Header.AddCell(x.Name, x.PropertyName, false);
-                    }
-                });
+                    tableViewModel.Header.AddCell(tableCellAttribute.Name, propertyName, true, defaultOrderType);
+                }
+                else
+                {
+                    tableViewModel.Header.AddCell(tableCellAttribute.Name, propertyName, false);
+                }
+            }
 
             if (entitiesResult.EntitiesCount > 0)
             {
