@@ -128,7 +128,7 @@ namespace Codific.Mvc567.Services.Infrastructure
             return propertyExpression;
         }
 
-        protected Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> GetOrderExpressionByFilterQueryRequest<TEntity, TEntityDto>(string propertyName)
+        protected virtual Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> GetOrderExpressionByFilterQueryRequest<TEntity, TEntityDto>(string propertyName)
         {
             var orderString = propertyName;
             if (propertyName == null)
@@ -141,7 +141,7 @@ namespace Codific.Mvc567.Services.Infrastructure
             return orderFunction;
         }
 
-        protected string GetDefaultOrderParameter<TEntityDto>()
+        protected virtual string GetDefaultOrderParameter<TEntityDto>()
         {
             TableDefaultOrderPropertyAttribute defaultOrderAttribute = null;
             typeof(TEntityDto)
