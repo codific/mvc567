@@ -22,9 +22,8 @@ namespace Codific.Mvc567.Common.Attributes
 {
     public class TableCellAttribute : Attribute
     {
-        public TableCellAttribute(int order, string name, TableCellType type, [CallerMemberName] string propertyName = "")
+        public TableCellAttribute(int order, string name, TableCellType type)
         {
-            this.PropertyName = propertyName;
             this.Order = order;
             this.Name = name;
             this.Type = type;
