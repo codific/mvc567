@@ -6,14 +6,11 @@ namespace Codific.Mvc567.Common.Attributes
 {
     public class TableDefaultOrderPropertyAttribute : Attribute
     {
-        public TableDefaultOrderPropertyAttribute(FilterOrderType orderType, [CallerMemberName] string propertyName = null)
+        public TableDefaultOrderPropertyAttribute(FilterOrderType orderType)
         {
             this.OrderType = orderType;
-            this.PropertyName = propertyName;
         }
 
         public FilterOrderType OrderType { get; }
-
-        public string PropertyName { get; }
     }
 }

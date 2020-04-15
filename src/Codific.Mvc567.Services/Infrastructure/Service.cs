@@ -143,21 +143,24 @@ namespace Codific.Mvc567.Services.Infrastructure
 
         protected virtual string GetDefaultOrderParameter<TEntityDto>()
         {
-            TableDefaultOrderPropertyAttribute defaultOrderAttribute = null;
+            TableDefaultOrderPropertyAttribute defaultOrderPropertyAttribute = null;
+            SortablePropertyAttribute orderPropertyAttribute = null;
             typeof(TEntityDto)
                 .GetProperties()
                 .ToList()
                 .ForEach(x =>
                 {
-                    var orderAttribute = (TableDefaultOrderPropertyAttribute)x.GetCustomAttributes(typeof(TableDefaultOrderPropertyAttribute), false).FirstOrDefault();
-                    if (orderAttribute != null)
+                    var defaultOrderAttribute = (TableDefaultOrderPropertyAttribute)x.GetCustomAttributes(typeof(TableDefaultOrderPropertyAttribute), false).FirstOrDefault();
+                    var orderAttribute = (SortablePropertyAttribute)x.GetCustomAttributes(typeof(SortablePropertyAttribute), false).FirstOrDefault();
+                    if (defaultOrderAttribute != null)
                     {
-                        defaultOrderAttribute = orderAttribute;
+                        defaultOrderPropertyAttribute = defaultOrderAttribute;
+                        orderPropertyAttribute = orderAttribute;
                     }
                 });
-            if (defaultOrderAttribute != null)
+            if (defaultOrderPropertyAttribute != null)
             {
-                return defaultOrderAttribute.PropertyName + " " + (defaultOrderAttribute.OrderType == FilterOrderType.Descending ? "DESC" : "ASC");
+                return orderPropertyAttribute.OrderArgument + " " + (defaultOrderPropertyAttribute.OrderType == FilterOrderType.Descending ? "DESC" : "ASC");
             }
 
             return null;

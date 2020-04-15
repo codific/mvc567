@@ -23,6 +23,7 @@ using Codific.Mvc567.Common.Attributes;
 using Codific.Mvc567.Common.Enums;
 using Codific.Mvc567.Dtos.ServiceResults;
 using Codific.Mvc567.Dtos.ViewModels.Abstractions.Table;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace Codific.Mvc567.Dtos.ViewModels.Mapping
 {
@@ -37,6 +38,7 @@ namespace Codific.Mvc567.Dtos.ViewModels.Mapping
             string defaultOrderPropertyName = null;
             FilterOrderType? defaultOrderType = null;
             var tableCellAttributePropertyNames = new List<string>();
+            var sortablePropertyAttributes = new List<SortablePropertyAttribute>();
             foreach (var property in properties)
             {
                 var defaultOrderAttribute = (TableDefaultOrderPropertyAttribute)property.GetCustomAttributes(typeof(TableDefaultOrderPropertyAttribute), false).FirstOrDefault();
@@ -46,15 +48,25 @@ namespace Codific.Mvc567.Dtos.ViewModels.Mapping
                     defaultOrderType = defaultOrderAttribute.OrderType;
                 }
 
+                if (property.GetCustomAttributes(typeof(SortablePropertyAttribute), false).Length > 0)
+                {
+                    var orderPropertyAttribute = (SortablePropertyAttribute)property.GetCustomAttributes(typeof(SortablePropertyAttribute), false).First();
+                    tableCellAttributePropertyNames.Add(property.Name);
+                    sortablePropertyAttributes.Add(orderPropertyAttribute);
+                }
+                else if (property.GetCustomAttributes(typeof(TableCellAttribute), false).Length > 0)
+                {
+                    sortablePropertyAttributes.Add(null);
+                    tableCellAttributePropertyNames.Add(null);
+                }
+
                 if (property.GetCustomAttributes(typeof(TableCellAttribute), false).Length > 0)
                 {
-                    tableCellAttributePropertyNames.Add(property.Name);
                     dtoAttributes.Add((TableCellAttribute)property.GetCustomAttributes(typeof(TableCellAttribute), false).FirstOrDefault());
                 }
             }
 
-            SortTableCellAttributesAndPropertyNamesByOrderWeight(dtoAttributes, tableCellAttributePropertyNames);
-
+            SortTableCellAttributesAndPropertyNamesByOrderWeight(dtoAttributes, tableCellAttributePropertyNames, sortablePropertyAttributes);
             var tableCellNames = dtoAttributes
                 .Select(x => x.Name)
                 .Distinct()
@@ -64,13 +76,21 @@ namespace Codific.Mvc567.Dtos.ViewModels.Mapping
             {
                 var propertyName = tableCellAttributePropertyNames[i];
                 var tableCellName = tableCellNames[i];
-                if (propertyName == defaultOrderPropertyName)
+                var orderPropertyAttribute = sortablePropertyAttributes[i];
+                if (orderPropertyAttribute != null)
                 {
-                    tableViewModel.Header.AddCell(tableCellName, propertyName, true, defaultOrderType);
+                    if (propertyName == defaultOrderPropertyName)
+                    {
+                        tableViewModel.Header.AddCell(tableCellName, orderPropertyAttribute.OrderArgument, true, defaultOrderType);
+                    }
+                    else
+                    {
+                        tableViewModel.Header.AddCell(tableCellName, orderPropertyAttribute.OrderArgument, false);
+                    }
                 }
                 else
                 {
-                    tableViewModel.Header.AddCell(tableCellName, propertyName, false);
+                    tableViewModel.Header.AddCell(tableCellName);
                 }
             }
 
@@ -186,7 +206,10 @@ namespace Codific.Mvc567.Dtos.ViewModels.Mapping
             return action;
         }
 
-        private static void SortTableCellAttributesAndPropertyNamesByOrderWeight(IList<TableCellAttribute> dtoAttributes, IList<string> tableCellAttributePropertyNames)
+        private static void SortTableCellAttributesAndPropertyNamesByOrderWeight(
+            IList<TableCellAttribute> dtoAttributes,
+            IList<string> tableCellAttributePropertyNames,
+            IList<SortablePropertyAttribute> orderPropertyAttributes)
         {
             for (int i = 0; i < dtoAttributes.Count; i++)
             {
@@ -201,6 +224,10 @@ namespace Codific.Mvc567.Dtos.ViewModels.Mapping
                         var tempPropertyName = tableCellAttributePropertyNames[j];
                         tableCellAttributePropertyNames[j] = tableCellAttributePropertyNames[j + 1];
                         tableCellAttributePropertyNames[j + 1] = tempPropertyName;
+
+                        var tempOrderPropertyAttribute = orderPropertyAttributes[j];
+                        orderPropertyAttributes[j] = orderPropertyAttributes[j + 1];
+                        orderPropertyAttributes[j + 1] = tempOrderPropertyAttribute;
                     }
                 }
             }

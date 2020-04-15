@@ -39,17 +39,30 @@ namespace Codific.Mvc567.Dtos.ViewModels.Abstractions.Table
 
         public void AddCell(
             string name,
-            string propertyName,
+            string orderArgument,
             bool isDefaultOrderColumn,
             FilterOrderType? defaultPropertyOrderType = null)
         {
             this.cells.Add(new TableHeaderCellViewModel
             {
+                OrderArgument = orderArgument,
                 Order = this.currentCellIndex,
                 Name = name,
-                PropertyName = propertyName,
                 IsDefaultOrderProperty = isDefaultOrderColumn,
                 DefaultPropertyOrderType = defaultPropertyOrderType,
+                IsSortable = true,
+            });
+
+            this.currentCellIndex++;
+        }
+
+        public void AddCell(string name)
+        {
+            this.cells.Add(new TableHeaderCellViewModel
+            {
+                Order = this.currentCellIndex,
+                Name = name,
+                IsSortable = false,
             });
 
             this.currentCellIndex++;

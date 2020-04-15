@@ -24,7 +24,9 @@ namespace Codific.Mvc567.Dtos.ViewModels.Abstractions.Table
 
         public string Name { get; set; }
 
-        public string PropertyName { get; set; }
+        public bool IsSortable { get; set; }
+
+        public string OrderArgument { get; set; }
 
         public bool IsDefaultOrderProperty { get; set; }
 
