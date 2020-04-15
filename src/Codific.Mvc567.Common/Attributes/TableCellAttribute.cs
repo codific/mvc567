@@ -22,7 +22,7 @@ namespace Codific.Mvc567.Common.Attributes
 {
     public class TableCellAttribute : Attribute
     {
-        public TableCellAttribute(int order, string name, TableCellType type)
+        public TableCellAttribute(int order, string name, TableCellType type, string test)
         {
             this.Order = order;
             this.Name = name;
