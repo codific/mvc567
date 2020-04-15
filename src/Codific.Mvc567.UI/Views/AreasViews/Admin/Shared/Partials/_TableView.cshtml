@@ -33,12 +33,18 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
                         <tr>
                             @foreach (TableHeaderCellViewModel cell in Model.Header.Cells)
                             {
+                                if (!cell.IsSortable)
+                                {
+                                    <th class="p-2 h-auto">@cell.Name</th>
+                                    continue;
+                                }
+                                
                                 var isSortArrowActive = false;
                                 var sortArrow = "mdi-chevron-down";
                                 var sortDirection = "ASC";
                                 if (Context.Request.Query["sortBy"].Count > 0)
                                 {
-                                    if (((string)Context.Request.Query["sortBy"]).Contains(cell.PropertyName))
+                                    if (((string)Context.Request.Query["sortBy"]).Split(' ').First() == cell.OrderArgument)
                                     {
                                         isSortArrowActive = true;
                                         if (!((string)Context.Request.Query["sortBy"]).ToLower().Contains("desc"))
@@ -48,7 +54,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
                                         }
                                     }
                                 }
-                                else if (cell.IsDefaultOrderProperty) 
+                                else if (cell.IsDefaultOrderProperty)
                                 {
                                     isSortArrowActive = true;
                                     if (cell.DefaultPropertyOrderType == FilterOrderType.Ascending)
@@ -63,7 +69,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
                                     }
                                 }
                                 <th class="p-2 h-auto sortable-column">
-                                    <a class="sortable-column-link" href="@(Context.Request.Scheme + "://" + Context.Request.Host + Context.Request.Path + $"?sortBy={cell.PropertyName} {sortDirection}")">
+                                    <a class="sortable-column-link" href="@(Context.Request.Scheme + "://" + Context.Request.Host + Context.Request.Path + $"?sortBy={cell.OrderArgument} {sortDirection}")">
                                         @cell.Name <i class="mdi @(isSortArrowActive ? "" : "arrow-inactive") @sortArrow"></i>
                                     </a>
                                 </th>
