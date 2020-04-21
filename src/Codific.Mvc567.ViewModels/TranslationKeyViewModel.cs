@@ -30,6 +30,8 @@ namespace Codific.Mvc567.ViewModels
         [DetailsOrder(0)]
         public string Id { get; set; }
 
+        [TableDefaultOrderProperty(FilterOrderType.Ascending)]
+        [SortableProperty]
         [TableCell(1, "Key", TableCellType.Text)]
         [DetailsOrder(1)]
         [Required(ErrorMessage = "Key is required field.")]

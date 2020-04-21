@@ -28,6 +28,8 @@ namespace Codific.Mvc567.ViewModels
         [DetailsOrder(0)]
         public string Id { get; set; }
 
+        [TableDefaultOrderProperty(FilterOrderType.Ascending)]
+        [SortableProperty]
         [TableCell(1, "Email", TableCellType.Text, Editable = false)]
         [DetailsOrder(1)]
         public string Email { get; set; }
@@ -38,6 +40,7 @@ namespace Codific.Mvc567.ViewModels
         [DetailsOrder(3)]
         public string LastName { get; set; }
 
+        [SortableProperty]
         [TableCell(2, "Name", TableCellType.Text, Editable = false)]
         public string Name
         {
@@ -47,14 +50,17 @@ namespace Codific.Mvc567.ViewModels
             }
         }
 
+        [SortableProperty]
         [TableCell(5, "Registration", TableCellType.DateTime)]
         [DetailsOrder(6)]
         public DateTime RegistrationDate { get; set; }
 
+        [SortableProperty]
         [TableCell(3, "2FA", TableCellType.Flag)]
         [DetailsOrder(4)]
         public bool TwoFactorEnabled { get; set; }
 
+        [SortableProperty]
         [TableCell(4, "Locked Out", TableCellType.Flag)]
         [DetailsOrder(5)]
         public bool IsLockedOut { get; set; }

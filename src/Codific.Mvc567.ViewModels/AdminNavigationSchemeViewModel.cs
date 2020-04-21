@@ -16,12 +16,15 @@ namespace Codific.Mvc567.ViewModels
         [DetailsOrder(0)]
         public string Id { get; set; }
 
+        [TableDefaultOrderProperty(FilterOrderType.Ascending)]
+        [SortableProperty]
         [TableCell(1, "Name", TableCellType.Text, Editable = true)]
         [DetailsOrder(1)]
         [Required(ErrorMessage = "Name is required field.")]
         [CreateEditEntityInput("Name", CreateEntityInputType.Text)]
         public string Name { get; set; }
 
+        [SortableProperty(OrderArgument = "Role.Name")]
         [DetailsOrder(1)]
         [TableCell(1, "Role", TableCellType.Text)]
         [Ignore]

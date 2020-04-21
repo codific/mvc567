@@ -31,24 +31,29 @@ namespace Codific.Mvc567.ViewModels
         [DetailsOrder(0)]
         public string Id { get; set; }
 
+        [TableDefaultOrderProperty(FilterOrderType.Ascending)]
+        [SortableProperty]
         [TableCell(1, "Key", TableCellType.Text, Editable = true)]
         [DetailsOrder(1)]
         [Required(ErrorMessage = "Key is required field.")]
         [CreateEditEntityInput("Key", CreateEntityInputType.Text)]
         public string Key { get; set; }
 
+        [SortableProperty]
         [TableCell(2, "Value", TableCellType.Text, Editable = true)]
         [DetailsOrder(2)]
         [Required(ErrorMessage = "Value is required field.")]
         [CreateEditEntityInput("Value", CreateEntityInputType.Text)]
         public string Value { get; set; }
 
+        [SortableProperty]
         [TableCell(3, "Type", TableCellType.Text)]
         [DetailsOrder(3)]
         [Required(ErrorMessage = "Type is required field.")]
         [CreateEditEntityInput("Type", CreateEntityInputType.EnumSelect)]
         public SystemConstantTypes Type { get; set; }
 
+        [SortableProperty]
         [TableCell(4, "Private", TableCellType.Flag)]
         [DetailsOrder(4)]
         [CreateEditEntityInput("Private", CreateEntityInputType.BoolRadio)]

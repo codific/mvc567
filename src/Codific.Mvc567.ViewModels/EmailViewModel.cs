@@ -16,18 +16,23 @@ namespace Codific.Mvc567.ViewModels
         [HtmlContent]
         public string EmailBody { get; set; }
 
+        [TableDefaultOrderProperty(FilterOrderType.Ascending)]
+        [SortableProperty]
         [TableCell(2, "Sent", TableCellType.Flag)]
         [DetailsOrder(2)]
         public bool Sent { get; set; }
 
+        [SortableProperty]
         [TableCell(3, "Receiver Name", TableCellType.Text)]
         [DetailsOrder(3)]
         public string ReceiverName { get; set; }
 
+        [SortableProperty]
         [TableCell(4, "Receiver Email", TableCellType.Text)]
         [DetailsOrder(4)]
         public string ReceiverEmail { get; set; }
 
+        [SortableProperty]
         [TableCell(5, "Type", TableCellType.Text)]
         [DetailsOrder(5)]
         public string Type { get; set; }

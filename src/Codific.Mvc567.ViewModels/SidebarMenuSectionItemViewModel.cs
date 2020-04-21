@@ -16,39 +16,47 @@ namespace Codific.Mvc567.ViewModels
         [DetailsOrder(0)]
         public string Id { get; set; }
 
+        [TableDefaultOrderProperty(FilterOrderType.Ascending)]
+        [SortableProperty]
         [TableCell(1, "Title", TableCellType.Text)]
         [DetailsOrder(1)]
         [Required(ErrorMessage = "Title is required field.")]
         [CreateEditEntityInput("Title", CreateEntityInputType.Text)]
         public string Title { get; set; }
 
+        [SortableProperty]
         [TableCell(2, "Controller", TableCellType.Text)]
         [DetailsOrder(2)]
         [Required(ErrorMessage = "Controller is required field.")]
         [CreateEditEntityInput("Controller", CreateEntityInputType.Text)]
         public string ItemController { get; set; }
 
+        [SortableProperty]
         [TableCell(3, "Action", TableCellType.Text)]
         [DetailsOrder(3)]
         [CreateEditEntityInput("Action", CreateEntityInputType.Text)]
         public string ItemAction { get; set; }
 
+        [SortableProperty]
         [TableCell(4, "Area", TableCellType.Text)]
         [DetailsOrder(4)]
         [CreateEditEntityInput("Area", CreateEntityInputType.Text)]
         public string ItemArea { get; set; }
 
+        [SortableProperty]
         [TableCell(4, "Order", TableCellType.Text)]
         [DetailsOrder(4)]
         [Required(ErrorMessage = "Order is required field.")]
         [CreateEditEntityInput("Order", CreateEntityInputType.Integer)]
         public int Order { get; set; }
 
+        [SortableProperty]
         [TableCell(5, "Single", TableCellType.Flag)]
         [DetailsOrder(5)]
         [CreateEditEntityInput("Single", CreateEntityInputType.BoolRadio)]
         public bool Single { get; set; }
 
+        [SortableProperty]
         [TableCell(6, "Icon", TableCellType.Text)]
         [DetailsOrder(6)]
         [CreateEditEntityInput("Icon", CreateEntityInputType.Text)]

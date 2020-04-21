@@ -36,6 +36,8 @@ namespace Codific.Mvc567.ViewModels
         [DatabaseEnum(typeof(Language), "Name")]
         public string LanguageId { get; set; }
 
+        [TableDefaultOrderProperty(FilterOrderType.Ascending)]
+        [SortableProperty]
         [DetailsOrder(1)]
         [TableCell(1, "Language", TableCellType.Text)]
         [Ignore]
@@ -56,6 +58,7 @@ namespace Codific.Mvc567.ViewModels
 
         public TranslationKeyViewModel TranslationKey { get; set; }
 
+        [SortableProperty]
         [DetailsOrder(2)]
         [TableCell(2, "Translation Key", TableCellType.Text)]
         [Ignore]
@@ -67,6 +70,7 @@ namespace Codific.Mvc567.ViewModels
             }
         }
 
+        [SortableProperty]
         [DetailsOrder(3)]
         [TableCell(3, "Value", TableCellType.Text)]
         [Required(ErrorMessage = "Value is required field.")]

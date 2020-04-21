@@ -30,21 +30,26 @@ namespace Codific.Mvc567.ViewModels
         [DetailsOrder(0)]
         public string Id { get; set; }
 
+        [SortableProperty]
         [TableCell(1, "Code", TableCellType.Text)]
         [DetailsOrder(1)]
         [CreateEditEntityInput("Code", CreateEntityInputType.Text)]
         public string Code { get; set; }
 
+        [TableDefaultOrderProperty(FilterOrderType.Ascending)]
+        [SortableProperty]
         [TableCell(2, "Name", TableCellType.Text)]
         [DetailsOrder(2)]
         [CreateEditEntityInput("Name", CreateEntityInputType.Text)]
         public string Name { get; set; }
 
+        [SortableProperty]
         [TableCell(3, "Native Name", TableCellType.Text)]
         [DetailsOrder(3)]
         [CreateEditEntityInput("Native Name", CreateEntityInputType.Text)]
         public string NativeName { get; set; }
 
+        [SortableProperty]
         [DetailsOrder(4, Title = "Image")]
         [TableCell(4, "Image", TableCellType.File)]
         [CreateEditEntityInput("Image", CreateEntityInputType.File)]
@@ -52,10 +57,12 @@ namespace Codific.Mvc567.ViewModels
 
         public string TranslationFileUrl { get; set; }
 
+        [SortableProperty]
         [TableCell(5, "Last Generation", TableCellType.DateTime)]
         [DetailsOrder(5)]
         public DateTime? LastTranslationFileGeneration { get; set; }
 
+        [SortableProperty]
         [TableCell(6, "Is Default", TableCellType.Flag)]
         [DetailsOrder(6)]
         [CreateEditEntityInput("Is Default", CreateEntityInputType.BoolSelect)]
