@@ -102,7 +102,6 @@ namespace Codific.Mvc567.Controllers.MVC.Admin
 
         [Route("/admin/login")]
         [ValidateAntiForgeryToken]
-        [ServiceFilter(typeof(VisibleReCaptchaValidateAttribute))]
         [HttpPost]
         public async Task<IActionResult> Login(AdminLoginViewModel model)
         {
@@ -164,7 +163,6 @@ namespace Codific.Mvc567.Controllers.MVC.Admin
 
         [HttpPost]
         [Route("/admin/login-2fa")]
-        [ServiceFilter(typeof(VisibleReCaptchaValidateAttribute))]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> LoginWith2fa(AdminLoginWith2faViewModel model)
         {
